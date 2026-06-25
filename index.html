@@ -9,45 +9,295 @@
     :root {
       --orange: #FF6B35;
       --green: #2D9E6B;
+      --green-light: #4CAF78;
       --navy: #1A1A2E;
       --light: #F8F9FA;
       --gray: #6C757D;
-      --card-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', sans-serif; background: var(--light); color: var(--navy); }
+    body { font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', sans-serif; background: #FAFAF8; color: var(--navy); }
 
-    /* HEADER */
-    header { background: var(--navy); color: white; padding: 0; }
-    .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; gap: 12px; }
-    .logo { display: flex; flex-direction: column; line-height: 1; flex-shrink: 0; }
-    .logo-main { font-size: 24px; font-weight: 900; letter-spacing: 2px; color: white; }
+    /* ========== HEADER ========== */
+    .site-header { background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; gap: 16px; max-width: 1200px; margin: 0 auto; }
+    .logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; text-decoration: none; }
+    .logo-icon { font-size: 26px; line-height: 1; }
+    .logo-text { display: flex; flex-direction: column; line-height: 1; }
+    .logo-main { font-size: 16px; font-weight: 900; letter-spacing: 1px; color: var(--navy); }
     .logo-main span { color: var(--orange); }
-    .logo-sub { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-top: 4px; }
-    .header-nav { display: flex; gap: 8px; align-items: center; }
-    .btn-org-register { background: transparent; color: rgba(255,255,255,0.85); border: 1.5px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-    .btn-org-register:hover { border-color: white; color: white; }
-    .header-cta { background: var(--orange); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .logo-sub { font-size: 9px; color: var(--gray); margin-top: 2px; letter-spacing: 0.5px; }
+    .site-nav { display: flex; gap: 4px; align-items: center; }
+    .nav-link { color: var(--navy); text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 6px; transition: background 0.2s; white-space: nowrap; }
+    .nav-link:hover { background: #f0f0f0; }
+    .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .btn-login { background: transparent; color: var(--navy); border: 1.5px solid #ddd; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .btn-register-event { background: var(--green); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+    .btn-register-event:hover { opacity: 0.9; }
 
-    .hero { background: linear-gradient(135deg, var(--navy) 0%, #16213E 50%, #0F3460 100%); padding: 36px 24px 44px; text-align: center; }
-    .hero-tag { display: inline-block; background: var(--orange); color: white; font-size: 11px; font-weight: 700; letter-spacing: 2px; padding: 4px 14px; border-radius: 12px; margin-bottom: 16px; }
-    .hero h1 { font-size: 26px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 12px; }
-    .hero h1 em { color: var(--orange); font-style: normal; }
-    .hero p { color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.8; max-width: 480px; margin: 0 auto 24px; }
-    .hero-keywords { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .hero-keyword { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+    /* ========== HERO ========== */
+    .hero-section { background: linear-gradient(160deg, #E8F5E9 0%, #F1F8E9 40%, #FFF8E1 100%); overflow: hidden; position: relative; min-height: 380px; display: flex; align-items: stretch; }
+    .hero-content { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; padding: 48px 28px 40px; gap: 32px; }
+    .hero-text { flex: 1; z-index: 2; }
+    .hero-title { font-size: 42px; font-weight: 900; color: #2a6e3f; line-height: 1.25; margin-bottom: 16px; letter-spacing: -1px; }
+    .hero-desc { font-size: 14px; line-height: 1.9; color: #555; margin-bottom: 0; max-width: 380px; }
+    .hero-illustration { flex: 1; position: relative; min-height: 280px; display: flex; align-items: center; justify-content: center; }
+    .hero-art { width: 100%; max-width: 480px; height: 280px; background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 30%, #fff9c4 60%, #b3e5fc 100%); border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    .hero-art-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 80px; letter-spacing: -4px; opacity: 0.85; }
+    .hero-art-banner { position: absolute; top: 12px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #2a6e3f; }
+    .hero-art-flags { position: absolute; top: 0; left: 0; right: 0; height: 32px; display: flex; gap: 0; }
+    .hero-flag { flex: 1; height: 32px; }
 
-    /* FILTER */
-    .filter-section { background: white; padding: 16px 24px; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    /* ========== ACTION CARDS ========== */
+    .action-section { background: white; padding: 32px 28px 0; }
+    .action-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+    .action-card { border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start; }
+    .action-card-plan { background: #F8FFF8; border: 2px solid #C8E6C9; }
+    .action-card-experience { background: #FFFAF7; border: 2px solid #FFD5B8; }
+    .action-card-icon-box { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+    .action-card-plan .action-card-icon-box { background: #E8F5E9; }
+    .action-card-experience .action-card-icon-box { background: #FFF3E0; }
+    .action-card-body { flex: 1; }
+    .action-card-tag { font-size: 10px; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+    .action-card-plan .action-card-tag { color: var(--green); }
+    .action-card-experience .action-card-tag { color: var(--orange); }
+    .action-card-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; color: var(--navy); }
+    .action-card-sub { font-size: 12px; font-weight: 700; color: var(--gray); margin-bottom: 10px; }
+    .action-card-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 16px; }
+    .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-outline-green { background: white; color: var(--green); border: 2px solid var(--green); padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .btn-outline-green:hover { background: var(--green); color: white; }
+    .btn-solid-green { background: var(--green); color: white; border: none; padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+    .btn-solid-green:hover { opacity: 0.9; }
+    .btn-solid-orange { background: var(--orange); color: white; border: none; padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+    .btn-solid-orange:hover { opacity: 0.9; }
+    .btn-outline-orange { background: white; color: var(--orange); border: 2px solid var(--orange); padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .btn-outline-orange:hover { background: var(--orange); color: white; }
+    .action-note { max-width: 1200px; margin: 16px auto 0; padding: 12px 0 0; border-top: 1px solid #eee; display: flex; gap: 24px; flex-wrap: wrap; }
+    .action-note span { font-size: 12px; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+
+    /* ========== TRUST BADGES ========== */
+    .trust-section { background: white; padding: 20px 28px 28px; }
+    .trust-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .trust-item { display: flex; gap: 12px; align-items: flex-start; padding: 16px; background: #F8F9FA; border-radius: 12px; }
+    .trust-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .trust-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .trust-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+
+    /* ========== EVENTS SECTION (Horizontal Scroll) ========== */
+    .events-section { padding: 36px 0 0; background: #FAFAF8; }
+    .section-header-row { display: flex; align-items: center; justify-content: space-between; padding: 0 28px; margin-bottom: 16px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .section-title-lg { font-size: 18px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+    .section-link { font-size: 13px; color: var(--orange); font-weight: 700; text-decoration: none; cursor: pointer; }
+
+    /* Filter row */
+    .filter-section { background: #FAFAF8; padding: 0 28px 16px; }
+    .filter-inner { max-width: 1200px; margin: 0 auto; }
     .filter-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--gray); margin-bottom: 8px; }
     .filter-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filter-tag { background: var(--light); border: 1.5px solid #e0e0e0; color: var(--navy); padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-weight: 600; white-space: nowrap; }
+    .filter-tag { background: white; border: 1.5px solid #e0e0e0; color: var(--navy); padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-weight: 600; white-space: nowrap; }
     .filter-tag:hover { border-color: var(--orange); color: var(--orange); }
     .filter-tag.active { background: var(--orange); border-color: var(--orange); color: white; }
 
-    /* MAIN */
-    main { padding: 24px 16px 80px; max-width: 960px; margin: 0 auto; }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    /* Horizontal scroll */
+    .events-scroll { overflow-x: auto; padding: 8px 28px 24px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .events-scroll::-webkit-scrollbar { display: none; }
+    .events-row { display: flex; gap: 16px; width: max-content; }
+    .event-card { width: 240px; background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0; }
+    .event-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.14); }
+    .card-thumb { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; }
+    .card-cat-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 8px; }
+    .card-body { padding: 14px; }
+    .card-title { font-size: 14px; font-weight: 800; line-height: 1.4; margin-bottom: 8px; color: var(--navy); }
+    .card-meta-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .card-meta { font-size: 11px; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+    .card-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+    .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+    .badge-participate { background: #E8F5E9; color: #2D9E6B; }
+    .badge-help { background: #FFF3E0; color: #FF6B35; }
+
+    /* EVENT GRID (fallback for all events view) */
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding: 0 28px; }
+
+    /* ========== CONTENT BOXES ========== */
+    .content-section { padding: 36px 28px 40px; background: #FAFAF8; }
+    .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+    .content-box { border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start; }
+    .content-box-idea { background: linear-gradient(135deg, #FFF9C4, #FFF3E0); }
+    .content-box-about { background: linear-gradient(135deg, #E8F5E9, #F1F8E9); }
+    .content-box-icon { font-size: 48px; flex-shrink: 0; }
+    .content-box-body { flex: 1; }
+    .content-box-title { font-size: 16px; font-weight: 900; color: var(--navy); margin-bottom: 8px; line-height: 1.4; }
+    .content-box-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 16px; }
+    .btn-content { display: inline-flex; align-items: center; gap: 6px; background: var(--green); color: white; border: none; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
+    .btn-content:hover { opacity: 0.9; }
+    .btn-content-outline { display: inline-flex; align-items: center; gap: 6px; background: white; color: var(--navy); border: 2px solid #ddd; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; transition: border-color 0.2s; }
+    .btn-content-outline:hover { border-color: var(--green); color: var(--green); }
+
+    /* ========== ORG SECTION ========== */
+    .org-section { padding: 36px 28px; background: white; }
+    .org-section-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; max-width: 1200px; margin-left: auto; margin-right: auto; margin-bottom: 16px; }
+    .org-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; max-width: 1200px; margin: 0 auto; }
+    .org-card { background: #F8F9FA; border-radius: 12px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: flex; gap: 12px; align-items: flex-start; }
+    .org-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--orange), #ff9a6c); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .org-info { flex: 1; min-width: 0; }
+    .org-name { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+    .org-type-badge { font-size: 10px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+    .org-desc-short { font-size: 12px; color: #555; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* ========== MODAL (event) ========== */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; border-radius: 24px 24px 0 0; width: 100%; max-width: 640px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 14px auto 0; }
+    .modal-header { padding: 20px 24px 16px; }
+    .modal-category { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 12px; margin-bottom: 12px; }
+    .modal-title { font-size: 22px; font-weight: 900; line-height: 1.4; margin-bottom: 6px; }
+    .modal-organizer { font-size: 13px; color: var(--gray); font-weight: 600; }
+    .modal-body { padding: 0 24px 24px; }
+    .modal-desc { font-size: 14px; line-height: 1.8; color: #333; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .info-item { background: var(--light); border-radius: 12px; padding: 12px; }
+    .info-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px; }
+    .info-item-value { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .knowhow-section { background: #FFFDF0; border: 1px solid #FFE082; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .knowhow-title { font-size: 12px; font-weight: 700; color: #F57F17; letter-spacing: 1px; margin-bottom: 8px; }
+    .knowhow-text { font-size: 13px; line-height: 1.7; color: #555; }
+    .tools-section { background: #F3E5F5; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .tools-title { font-size: 12px; font-weight: 700; color: #7B1FA2; letter-spacing: 1px; margin-bottom: 8px; }
+    .tools-text { font-size: 13px; line-height: 1.7; color: #555; }
+
+    /* ORG PROFILE in modal */
+    .org-profile-box { background: #F0F7FF; border: 1px solid #BBDEFB; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .org-profile-label { font-size: 11px; font-weight: 700; color: #1565C0; letter-spacing: 1px; margin-bottom: 10px; }
+    .org-profile-inner { display: flex; gap: 12px; align-items: flex-start; }
+    .org-profile-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--orange), #ff9a6c); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .org-profile-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+    .org-profile-type { font-size: 11px; color: var(--orange); font-weight: 700; margin-bottom: 6px; }
+    .org-profile-desc { font-size: 12px; line-height: 1.6; color: #555; }
+    .org-profile-links { display: flex; gap: 8px; margin-top: 8px; }
+    .org-profile-link { font-size: 11px; color: #1565C0; text-decoration: none; font-weight: 600; }
+
+    /* FORM (participation) */
+    .form-section { background: var(--navy); border-radius: 16px; padding: 20px; color: white; }
+    .form-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .form-subtitle { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .form-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .form-tab { flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .form-tab.active { background: var(--orange); border-color: var(--orange); color: white; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 6px; letter-spacing: 1px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 14px; color: white; font-size: 14px; outline: none; }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--orange); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group select option { background: var(--navy); color: white; }
+    .submit-btn { width: 100%; background: var(--orange); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .success-msg { text-align: center; padding: 20px; color: #4CAF50; font-weight: 700; font-size: 15px; display: none; }
+    .modal-close { position: fixed; top: 16px; right: 16px; background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1001; display: none; align-items: center; justify-content: center; }
+    .modal-close.show { display: flex; }
+
+    /* ========== ORG REGISTER MODAL ========== */
+    .org-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .org-modal-overlay.show { display: flex; }
+    .org-modal { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; }
+    .org-modal-header { background: var(--navy); color: white; padding: 20px 24px; border-radius: 20px 20px 0 0; position: sticky; top: 0; z-index: 10; }
+    .org-modal-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+    .org-modal-subtitle { font-size: 12px; color: rgba(255,255,255,0.6); }
+    .org-modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    /* STEP INDICATOR */
+    .step-indicator { display: flex; align-items: center; padding: 16px 24px; background: #F8F9FA; border-bottom: 1px solid #eee; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.3s; }
+    .step-dot.active { background: var(--orange); color: white; }
+    .step-dot.done { background: var(--green); color: white; }
+    .step-dot.pending { background: #e0e0e0; color: #999; }
+    .step-label { font-size: 10px; color: #999; margin-top: 2px; white-space: nowrap; }
+    .step-active-label { color: var(--orange); font-weight: 700; }
+    .step-line { flex: 1; height: 2px; background: #e0e0e0; margin: 0 6px; }
+    .step-line.done { background: var(--green); }
+    .step-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+
+    /* FORM STEP CONTENT */
+    .org-form-body { padding: 24px; }
+    .org-step-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .org-step-desc { font-size: 12px; color: var(--gray); margin-bottom: 20px; line-height: 1.6; }
+    .org-form-group { margin-bottom: 16px; }
+    .org-form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .org-form-group label .required { color: var(--orange); margin-left: 4px; }
+    .org-form-group input, .org-form-group textarea, .org-form-group select { width: 100%; border: 1.5px solid #e0e0e0; border-radius: 10px; padding: 10px 14px; font-size: 14px; outline: none; color: var(--navy); background: white; transition: border-color 0.2s; }
+    .org-form-group input:focus, .org-form-group textarea:focus, .org-form-group select:focus { border-color: var(--orange); }
+    .org-form-group textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    .org-form-group .hint { font-size: 11px; color: var(--gray); margin-top: 4px; line-height: 1.5; }
+    .org-form-group .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .org-form-group .radio-btn { padding: 8px 14px; border: 1.5px solid #e0e0e0; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+    .org-form-group .radio-btn.selected { background: var(--orange); border-color: var(--orange); color: white; }
+    .org-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Terms */
+    .terms-box { background: var(--light); border-radius: 12px; padding: 16px; margin-bottom: 16px; max-height: 200px; overflow-y: auto; font-size: 12px; line-height: 1.8; color: #555; }
+    .terms-box h4 { font-size: 13px; color: var(--navy); margin-bottom: 8px; }
+    .checkbox-group { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+    .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--orange); flex-shrink: 0; }
+    .checkbox-group span { font-size: 13px; line-height: 1.6; color: var(--navy); font-weight: 600; }
+
+    /* Review pending */
+    .review-pending { text-align: center; padding: 40px 24px; }
+    .review-icon { font-size: 64px; margin-bottom: 16px; }
+    .review-title { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+    .review-desc { font-size: 14px; color: var(--gray); line-height: 1.8; margin-bottom: 24px; }
+    .review-steps { text-align: left; background: var(--light); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    .review-step { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .review-step:last-child { border-bottom: none; }
+    .review-step-icon { font-size: 20px; flex-shrink: 0; }
+    .review-step-text { font-size: 13px; color: #555; line-height: 1.6; }
+    .review-step-text strong { color: var(--navy); }
+
+    /* STEP NAV */
+    .step-nav { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid #eee; background: white; border-radius: 0 0 20px 20px; position: sticky; bottom: 0; }
+    .btn-prev { flex: 1; background: #f0f0f0; color: var(--navy); border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-next { flex: 2; background: var(--orange); color: white; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; }
+    .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* LOADING / EMPTY */
+    .loading { text-align: center; padding: 60px 20px; color: var(--gray); }
+    .spinner { width: 40px; height: 40px; border: 3px solid #eee; border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
+    .empty-emoji { font-size: 48px; margin-bottom: 12px; }
+
+    /* CAT COLORS */
+    .cat-1 { background: #E8F5E9; color: #2D9E6B; }
+    .cat-2 { background: #E3F2FD; color: #1565C0; }
+    .cat-3 { background: #F3E5F5; color: #7B1FA2; }
+    .cat-4 { background: #FFF3E0; color: #E65100; }
+    .cat-5 { background: #FCE4EC; color: #C62828; }
+    .cat-6 { background: #F9FBE7; color: #827717; }
+    .cat-7 { background: #E8EAF6; color: #283593; }
+    .cat-8 { background: #EFEBE9; color: #4E342E; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 32px 24px; font-size: 12px; line-height: 1.8; }
+    footer strong { color: white; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 28px; }
+      .hero-illustration { display: none; }
+      .action-cards { grid-template-columns: 1fr; }
+      .trust-grid { grid-template-columns: 1fr 1fr; }
+      .content-grid { grid-template-columns: 1fr; }
+      .site-nav { display: none; }
+      .header-actions .btn-login { display: none; }
+      .org-form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .trust-grid { grid-template-columns: 1fr; }
+      .header-inner { padding: 10px 16px; }
+    }
     .section-title { font-size: 16px; font-weight: 800; color: var(--navy); }
     .event-count { font-size: 12px; color: var(--gray); }
 
@@ -240,78 +490,188 @@
 </head>
 <body>
 
-<header>
-  <div class="header-top">
-    <div class="logo">
-      <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
-      <div class="logo-sub">あつまる · つくる · あそぶ</div>
-    </div>
-    <div class="header-nav">
-      <button class="btn-org-register" onclick="openOrgRegister()">団体登録する</button>
-      <button class="header-cta" onclick="openEventRegisterInfo()">イベント掲載</button>
-    </div>
-  </div>
-  <div class="hero">
-    <div class="hero-tag">ASOBI · CREATE · CONNECT</div>
-    <h1>受け手じゃなく、<br><em>自ら仕掛ける人</em>になろう</h1>
-    <p>地域のイベントを発見して、参加して、一緒につくる。<br>おやじの会・まち道楽・カヌー部・にぎわいプロジェクト…<br>あなたの街のMAKERSがここにいる。</p>
-    <div class="hero-keywords">
-      <span class="hero-keyword">🌿 自然体験</span>
-      <span class="hero-keyword">🌊 川あそび</span>
-      <span class="hero-keyword">🏙️ まちあそび</span>
-      <span class="hero-keyword">🎉 お祭り</span>
+<!-- ========== HEADER ========== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="#events-section" class="nav-link">事例を見る</a>
+      <a href="#events-section" class="nav-link">あそびを探す</a>
+      <a href="#events-section" class="nav-link">手伝いを探す</a>
+      <a href="#about-section" class="nav-link">このサイトについて</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-login">登録団体ログイン</button>
+      <button class="btn-register-event" onclick="openOrgRegister()">✏️ あそびを登録する</button>
     </div>
   </div>
 </header>
 
-<div class="filter-section">
-  <div class="filter-label">CATEGORY</div>
-  <div class="filter-tags" id="filterTags">
-    <button class="filter-tag active" data-cat="all">すべて</button>
-  </div>
-</div>
-
-<main>
-  <!-- イベント一覧 -->
-  <div class="section-header">
-    <div class="section-title">イベント一覧</div>
-    <div class="event-count" id="eventCount">読み込み中...</div>
-  </div>
-  <div class="events-grid" id="eventsGrid">
-    <div class="loading">
-      <div class="spinner"></div>
-      <div>イベントを読み込んでいます...</div>
+<!-- ========== HERO ========== -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title">やってみたい！<br>を、カタチにしよう。</h1>
+      <p class="hero-desc">地域のあそびやイベント、体験活動。<br>あなたの「やってみたい」が、<br>誰かの「参加したい」「手伝いたい」につながります。<br>さあ、一緒にあそびを広げていこう！</p>
     </div>
-  </div>
-
-  <!-- 団体登録バナー -->
-  <div class="org-banner" style="margin-top:40px">
-    <div class="org-banner-icon">🏘️</div>
-    <div class="org-banner-content">
-      <div class="org-banner-label">ORGANIZER REGISTRATION</div>
-      <div class="org-banner-title">あなたの団体をASОBI CREATE PARKに掲載しませんか？</div>
-      <div class="org-banner-desc">おやじの会・地域NPO・任意団体・自治会など、世田谷で活動するすべての団体が対象です。<br>審査通過後、自由にイベントを掲載できるようになります。</div>
-      <div class="org-banner-steps">
-        <div class="org-step"><div class="org-step-num">1</div><div class="org-step-text">団体情報を登録</div></div>
-        <div style="color:rgba(255,255,255,0.3);font-size:18px;line-height:24px">→</div>
-        <div class="org-step"><div class="org-step-num">2</div><div class="org-step-text">事務局が審査（3〜7営業日）</div></div>
-        <div style="color:rgba(255,255,255,0.3);font-size:18px;line-height:24px">→</div>
-        <div class="org-step"><div class="org-step-num">3</div><div class="org-step-text">承認後、イベント掲載OK!</div></div>
-      </div>
-      <button class="btn-apply" onclick="openOrgRegister()">無料で団体登録する →</button>
-    </div>
-  </div>
-
-  <!-- 登録団体一覧 -->
-  <div class="org-section">
-    <div class="org-section-title">🏅 登録団体</div>
-    <div class="org-grid" id="orgGrid">
-      <div class="loading" style="grid-column:1/-1">
-        <div class="spinner"></div>
+    <div class="hero-illustration">
+      <div class="hero-art">
+        <div class="hero-art-flags">
+          <div class="hero-flag" style="background:#FF6B35"></div>
+          <div class="hero-flag" style="background:#FFD600"></div>
+          <div class="hero-flag" style="background:#2D9E6B"></div>
+          <div class="hero-flag" style="background:#42A5F5"></div>
+          <div class="hero-flag" style="background:#AB47BC"></div>
+          <div class="hero-flag" style="background:#FF6B35"></div>
+          <div class="hero-flag" style="background:#FFD600"></div>
+          <div class="hero-flag" style="background:#2D9E6B"></div>
+        </div>
+        <div class="hero-art-content">🌳🧒🎨👨🛶🌊🎪</div>
+        <div style="position:absolute;bottom:12px;right:16px;font-size:11px;font-weight:800;color:#2a6e3f;letter-spacing:1px">TODAY! ASOBI PARK</div>
       </div>
     </div>
   </div>
-</main>
+</section>
+
+<!-- ========== ACTION CARDS ========== -->
+<section class="action-section">
+  <div class="action-cards">
+    <!-- 企画する -->
+    <div class="action-card action-card-plan">
+      <div class="action-card-icon-box">💡</div>
+      <div class="action-card-body">
+        <div class="action-card-tag">PLAN</div>
+        <div class="action-card-title">あそびを企画する</div>
+        <div class="action-card-sub">あそびを生み出し、地域にひらく</div>
+        <div class="action-card-desc">企画のヒントや事例を見つけて、<br>イベントや体験活動を登録しましょう。</div>
+        <div class="action-btns">
+          <button class="btn-outline-green" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">📖 事例・ヒントを見る</button>
+          <button class="btn-solid-green" onclick="openOrgRegister()">✏️ あそびを登録する</button>
+        </div>
+      </div>
+    </div>
+    <!-- 体験する -->
+    <div class="action-card action-card-experience">
+      <div class="action-card-icon-box">📍</div>
+      <div class="action-card-body">
+        <div class="action-card-tag">EXPERIENCE</div>
+        <div class="action-card-title">あそびを体験する</div>
+        <div class="action-card-sub">参加したり、手伝ったりして楽しむ</div>
+        <div class="action-card-desc">地域のあそびやイベントを探して、<br>参加したり、サポートしたりしてみましょう。</div>
+        <div class="action-btns">
+          <button class="btn-solid-orange" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">🗓️ あそびを探す（参加する）</button>
+          <button class="btn-outline-orange" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">🤝 手伝えるあそびを探す</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="action-note">
+    <span>👁 見る・探すだけなら登録は不要です。</span>
+    <span>✅ あそびの登録・編集は、認証済みの団体のみ可能です。 →</span>
+  </div>
+</section>
+
+<!-- ========== TRUST BADGES ========== -->
+<section class="trust-section">
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon">🛡️</div>
+      <div>
+        <div class="trust-title">認証済み団体のみ掲載</div>
+        <div class="trust-desc">運営が審査・確認した団体のあそびやイベントだけを掲載。安心してご利用いただけます。</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">✉️</div>
+      <div>
+        <div class="trust-title">公開問い合わせ対応</div>
+        <div class="trust-desc">主催団体の連絡先が公開されているので、気になるあそびに直接問い合わせできます。</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🔒</div>
+      <div>
+        <div class="trust-title">安心・安全な仕組み</div>
+        <div class="trust-desc">ガイドラインに基づく運営で、個人情報の保護や安全対策を徹底しています。</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🌐</div>
+      <div>
+        <div class="trust-title">全国・世界へひろがる</div>
+        <div class="trust-desc">日本全国の地域から、グローバルな活動まで、あそびの輪を広げていきます。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== EVENTS SECTION ========== -->
+<section class="events-section" id="events-section">
+  <div class="section-header-row" style="margin-bottom:12px">
+    <div class="section-title-lg">🏳️ 新着のあそび</div>
+    <span class="section-link" id="eventCount">読み込み中...</span>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-section">
+    <div class="filter-inner">
+      <div class="filter-tags" id="filterTags">
+        <button class="filter-tag active" data-cat="all" onclick="filterBy('all', this)">すべて</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Horizontal scroll cards -->
+  <div class="events-scroll">
+    <div class="events-row" id="eventsGrid">
+      <div class="loading"><div class="spinner"></div><div>読み込み中...</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTENT SECTION ========== -->
+<section class="content-section" id="about-section">
+  <div class="content-grid">
+    <div class="content-box content-box-idea">
+      <div class="content-box-icon">💡</div>
+      <div class="content-box-body">
+        <div class="content-box-title">あそびのアイデアや<br>ヒントが見つかる！</div>
+        <div class="content-box-desc">年齢や目的、場所、季節などから、いろいろなあそびや事例を探せます。</div>
+        <button class="btn-content" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">事例・ヒントをもっと見る →</button>
+      </div>
+    </div>
+    <div class="content-box content-box-about">
+      <div class="content-box-icon">🌿</div>
+      <div class="content-box-body">
+        <div class="content-box-title">ASOBI CREATE PARKについて</div>
+        <div class="content-box-desc">このサイトは、地域のあそびや体験活動を通して、人と人がつながり、笑顔が広がる社会を目指すプロジェクトです。</div>
+        <button class="btn-content-outline">コンセプト・想いを見る →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 登録団体一覧 ========== -->
+<section class="org-section">
+  <div class="org-section-title">🏅 登録団体</div>
+  <div class="org-grid" id="orgGrid">
+    <div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
+    <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
+    © 2024 世田谷区地域あそびプラットフォーム
+  </div>
+</footer>
 
 <!-- イベント詳細モーダル -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
@@ -610,27 +970,39 @@
     renderEvents();
   }
 
+  const THUMB_GRADIENTS = [
+    'linear-gradient(135deg,#a5d6a7,#81c784)',
+    'linear-gradient(135deg,#90caf9,#64b5f6)',
+    'linear-gradient(135deg,#ce93d8,#ba68c8)',
+    'linear-gradient(135deg,#ffcc80,#ffa726)',
+    'linear-gradient(135deg,#f48fb1,#e91e63)',
+    'linear-gradient(135deg,#e6ee9c,#cddc39)',
+    'linear-gradient(135deg,#80cbc4,#26a69a)',
+    'linear-gradient(135deg,#bcaaa4,#8d6e63)',
+  ];
+
   function renderEvents() {
     const filtered = currentCat === 'all' ? allEvents : allEvents.filter(e => e.category_id == currentCat);
-    document.getElementById('eventCount').textContent = `${filtered.length}件`;
+    document.getElementById('eventCount').textContent = `すべてを見る（${filtered.length}件）→`;
     const grid = document.getElementById('eventsGrid');
-    if (filtered.length === 0) { grid.innerHTML = '<div class="empty"><div class="empty-emoji">🔍</div><div>該当するイベントが見つかりません</div></div>'; return; }
-    grid.innerHTML = filtered.map(ev => {
+    if (filtered.length === 0) { grid.innerHTML = '<div class="empty" style="min-width:200px"><div class="empty-emoji">🔍</div><div>該当するイベントが見つかりません</div></div>'; return; }
+    grid.innerHTML = filtered.map((ev, idx) => {
       const cat = ev.event_categories;
       const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
+      const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
+      const emoji = cat ? cat.emoji : '🎪';
       return `
       <div class="event-card" onclick="openModal(${ev.id})">
-        <div class="card-header">
-          <div class="card-category ${catClass}">${cat ? cat.emoji + ' ' + cat.name : ''}</div>
-          <div class="card-title">${ev.title}</div>
-          <div class="card-organizer">📍 ${ev.organizer_name}</div>
+        <div class="card-thumb" style="background:${grad}">
+          <span style="font-size:52px">${emoji}</span>
+          <div class="card-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
         </div>
-        <div class="card-body"><div class="card-desc">${ev.description || ''}</div></div>
-        <div class="card-footer">
-          <div style="display:flex;gap:12px;flex-wrap:wrap;width:100%">
+        <div class="card-body">
+          <div class="card-title">${ev.title}</div>
+          <div class="card-meta-row">
             <div class="card-meta">🗓️ ${ev.event_date || '時期未定'}</div>
+            <div class="card-meta">📍 ${ev.location || ev.organizer_name}</div>
             <div class="card-meta">👥 ${ev.target_audience || '全年齢'}</div>
-            <div class="card-meta">💴 ${ev.fee || '無料'}</div>
           </div>
           <div class="card-badges">
             ${ev.can_participate ? '<span class="badge badge-participate">✋ 参加できる</span>' : ''}
