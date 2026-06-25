@@ -1246,7 +1246,8 @@
     if (n === 3) {
       if (!document.getElementById('s3_rep_name').value.trim()) { alert('代表者名を入力してください'); return false; }
       if (!document.getElementById('s3_email').value.trim()) { alert('メールアドレスを入力してください'); return false; }
-      if (!emailVerified) { alert('メールアドレスの認証が必要です。\nコードを送って確認してください。'); return false; }
+      // メール認証はオプション（デモ用：レート制限のため任意）
+      // if (!emailVerified) { alert('メールアドレスの認証が必要です。'); return false; }
     }
     if (n === 4) {
       if (!document.getElementById('agree1').checked || !document.getElementById('agree2').checked) {
