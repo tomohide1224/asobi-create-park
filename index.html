@@ -816,19 +816,19 @@
         <label>メールアドレス<span class="required">*</span></label>
         <div style="display:flex;gap:8px;align-items:stretch">
           <input type="email" id="s3_email" placeholder="example@mail.com" style="flex:1">
-          <button type="button" id="btnSendOtp" onclick="sendOtp()" style="background:var(--navy);color:white;border:none;padding:0 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">コードを送る</button>
+          <button type="button" id="btnSendOtp" onclick="sendOtp()" style="background:var(--navy);color:white;border:none;padding:0 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">認証リンクを送る</button>
         </div>
-        <div class="hint">※ 入力したメアドに6桁の認証コードを送ります。</div>
+        <div class="hint">※ 入力したメアドに認証リンクを送ります。</div>
       </div>
 
       <div id="otpBox" style="display:none">
-        <div class="org-form-group">
-          <label>認証コード（6桁）<span class="required">*</span></label>
-          <div style="display:flex;gap:8px;align-items:stretch">
-            <input type="text" id="s3_otp" placeholder="123456" maxlength="6" style="flex:1;letter-spacing:6px;font-size:22px;font-weight:800;text-align:center">
-            <button type="button" id="btnVerifyOtp" onclick="verifyOtpCode()" style="background:var(--green);color:white;border:none;padding:0 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">確認する</button>
-          </div>
-          <div id="otpStatus" class="hint" style="margin-top:6px"></div>
+        <div style="background:#EEF7FF;border:1.5px solid #90CAF9;border-radius:12px;padding:16px;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:700;color:#1565C0;margin-bottom:6px">📧 メールを確認してください</div>
+          <div id="otpStatus" style="font-size:13px;color:#555;line-height:1.7"></div>
+          <div style="font-size:12px;color:#888;margin-top:8px">メール内の「Sign in」リンクをクリックすると、このページで自動的に認証が完了します。</div>
+        </div>
+        <div id="otpVerifiedBox" style="display:none;background:#E8F5E9;border:1.5px solid #A5D6A7;border-radius:12px;padding:14px">
+          <div style="font-size:14px;font-weight:800;color:#2D9E6B">✅ メールアドレスの確認が完了しました！</div>
         </div>
       </div>
 
@@ -1130,47 +1130,50 @@
   let currentStep = 1;
   let emailVerified = false;
 
+  let otpPollInterval = null;
+
   async function sendOtp() {
     const email = document.getElementById('s3_email').value.trim();
     if (!email || !email.includes('@')) { alert('正しいメールアドレスを入力してください'); return; }
     const btn = document.getElementById('btnSendOtp');
     btn.disabled = true; btn.textContent = '送信中...';
-    const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    const redirectTo = window.location.origin + window.location.pathname;
+    const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: redirectTo } });
     if (error) {
       alert('送信に失敗しました: ' + error.message);
-      btn.disabled = false; btn.textContent = 'コードを送る';
+      btn.disabled = false; btn.textContent = '認証リンクを送る';
     } else {
       document.getElementById('otpBox').style.display = 'block';
       btn.textContent = '再送信';
       btn.disabled = false;
       document.getElementById('s3_email').readOnly = true;
-      const status = document.getElementById('otpStatus');
-      status.style.color = 'var(--gray)';
-      status.textContent = `📧 ${email} に6桁コードを送りました。メールをご確認ください。`;
+      document.getElementById('otpStatus').textContent = `${email} に認証リンクを送りました。メールを開いて「Sign in」をクリックしてください。`;
+      // Poll for auth session (Supabase syncs via localStorage across tabs)
+      startOtpPoll(email);
     }
   }
 
-  async function verifyOtpCode() {
-    const email = document.getElementById('s3_email').value.trim();
-    const token = document.getElementById('s3_otp').value.trim();
-    if (!token || token.length < 6) { alert('6桁のコードを入力してください'); return; }
-    const btn = document.getElementById('btnVerifyOtp');
-    btn.disabled = true; btn.textContent = '確認中...';
-    const { error } = await client.auth.verifyOtp({ email, token, type: 'email' });
-    const status = document.getElementById('otpStatus');
-    if (error) {
-      status.style.color = '#e53935';
-      status.textContent = '❌ コードが間違っています。再度お試しください。';
-      btn.disabled = false; btn.textContent = '確認する';
-    } else {
-      emailVerified = true;
-      status.style.color = 'var(--green)';
-      status.textContent = '✅ メールアドレスの確認が完了しました！';
-      document.getElementById('s3_otp').disabled = true;
-      btn.textContent = '✓ 確認済み';
-      btn.style.background = '#bdbdbd';
-    }
+  function startOtpPoll(email) {
+    if (otpPollInterval) clearInterval(otpPollInterval);
+    otpPollInterval = setInterval(async () => {
+      const { data: { session } } = await client.auth.getSession();
+      if (session && session.user && session.user.email === email) {
+        clearInterval(otpPollInterval);
+        otpPollInterval = null;
+        emailVerified = true;
+        document.getElementById('otpBox').style.display = 'block';
+        document.getElementById('otpVerifiedBox').style.display = 'block';
+        document.getElementById('otpStatus').textContent = '';
+        document.getElementById('btnSendOtp').textContent = '✓ 認証済み';
+        document.getElementById('btnSendOtp').disabled = true;
+        document.getElementById('btnSendOtp').style.background = '#bdbdbd';
+      }
+    }, 2000);
+    // Stop polling after 10 minutes
+    setTimeout(() => { if (otpPollInterval) { clearInterval(otpPollInterval); otpPollInterval = null; } }, 600000);
   }
+
+  async function verifyOtpCode() { /* legacy - unused */ }
 
   function openOrgRegister() {
     currentStep = 1;
@@ -1185,16 +1188,15 @@
     currentStep = 1; emailVerified = false;
     showStep(1);
     // OTPリセット
+    if (otpPollInterval) { clearInterval(otpPollInterval); otpPollInterval = null; }
     document.getElementById('otpBox').style.display = 'none';
+    document.getElementById('otpVerifiedBox').style.display = 'none';
     document.getElementById('s3_email').readOnly = false;
-    document.getElementById('s3_otp').disabled = false;
-    document.getElementById('s3_otp').value = '';
+    document.getElementById('s3_email').value = '';
     document.getElementById('otpStatus').textContent = '';
     document.getElementById('btnSendOtp').disabled = false;
-    document.getElementById('btnSendOtp').textContent = 'コードを送る';
-    document.getElementById('btnVerifyOtp').disabled = false;
-    document.getElementById('btnVerifyOtp').textContent = '確認する';
-    document.getElementById('btnVerifyOtp').style.background = 'var(--green)';
+    document.getElementById('btnSendOtp').textContent = '認証リンクを送る';
+    document.getElementById('btnSendOtp').style.background = 'var(--navy)';
   }
 
   function showStep(n) {
