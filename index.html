@@ -17,231 +17,49 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', sans-serif; background: var(--light); color: var(--navy); }
 
-    /* HEADER */
-    header {
-      background: var(--navy);
-      color: white;
-      padding: 0;
-    }
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 24px;
-    }
-    .logo {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-    }
-    .logo-main {
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: white;
-    }
+    header { background: var(--navy); color: white; padding: 0; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+    .logo { display: flex; flex-direction: column; line-height: 1; }
+    .logo-main { font-size: 26px; font-weight: 900; letter-spacing: 2px; color: white; }
     .logo-main span { color: var(--orange); }
-    .logo-sub {
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.6);
-      margin-top: 4px;
-    }
-    .header-cta {
-      background: var(--orange);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 24px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .hero {
-      background: linear-gradient(135deg, var(--navy) 0%, #16213E 50%, #0F3460 100%);
-      padding: 40px 24px 48px;
-      text-align: center;
-    }
-    .hero-tag {
-      display: inline-block;
-      background: var(--orange);
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      padding: 4px 14px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-    }
-    .hero h1 {
-      font-size: 28px;
-      font-weight: 900;
-      color: white;
-      line-height: 1.4;
-      margin-bottom: 12px;
-    }
-    .hero h1 em {
-      color: var(--orange);
-      font-style: normal;
-    }
-    .hero p {
-      color: rgba(255,255,255,0.75);
-      font-size: 14px;
-      line-height: 1.8;
-      max-width: 480px;
-      margin: 0 auto 28px;
-    }
-    .hero-keywords {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .hero-keyword {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 700;
-    }
+    .logo-sub { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .header-cta { background: var(--orange); color: white; border: none; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .hero { background: linear-gradient(135deg, var(--navy) 0%, #16213E 50%, #0F3460 100%); padding: 40px 24px 48px; text-align: center; }
+    .hero-tag { display: inline-block; background: var(--orange); color: white; font-size: 11px; font-weight: 700; letter-spacing: 2px; padding: 4px 14px; border-radius: 12px; margin-bottom: 16px; }
+    .hero h1 { font-size: 28px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 12px; }
+    .hero h1 em { color: var(--orange); font-style: normal; }
+    .hero p { color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.8; max-width: 480px; margin: 0 auto 28px; }
+    .hero-keywords { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-keyword { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; }
 
-    /* FILTER */
-    .filter-section {
-      background: white;
-      padding: 20px 24px;
-      border-bottom: 1px solid #eee;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .filter-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--gray);
-      margin-bottom: 10px;
-    }
-    .filter-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .filter-tag {
-      background: var(--light);
-      border: 1.5px solid #e0e0e0;
-      color: var(--navy);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 600;
-      white-space: nowrap;
-    }
+    .filter-section { background: white; padding: 20px 24px; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .filter-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--gray); margin-bottom: 10px; }
+    .filter-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-tag { background: var(--light); border: 1.5px solid #e0e0e0; color: var(--navy); padding: 6px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-weight: 600; white-space: nowrap; }
     .filter-tag:hover { border-color: var(--orange); color: var(--orange); }
     .filter-tag.active { background: var(--orange); border-color: var(--orange); color: white; }
 
-    /* MAIN */
     main { padding: 24px 16px 80px; max-width: 900px; margin: 0 auto; }
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .section-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--navy);
-    }
-    .event-count {
-      font-size: 12px;
-      color: var(--gray);
-    }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-title { font-size: 16px; font-weight: 800; color: var(--navy); }
+    .event-count { font-size: 12px; color: var(--gray); }
 
-    /* EVENT CARDS */
-    .events-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .event-card {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .event-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
     .event-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
-    .card-header {
-      padding: 20px 20px 12px;
-      position: relative;
-    }
-    .card-category {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-    .card-title {
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.4;
-      margin-bottom: 6px;
-    }
-    .card-organizer {
-      font-size: 12px;
-      color: var(--gray);
-      font-weight: 600;
-    }
+    .card-header { padding: 20px 20px 12px; position: relative; }
+    .card-category { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; margin-bottom: 10px; }
+    .card-title { font-size: 17px; font-weight: 800; line-height: 1.4; margin-bottom: 6px; }
+    .card-organizer { font-size: 12px; color: var(--gray); font-weight: 600; }
     .card-body { padding: 0 20px 16px; }
-    .card-desc {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.7;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .card-footer {
-      padding: 12px 20px 16px;
-      border-top: 1px solid #f0f0f0;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      color: var(--gray);
-    }
-    .card-badges {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 8px;
-    }
+    .card-desc { font-size: 13px; color: #555; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-footer { padding: 12px 20px 16px; border-top: 1px solid #f0f0f0; display: flex; gap: 8px; flex-wrap: wrap; }
+    .card-meta { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--gray); }
+    .card-badges { display: flex; gap: 6px; margin-top: 8px; }
+    .badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 8px; }
     .badge-participate { background: #E8F5E9; color: #2D9E6B; }
     .badge-help { background: #FFF3E0; color: #FF6B35; }
 
-    /* CATEGORY COLORS */
     .cat-1 { background: #E8F5E9; color: #2D9E6B; }
     .cat-2 { background: #E3F2FD; color: #1565C0; }
     .cat-3 { background: #F3E5F5; color: #7B1FA2; }
@@ -251,270 +69,59 @@
     .cat-7 { background: #E8EAF6; color: #283593; }
     .cat-8 { background: #EFEBE9; color: #4E342E; }
 
-    /* MODAL */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 1000;
-      align-items: flex-end;
-      justify-content: center;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; }
     .modal-overlay.show { display: flex; }
-    .modal {
-      background: white;
-      border-radius: 24px 24px 0 0;
-      width: 100%;
-      max-width: 640px;
-      max-height: 92vh;
-      overflow-y: auto;
-      animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .modal-handle {
-      width: 40px; height: 4px;
-      background: #ddd;
-      border-radius: 2px;
-      margin: 14px auto 0;
-    }
-    .modal-header {
-      padding: 20px 24px 16px;
-    }
-    .modal-category {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-    }
-    .modal-title {
-      font-size: 22px;
-      font-weight: 900;
-      line-height: 1.4;
-      margin-bottom: 6px;
-    }
-    .modal-organizer {
-      font-size: 13px;
-      color: var(--gray);
-      font-weight: 600;
-    }
+    .modal { background: white; border-radius: 24px 24px 0 0; width: 100%; max-width: 640px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 14px auto 0; }
+    .modal-header { padding: 20px 24px 16px; }
+    .modal-category { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 12px; margin-bottom: 12px; }
+    .modal-title { font-size: 22px; font-weight: 900; line-height: 1.4; margin-bottom: 6px; }
+    .modal-organizer { font-size: 13px; color: var(--gray); font-weight: 600; }
     .modal-body { padding: 0 24px 24px; }
-    .modal-desc {
-      font-size: 14px;
-      line-height: 1.8;
-      color: #333;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .info-item {
-      background: var(--light);
-      border-radius: 12px;
-      padding: 12px;
-    }
-    .info-item-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--gray);
-      margin-bottom: 4px;
-    }
-    .info-item-value {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--navy);
-    }
-    .knowhow-section {
-      background: #FFFDF0;
-      border: 1px solid #FFE082;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .knowhow-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #F57F17;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .knowhow-text {
-      font-size: 13px;
-      line-height: 1.7;
-      color: #555;
-    }
-    .tools-section {
-      background: #F3E5F5;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    .tools-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #7B1FA2;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .tools-text {
-      font-size: 13px;
-      line-height: 1.7;
-      color: #555;
-    }
+    .modal-desc { font-size: 14px; line-height: 1.8; color: #333; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .info-item { background: var(--light); border-radius: 12px; padding: 12px; }
+    .info-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px; }
+    .info-item-value { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .knowhow-section { background: #FFFDF0; border: 1px solid #FFE082; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .knowhow-title { font-size: 12px; font-weight: 700; color: #F57F17; letter-spacing: 1px; margin-bottom: 8px; }
+    .knowhow-text { font-size: 13px; line-height: 1.7; color: #555; }
+    .tools-section { background: #F3E5F5; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .tools-title { font-size: 12px; font-weight: 700; color: #7B1FA2; letter-spacing: 1px; margin-bottom: 8px; }
+    .tools-text { font-size: 13px; line-height: 1.7; color: #555; }
 
-    /* FORM */
-    .form-section {
-      background: var(--navy);
-      border-radius: 16px;
-      padding: 20px;
-      color: white;
-    }
-    .form-title {
-      font-size: 16px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-    .form-subtitle {
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 16px;
-    }
-    .form-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .form-tab {
-      flex: 1;
-      padding: 8px;
-      border-radius: 10px;
-      border: 1.5px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: rgba(255,255,255,0.6);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
+    .form-section { background: var(--navy); border-radius: 16px; padding: 20px; color: white; }
+    .form-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .form-subtitle { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .form-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .form-tab { flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
     .form-tab.active { background: var(--orange); border-color: var(--orange); color: white; }
     .form-group { margin-bottom: 12px; }
-    .form-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 6px;
-      letter-spacing: 1px;
-    }
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: white;
-      font-size: 14px;
-      outline: none;
-    }
-    .form-group input::placeholder,
-    .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
-    .form-group input:focus,
-    .form-group textarea:focus { border-color: var(--orange); }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 6px; letter-spacing: 1px; }
+    .form-group input, .form-group textarea { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 14px; color: white; font-size: 14px; outline: none; }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--orange); }
     .form-group textarea { resize: vertical; min-height: 80px; }
-    .submit-btn {
-      width: 100%;
-      background: var(--orange);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
+    .submit-btn { width: 100%; background: var(--orange); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
     .submit-btn:hover { opacity: 0.9; }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .success-msg {
-      text-align: center;
-      padding: 20px;
-      color: var(--green);
-      font-weight: 700;
-      font-size: 15px;
-      display: none;
-    }
-    .modal-close {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      z-index: 1001;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
+    .success-msg { text-align: center; padding: 20px; color: var(--green); font-weight: 700; font-size: 15px; display: none; }
+    .modal-close { position: fixed; top: 16px; right: 16px; background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1001; display: none; align-items: center; justify-content: center; }
     .modal-close.show { display: flex; }
 
-    /* LOADING */
-    .loading {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--gray);
-    }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid #eee;
-      border-top-color: var(--orange);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
-    }
+    .loading { text-align: center; padding: 60px 20px; color: var(--gray); }
+    .spinner { width: 40px; height: 40px; border: 3px solid #eee; border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* EMPTY */
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--gray);
-    }
+    .empty { text-align: center; padding: 60px 20px; color: var(--gray); }
     .empty-emoji { font-size: 48px; margin-bottom: 12px; }
 
-    /* FOOTER */
-    footer {
-      background: var(--navy);
-      color: rgba(255,255,255,0.5);
-      text-align: center;
-      padding: 24px;
-      font-size: 12px;
-    }
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
     footer strong { color: white; }
 
     @media (max-width: 480px) {
       .hero h1 { font-size: 22px; }
       .events-grid { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -561,7 +168,6 @@
   </div>
 </main>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
   <button class="modal-close" id="modalClose" onclick="closeModal()">✕</button>
   <div class="modal" id="modal">
@@ -579,31 +185,34 @@
 <script>
   const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const CAT_COLORS = ['','cat-1','cat-2','cat-3','cat-4','cat-5','cat-6','cat-7','cat-8'];
+  let allEvents = [], allCategories = [], currentCat = 'all', currentRequestType = '参加したい';
 
-  let allEvents = [];
-  let allCategories = [];
-  let currentCat = 'all';
-  let currentRequestType = '参加したい';
+  function showError(msg) {
+    document.getElementById('eventsGrid').innerHTML = `<div class="empty"><div class="empty-emoji">⚠️</div><div style="font-size:12px;word-break:break-all;padding:0 16px">${msg}</div></div>`;
+    document.getElementById('eventCount').textContent = 'エラー';
+  }
 
   async function loadData() {
     try {
+      if (typeof window.supabase === 'undefined') {
+        showError('Supabase SDKが読み込めませんでした。ネットワーク接続を確認してください。');
+        return;
+      }
+      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       const [catsResult, eventsResult] = await Promise.all([
-        supabase.from('event_categories').select('*').order('id'),
-        supabase.from('events').select('*, event_categories(name, emoji)').eq('status', 'published').order('id')
+        client.from('event_categories').select('*').order('id'),
+        client.from('events').select('*, event_categories(name, emoji)').eq('status', 'published').order('id')
       ]);
-      if (catsResult.error) console.error('Categories error:', catsResult.error);
-      if (eventsResult.error) console.error('Events error:', eventsResult.error);
+      if (catsResult.error) { showError('カテゴリ取得エラー: ' + JSON.stringify(catsResult.error)); return; }
+      if (eventsResult.error) { showError('イベント取得エラー: ' + JSON.stringify(eventsResult.error)); return; }
       allCategories = catsResult.data || [];
       allEvents = eventsResult.data || [];
       renderFilters();
       renderEvents();
     } catch (e) {
-      console.error('loadData failed:', e);
-      document.getElementById('eventsGrid').innerHTML = '<div class="empty"><div class="empty-emoji">⚠️</div><div>データの読み込みに失敗しました。ページを再読み込みしてください。</div></div>';
-      document.getElementById('eventCount').textContent = 'エラー';
+      showError('エラー: ' + e.message);
     }
   }
 
@@ -628,19 +237,14 @@
   }
 
   function renderEvents() {
-    const filtered = currentCat === 'all'
-      ? allEvents
-      : allEvents.filter(e => e.category_id == currentCat);
-
+    const filtered = currentCat === 'all' ? allEvents : allEvents.filter(e => e.category_id == currentCat);
     document.getElementById('eventCount').textContent = `${filtered.length}件`;
-
     const grid = document.getElementById('eventsGrid');
     if (filtered.length === 0) {
       grid.innerHTML = '<div class="empty"><div class="empty-emoji">🔍</div><div>該当するイベントが見つかりません</div></div>';
       return;
     }
-
-    grid.innerHTML = filtered.map((ev, i) => {
+    grid.innerHTML = filtered.map(ev => {
       const cat = ev.event_categories;
       const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
       return `
@@ -650,11 +254,9 @@
           <div class="card-title">${ev.title}</div>
           <div class="card-organizer">📍 ${ev.organizer_name}</div>
         </div>
-        <div class="card-body">
-          <div class="card-desc">${ev.description || ''}</div>
-        </div>
+        <div class="card-body"><div class="card-desc">${ev.description || ''}</div></div>
         <div class="card-footer">
-          <div style="display:flex; gap:12px; flex-wrap:wrap; width:100%">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;width:100%">
             <div class="card-meta">🗓️ ${ev.event_date || '時期未定'}</div>
             <div class="card-meta">👥 ${ev.target_audience || '全年齢'}</div>
             <div class="card-meta">💴 ${ev.fee || '無料'}</div>
@@ -673,86 +275,39 @@
     if (!ev) return;
     const cat = ev.event_categories;
     const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
-
     document.getElementById('modalHeader').innerHTML = `
       <div class="modal-category ${catClass}">${cat ? cat.emoji + ' ' + cat.name : ''}</div>
       <div class="modal-title">${ev.title}</div>
-      <div class="modal-organizer">📍 ${ev.organizer_name}　｜　${ev.organizer_type || ''}</div>
-    `;
-
+      <div class="modal-organizer">📍 ${ev.organizer_name}　｜　${ev.organizer_type || ''}</div>`;
     document.getElementById('modalBody').innerHTML = `
       <p class="modal-desc">${ev.description || ''}</p>
-
       <div class="info-grid">
-        <div class="info-item">
-          <div class="info-item-label">🗓️ 開催時期</div>
-          <div class="info-item-value">${ev.event_date || '時期未定'}</div>
-        </div>
-        <div class="info-item">
-          <div class="info-item-label">📍 場所</div>
-          <div class="info-item-value">${ev.location || '未定'}</div>
-        </div>
-        <div class="info-item">
-          <div class="info-item-label">👥 対象</div>
-          <div class="info-item-value">${ev.target_audience || '全年齢'}</div>
-        </div>
-        <div class="info-item">
-          <div class="info-item-label">💴 参加費</div>
-          <div class="info-item-value">${ev.fee || '無料'}</div>
-        </div>
-        ${ev.max_participants ? `
-        <div class="info-item">
-          <div class="info-item-label">🙋 定員</div>
-          <div class="info-item-value">${ev.max_participants}名</div>
-        </div>` : ''}
+        <div class="info-item"><div class="info-item-label">🗓️ 開催時期</div><div class="info-item-value">${ev.event_date || '時期未定'}</div></div>
+        <div class="info-item"><div class="info-item-label">📍 場所</div><div class="info-item-value">${ev.location || '未定'}</div></div>
+        <div class="info-item"><div class="info-item-label">👥 対象</div><div class="info-item-value">${ev.target_audience || '全年齢'}</div></div>
+        <div class="info-item"><div class="info-item-label">💴 参加費</div><div class="info-item-value">${ev.fee || '無料'}</div></div>
+        ${ev.max_participants ? `<div class="info-item"><div class="info-item-label">🙋 定員</div><div class="info-item-value">${ev.max_participants}名</div></div>` : ''}
       </div>
-
-      ${ev.knowhow_summary ? `
-      <div class="knowhow-section">
-        <div class="knowhow-title">💡 ノウハウ・ポイント</div>
-        <div class="knowhow-text">${ev.knowhow_summary}</div>
-      </div>` : ''}
-
-      ${ev.tools_needed ? `
-      <div class="tools-section">
-        <div class="tools-title">🛠️ 必要な道具・準備物</div>
-        <div class="tools-text">${ev.tools_needed}</div>
-      </div>` : ''}
-
+      ${ev.knowhow_summary ? `<div class="knowhow-section"><div class="knowhow-title">💡 ノウハウ・ポイント</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>` : ''}
+      ${ev.tools_needed ? `<div class="tools-section"><div class="tools-title">🛠️ 必要な道具・準備物</div><div class="tools-text">${ev.tools_needed}</div></div>` : ''}
       ${(ev.can_participate || ev.can_help) ? `
       <div class="form-section">
         <div class="form-title">このイベントに関わる</div>
         <div class="form-subtitle">仕掛け人になろう！自ら動いてコンタクトする</div>
         ${ev.can_participate && ev.can_help ? `
         <div class="form-tabs">
-          <button class="form-tab active" onclick="setTab(this, '参加したい', ${ev.id})">✋ 参加したい</button>
-          <button class="form-tab" onclick="setTab(this, 'お手伝いしたい', ${ev.id})">🙌 お手伝いしたい</button>
+          <button class="form-tab active" onclick="setTab(this,'参加したい',${ev.id})">✋ 参加したい</button>
+          <button class="form-tab" onclick="setTab(this,'お手伝いしたい',${ev.id})">🙌 お手伝いしたい</button>
         </div>` : ''}
-        <form id="requestForm-${ev.id}" onsubmit="submitRequest(event, ${ev.id})">
-          <div class="form-group">
-            <label>お名前</label>
-            <input type="text" name="name" placeholder="山田 太郎" required>
-          </div>
-          <div class="form-group">
-            <label>メールアドレス</label>
-            <input type="email" name="email" placeholder="example@mail.com" required>
-          </div>
-          <div class="form-group">
-            <label>所属（学校・団体名）</label>
-            <input type="text" name="school_name" placeholder="○○小おやじの会">
-          </div>
-          <div class="form-group">
-            <label>メッセージ・質問</label>
-            <textarea name="message" placeholder="気になることや質問があれば書いてください"></textarea>
-          </div>
+        <form id="requestForm-${ev.id}" onsubmit="submitRequest(event,${ev.id})">
+          <div class="form-group"><label>お名前</label><input type="text" name="name" placeholder="山田 太郎" required></div>
+          <div class="form-group"><label>メールアドレス</label><input type="email" name="email" placeholder="example@mail.com" required></div>
+          <div class="form-group"><label>所属（学校・団体名）</label><input type="text" name="school_name" placeholder="○○小おやじの会"></div>
+          <div class="form-group"><label>メッセージ・質問</label><textarea name="message" placeholder="気になることや質問があれば書いてください"></textarea></div>
           <button type="submit" class="submit-btn" id="submitBtn-${ev.id}">送信する →</button>
-          <div class="success-msg" id="successMsg-${ev.id}">
-            🎉 送信しました！<br>後ほどご連絡します。
-          </div>
+          <div class="success-msg" id="successMsg-${ev.id}">🎉 送信しました！<br>後ほどご連絡します。</div>
         </form>
-      </div>` : ''}
-    `;
-
+      </div>` : ''}`;
     document.getElementById('modalOverlay').classList.add('show');
     document.getElementById('modalClose').classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -771,24 +326,13 @@
     const msg = document.getElementById(`successMsg-${eventId}`);
     btn.disabled = true;
     btn.textContent = '送信中...';
-
-    const { error } = await supabase.from('participation_requests').insert({
-      event_id: eventId,
-      name: form.name.value,
-      email: form.email.value,
-      school_name: form.school_name.value,
-      request_type: currentRequestType,
-      message: form.message.value
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const { error } = await client.from('participation_requests').insert({
+      event_id: eventId, name: form.name.value, email: form.email.value,
+      school_name: form.school_name.value, request_type: currentRequestType, message: form.message.value
     });
-
-    if (!error) {
-      form.style.display = 'none';
-      msg.style.display = 'block';
-    } else {
-      btn.disabled = false;
-      btn.textContent = '送信する →';
-      alert('送信に失敗しました。もう一度お試しください。');
-    }
+    if (!error) { form.style.display = 'none'; msg.style.display = 'block'; }
+    else { btn.disabled = false; btn.textContent = '送信する →'; alert('送信に失敗しました。もう一度お試しください。'); }
   }
 
   function closeModal() {
@@ -796,14 +340,8 @@
     document.getElementById('modalClose').classList.remove('show');
     document.body.style.overflow = '';
   }
-
-  function handleOverlayClick(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-  }
-
-  function openRegisterModal() {
-    alert('イベント登録機能は7月から順次公開予定です！');
-  }
+  function handleOverlayClick(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+  function openRegisterModal() { alert('イベント登録機能は7月から順次公開予定です！'); }
 
   loadData();
 </script>
