@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>よくある質問 | ASOBI CREATE PARK</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; }
+    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: white; color: var(--navy); }
+    .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
+    .logo-main span { color: var(--green); }
+    .logo-sub { font-size: 9px; color: var(--gray); }
+    .site-nav { display: flex; gap: 4px; margin-left: auto; }
+    .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
+    .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-login { background: none; border: 1.5px solid #ddd; color: #555; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .btn-register { background: var(--orange); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-decoration: none; }
+    .breadcrumb { background: var(--light); border-bottom: 1px solid #eee; }
+    .breadcrumb-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 8px; font-size: 12px; color: var(--gray); }
+    .breadcrumb-inner a { color: var(--gray); text-decoration: none; }
+    .breadcrumb-sep { color: #ccc; }
+
+    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%); padding: 64px 24px 56px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .hero-title { font-size: 34px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 16px; }
+    .hero-desc { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.9; }
+
+    .page-body { max-width: 800px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    .faq-category { margin-bottom: 48px; }
+    .faq-category-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--green); display: flex; align-items: center; gap: 10px; }
+
+    .faq-item { border: 1.5px solid #F0F0F0; border-radius: 16px; margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+    .faq-item:hover { border-color: var(--green); }
+    .faq-question {
+      padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; background: white;
+      font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.5;
+      list-style: none; user-select: none;
+    }
+    .faq-question::after { content: '＋'; font-size: 20px; color: var(--green); flex-shrink: 0; font-weight: 400; transition: transform 0.3s; }
+    .faq-item.open .faq-question::after { transform: rotate(45deg); }
+    .faq-question-q { display: flex; align-items: flex-start; gap: 12px; }
+    .faq-q-badge { background: var(--orange); color: white; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 6px; flex-shrink: 0; margin-top: 2px; }
+    .faq-answer {
+      padding: 0 24px; max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s;
+      background: #FAFAFA; font-size: 14px; color: #555; line-height: 2.0;
+    }
+    .faq-item.open .faq-answer { max-height: 400px; padding: 20px 24px; }
+    .faq-answer a { color: var(--green); text-decoration: none; font-weight: 700; }
+
+    .contact-box { background: linear-gradient(135deg, #F0FBF5, #E8F5E9); border-radius: 20px; padding: 36px 32px; text-align: center; border: 2px solid #A5D6A7; margin-top: 48px; }
+    .contact-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .contact-desc { font-size: 14px; color: #555; line-height: 1.9; margin-bottom: 20px; }
+    .btn-contact { display: inline-block; background: var(--green); color: white; padding: 12px 32px; border-radius: 24px; font-size: 14px; font-weight: 800; text-decoration: none; }
+    .btn-contact:hover { background: var(--green-light); }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 12px; line-height: 2.0; }
+    footer strong { color: white; }
+    .footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .footer-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 12px; }
+
+    @media (max-width: 768px) { .site-nav { display: none; } .hero-title { font-size: 24px; } }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="events.html" class="nav-link">あそびを探す</a>
+      <a href="cases.html" class="nav-link">事例を見る</a>
+      <a href="about.html" class="nav-link">このサイトについて</a>
+      <a href="faq.html" class="nav-link active">よくある質問</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn-login">登録団体ログイン</a>
+      <a href="index.html#register" class="btn-register">✏️ あそびを登録する</a>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">トップ</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>よくある質問</span>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-badge">FAQ — よくある質問</div>
+    <h1 class="hero-title">よくある質問</h1>
+    <p class="hero-desc">ASOBI CREATE PARKの使い方や掲載について、よくいただく質問をまとめました。</p>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <!-- 利用全般 -->
+  <div class="faq-category">
+    <div class="faq-category-title">👀 利用全般</div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>見るだけでも登録が必要ですか？</div>
+      </div>
+      <div class="faq-answer">登録は不要です。あそびの事例・イベント一覧・団体情報はすべて、ログインなしで閲覧できます。あそびを掲載したい団体のみ、団体登録が必要です。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>参加申込はこのサイトでできますか？</div>
+      </div>
+      <div class="faq-answer">ASOBI CREATE PARKは申込システムを提供していません。参加希望の場合は、イベント詳細ページに掲載された主催団体の問い合わせ先へ直接ご連絡ください。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>手伝い募集だけでも掲載できますか？</div>
+      </div>
+      <div class="faq-answer">はい、掲載できます。「スタッフ募集」として登録することで、参加者ではなく運営手伝いを求めるイベントとして掲載されます。</div>
+    </div>
+  </div>
+
+  <!-- 掲載・登録 -->
+  <div class="faq-category">
+    <div class="faq-category-title">📝 掲載・団体登録</div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>あそびを掲載するには何が必要ですか？</div>
+      </div>
+      <div class="faq-answer">まず団体登録が必要です。団体情報・公開問い合わせ先を入力して申請していただくと、運営から確認連絡を行います。確認が取れた後、あそびやイベントを掲載できるようになります。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>団体登録とは何ですか？</div>
+      </div>
+      <div class="faq-answer">団体登録とは、掲載の主体となる組織・グループ・個人として審査を受けることです。登録情報（団体名・活動内容・問い合わせ先など）はサイト上に公開されます。運営が確認した団体のみ掲載が許可されます。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>個人でも掲載できますか？</div>
+      </div>
+      <div class="faq-answer">はい、個人企画者としての登録が可能です。ただし、登録情報と問い合わせ先は公開されます。個人用メールアドレスではなく、活動専用・問い合わせ専用のメールアドレスのご利用をおすすめします。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>問い合わせ先メールは公開されますか？</div>
+      </div>
+      <div class="faq-answer">はい、公開されます。参加希望者や手伝いたい人が直接連絡できるよう、問い合わせ先メールアドレスはサイト上に掲載されます。個人用メールではなく、団体用・活動用のアドレスをご利用ください。詳しくは<a href="safety.html">安心・安全への取り組み</a>をご覧ください。</div>
+    </div>
+  </div>
+
+  <!-- 掲載内容の管理 -->
+  <div class="faq-category">
+    <div class="faq-category-title">⚙️ 掲載内容の管理</div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>掲載内容を修正できますか？</div>
+      </div>
+      <div class="faq-answer">はい。登録団体ログイン後の管理画面から、団体情報・あそび情報の修正が可能です。修正内容によっては、再審査が必要な場合があります。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>掲載を取り下げられますか？</div>
+      </div>
+      <div class="faq-answer">はい。ログイン後の管理画面から「非公開」にすることで、いつでも掲載を取り下げることができます。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>掲載できない内容はありますか？</div>
+      </div>
+      <div class="faq-answer">はい。虚偽情報・なりすまし・過度な営業・勧誘・差別・誹謗中傷などを含む内容は掲載できません。詳細は<a href="guidelines.html">掲載ガイドライン</a>をご確認ください。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <div class="faq-question-q"><span class="faq-q-badge">Q</span>通報したい場合はどうすればいいですか？</div>
+      </div>
+      <div class="faq-answer">ガイドラインに反する投稿を見つけた場合は、<a href="mailto:report@asobi-create-park.jp">report@asobi-create-park.jp</a>までご連絡ください。速やかに確認・対応いたします。</div>
+    </div>
+  </div>
+
+  <!-- お問い合わせ -->
+  <div class="contact-box">
+    <div class="contact-title">解決しない場合は、お気軽にご連絡ください</div>
+    <div class="contact-desc">上記のQAで解決しない疑問がある場合は、運営チームへお問い合わせください。</div>
+    <a href="mailto:info@asobi-create-park.jp" class="btn-contact">メールでお問い合わせ</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-nav">
+    <a href="about.html">このサイトについて</a>
+    <a href="concept.html">コンセプト</a>
+    <a href="safety.html">安心・安全への取り組み</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="guidelines.html">掲載ガイドライン</a>
+  </div>
+  <div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
+  <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
+  © 2024 世田谷区地域あそびプラットフォーム
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>

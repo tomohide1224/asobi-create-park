@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コンセプト | ASOBI CREATE PARK</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78;
+      --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D;
+      --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: white; color: var(--navy); }
+
+    /* ===== HEADER ===== */
+    .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
+    .logo-main span { color: var(--green); }
+    .logo-sub { font-size: 9px; color: var(--gray); letter-spacing: 0.03em; }
+    .site-nav { display: flex; gap: 4px; margin-left: auto; }
+    .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
+    .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+    .btn-login { background: none; border: 1.5px solid #ddd; color: #555; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .btn-login:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-register { background: var(--orange); border: none; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+    .btn-register:hover { background: #e55a25; }
+
+    /* ===== BREADCRUMB ===== */
+    .breadcrumb { background: var(--light); border-bottom: 1px solid #eee; }
+    .breadcrumb-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gray); }
+    .breadcrumb-inner a { color: var(--gray); text-decoration: none; }
+    .breadcrumb-inner a:hover { color: var(--green); }
+    .breadcrumb-sep { color: #ccc; }
+
+    /* ===== HERO ===== */
+    .page-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%);
+      padding: 72px 24px 64px; position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: '🌿'; position: absolute; right: -40px; bottom: -40px;
+      font-size: 240px; opacity: 0.06; line-height: 1;
+    }
+    .page-hero::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(45,158,107,0.15) 0%, transparent 60%);
+    }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+      color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; padding: 5px 14px; border-radius: 20px;
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    .hero-title { font-size: 38px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 20px; }
+    .hero-title span { color: #5DD4A4; }
+    .hero-desc { font-size: 16px; color: rgba(255,255,255,0.75); line-height: 2.0; max-width: 600px; }
+
+    /* ===== CONTENT ===== */
+    .page-body { max-width: 800px; margin: 0 auto; padding: 64px 24px 80px; }
+
+    .section { margin-bottom: 64px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #F0FBF5; color: var(--green); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.1em; padding: 5px 14px 5px 10px; border-radius: 20px;
+      margin-bottom: 20px; text-transform: uppercase;
+    }
+    .section-title { font-size: 26px; font-weight: 900; color: var(--navy); line-height: 1.5; margin-bottom: 20px; }
+    .section-title .accent { color: var(--orange); }
+    .section-title .green { color: var(--green); }
+    .body-text { font-size: 15px; color: #444; line-height: 2.1; margin-bottom: 16px; }
+
+    .quote-block {
+      background: #F8F9FA; border-left: 4px solid var(--green);
+      border-radius: 0 16px 16px 0; padding: 24px 28px; margin: 28px 0;
+    }
+    .quote-block p { font-size: 15px; color: #555; line-height: 2.2; margin: 0; }
+
+    .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+    .feature-card {
+      background: #F8F9FA; border-radius: 20px; padding: 28px 24px;
+      border: 2px solid transparent; transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: var(--green-light); transform: translateY(-2px); }
+    .feature-num { font-size: 11px; font-weight: 900; color: var(--green); letter-spacing: 0.1em; margin-bottom: 10px; }
+    .feature-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 10px; line-height: 1.5; }
+    .feature-desc { font-size: 13px; color: #666; line-height: 1.9; }
+
+    .tags-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .tag { background: #EEF7FF; color: #1565C0; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 20px; }
+
+    .notice-box {
+      background: #FFF8F0; border: 2px solid #FFD0A8; border-radius: 20px; padding: 28px;
+    }
+    .notice-title { font-size: 14px; font-weight: 800; color: #E65100; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .notice-text { font-size: 14px; color: #555; line-height: 2.0; }
+
+    .vision-box {
+      background: linear-gradient(135deg, #F0FBF5, #E8F5E9);
+      border-radius: 24px; padding: 48px 40px; text-align: center;
+      border: 2px solid #A5D6A7; margin-top: 16px;
+    }
+    .vision-icon { font-size: 56px; margin-bottom: 24px; }
+    .vision-title { font-size: 22px; font-weight: 900; color: var(--navy); line-height: 1.8; margin-bottom: 20px; }
+    .vision-text { font-size: 15px; color: #555; line-height: 2.1; max-width: 560px; margin: 0 auto; }
+
+    .divider { border: none; border-top: 1px solid #EFEFEF; margin: 64px 0; }
+
+    /* ===== FOOTER ===== */
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 12px; line-height: 2.0; }
+    footer strong { color: white; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 12px; }
+    .footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .footer-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
+    .footer-nav a:hover { color: white; }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 26px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .site-nav { display: none; }
+      .page-body { padding: 40px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="events.html" class="nav-link">あそびを探す</a>
+      <a href="cases.html" class="nav-link">事例を見る</a>
+      <a href="about.html" class="nav-link active">このサイトについて</a>
+      <a href="faq.html" class="nav-link">よくある質問</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn-login">登録団体ログイン</a>
+      <a href="index.html#register" class="btn-register">✏️ あそびを登録する</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== BREADCRUMB ===== -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">トップ</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="about.html">このサイトについて</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>コンセプト</span>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-badge">Concept — コンセプト</div>
+    <h1 class="hero-title">
+      あそびをつくる人と、<br>
+      <span>関わる人をつなぐ。</span>
+    </h1>
+    <p class="hero-desc">
+      ASOBI CREATE PARKは、地域のあそびやイベントを企画する人と、参加したい人・手伝いたい人をつなぐマッチングサイトです。
+    </p>
+  </div>
+</div>
+
+<!-- ===== BODY ===== -->
+<div class="page-body">
+
+  <!-- What is -->
+  <div class="section">
+    <div class="section-label">🌿 ASOBI CREATE PARKとは</div>
+    <h2 class="section-title">地域の「やってみたい」を、<br><span class="green">カタチにする場所</span>。</h2>
+    <p class="body-text">
+      学校・PTA・おやじの会・町会・自治会・商店街・地域団体・個人企画者など、地域で「何かやってみたい」と思う人たちが、企画のヒントを見つけたり、仲間を集めたり、イベントを広げたりできる場所を目指しています。
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Origin -->
+  <div class="section">
+    <div class="section-label">💬 はじまりのきっかけ</div>
+    <h2 class="section-title">「他の地域では何をやっているの？」<br>という声から。</h2>
+    <p class="body-text">
+      地域には、たくさんの面白いあそびやイベントがあります。水あそび、外あそび、防災体験、工作、まつり、屋台、自然体験、親子イベント。けれど、その多くは、実施した団体の中だけで終わってしまうことがあります。
+    </p>
+    <div class="quote-block">
+      <p>
+        「あのイベント、どうやって準備したんだろう」<br>
+        「費用はどれくらいかかったんだろう」<br>
+        「何人くらいで運営したんだろう」<br>
+        「うちの地域でもできるだろうか」<br>
+        「手伝ってくれる人がいたら、できるかもしれない」
+      </p>
+    </div>
+    <p class="body-text">そんな声をつなげるために、ASOBI CREATE PARKは生まれました。</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Mission -->
+  <div class="section">
+    <div class="section-label">✨ ひとつのイベントが次のヒントに</div>
+    <h2 class="section-title">地域のあそびは、<br>誰かの<span class="accent">「やってみたい」</span>から始まります。</h2>
+    <p class="body-text">
+      でも、最初の一歩は簡単ではありません。場所の調整、道具の準備、人手の確保、安全管理、告知、当日の運営。ひとつのイベントの裏側には、たくさんの工夫と経験があります。
+    </p>
+    <p class="body-text">
+      ASOBI CREATE PARKでは、そうしたイベントの事例やノウハウを共有し、これから企画したい人が参考にできるようにします。誰かが実施したあそびが、次の地域の「やってみたい」につながる。それが、このサイトの大切な役割です。
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Features -->
+  <div class="section">
+    <div class="section-label">🎯 ASOBI CREATE PARKでできること</div>
+    <h2 class="section-title">4つの使い方</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-num">01 — 見る・探す</div>
+        <div class="feature-title">あそびの事例・ヒントを見る</div>
+        <div class="feature-desc">過去に実施された地域イベントの事例を見て、企画の参考にできます。対象年齢、準備物、費用感なども確認できます。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">02 — 企画する</div>
+        <div class="feature-title">あそびを企画・登録する</div>
+        <div class="feature-desc">地域で実施したいイベントを登録し、参加者・スタッフ・協力団体を募集できます。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">03 — 参加する</div>
+        <div class="feature-title">あそびに参加する</div>
+        <div class="feature-desc">地域で開催されるイベントを探して、親子や友人同士で参加できます。地域とつながるきっかけが生まれます。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">04 — 手伝う</div>
+        <div class="feature-title">スタッフとして手伝う</div>
+        <div class="feature-desc">「受付だけ」「設営なら」「写真撮影なら」—小さな関わりも、地域イベントにとっては大きな力になります。</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Who -->
+  <div class="section">
+    <div class="section-label">👥 対象となる人・団体</div>
+    <h2 class="section-title">地域のあそびをつくりたい人、広げたい人、<br>支えたい人に<span class="green">開かれた場所</span>です。</h2>
+    <div class="tags-wrap">
+      <span class="tag">学校・PTA関係者</span>
+      <span class="tag">おやじの会</span>
+      <span class="tag">町会・自治会</span>
+      <span class="tag">商店街</span>
+      <span class="tag">子育て団体</span>
+      <span class="tag">地域活動団体</span>
+      <span class="tag">NPO</span>
+      <span class="tag">個人企画者</span>
+      <span class="tag">企業・行政と連携した地域活動</span>
+      <span class="tag">地域イベントを手伝いたい人</span>
+      <span class="tag">親子で参加したい人</span>
+    </div>
+    <p class="body-text" style="margin-top:24px">
+      大切なのは、団体の大きさではありません。「地域で何かをやってみたい」「子どもたちや地域の人に楽しんでもらいたい」「自分たちの経験を、次の誰かの役に立てたい」—そんな思いがあることです。
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Notice -->
+  <div class="section">
+    <div class="section-label">📋 登録・利用について</div>
+    <h2 class="section-title">安心して使うために</h2>
+    <p class="body-text">
+      誰でも自由に投稿できる仕組みでは、荒らしやなりすまし、無関係な投稿が発生する可能性があります。ASOBI CREATE PARKでは、安心して利用できる場所にするため、団体登録時に確認を行います。
+    </p>
+    <div class="notice-box">
+      <div class="notice-title">⚠️ 登録情報は公開前提です</div>
+      <p class="notice-text">
+        登録された団体情報・イベント情報・問い合わせ先は、原則としてサイト上に公開されます。個人用メールではなく、団体用・活動用・問い合わせ専用のメールアドレスの利用をおすすめします。
+      </p>
+    </div>
+    <p class="body-text" style="margin-top:20px">
+      登録された問い合わせ先に運営から連絡し、正しく確認が取れた団体・活動のみ公開します。掲載内容がサイトの目的に合わない場合や、虚偽情報・なりすまし・危険な内容・過度な営業や勧誘などが確認された場合は、掲載を見送ることがあります。
+    </p>
+    <p style="margin-top:16px; font-size:14px;">
+      <a href="safety.html" style="color:var(--green); font-weight:700; text-decoration:none;">→ 安心・安全への取り組み詳細</a> &nbsp;
+      <a href="guidelines.html" style="color:var(--green); font-weight:700; text-decoration:none;">→ 掲載ガイドライン</a>
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Vision -->
+  <div class="section">
+    <div class="vision-box">
+      <div class="vision-icon">🌿</div>
+      <div class="vision-title">
+        地域のあそびの経験が蓄積され、<br>
+        企画したい人がヒントを得られ、<br>
+        参加したい人が出会い、<br>
+        手伝いたい人が関われる。
+      </div>
+      <p class="vision-text">
+        ひとつの学校、ひとつの団体、ひとつの地域だけではできないことも、誰かの経験や手助けがあれば実現できるかもしれません。あそびは、まちをつなぐ力になります。ASOBI CREATE PARKは、そのつながりを少しずつ広げていきます。
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-nav">
+    <a href="about.html">このサイトについて</a>
+    <a href="concept.html">コンセプト</a>
+    <a href="safety.html">安心・安全への取り組み</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="guidelines.html">掲載ガイドライン</a>
+  </div>
+  <div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
+  <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
+  © 2024 世田谷区地域あそびプラットフォーム
+</footer>
+
+</body>
+</html>

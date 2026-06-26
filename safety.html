@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>安心・安全への取り組み | ASOBI CREATE PARK</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; }
+    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: white; color: var(--navy); }
+    .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
+    .logo-main span { color: var(--green); }
+    .logo-sub { font-size: 9px; color: var(--gray); }
+    .site-nav { display: flex; gap: 4px; margin-left: auto; }
+    .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
+    .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-login { background: none; border: 1.5px solid #ddd; color: #555; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .btn-register { background: var(--orange); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-decoration: none; }
+    .breadcrumb { background: var(--light); border-bottom: 1px solid #eee; }
+    .breadcrumb-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 8px; font-size: 12px; color: var(--gray); }
+    .breadcrumb-inner a { color: var(--gray); text-decoration: none; }
+    .breadcrumb-sep { color: #ccc; }
+
+    .page-hero { background: linear-gradient(135deg, #0f3460, #1a5276); padding: 64px 24px 56px; }
+    .page-hero-inner { max-width: 800px; margin: 0 auto; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .hero-title { font-size: 34px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 16px; }
+    .hero-title span { color: #7EC8E3; }
+    .hero-desc { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.9; }
+
+    .page-body { max-width: 800px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    .section { margin-bottom: 56px; }
+    .section-label { display: inline-flex; align-items: center; gap: 8px; background: #F0FBF5; color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: 0.1em; padding: 5px 14px 5px 10px; border-radius: 20px; margin-bottom: 16px; }
+    .section-title { font-size: 24px; font-weight: 900; color: var(--navy); line-height: 1.5; margin-bottom: 16px; }
+    .body-text { font-size: 15px; color: #444; line-height: 2.1; margin-bottom: 12px; }
+
+    .trust-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    .trust-card { background: white; border: 2px solid #E8F5E9; border-radius: 20px; padding: 28px 24px; }
+    .trust-icon { font-size: 32px; margin-bottom: 12px; }
+    .trust-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .trust-desc { font-size: 13px; color: #555; line-height: 1.9; }
+
+    .flow-steps { margin-top: 24px; }
+    .flow-step { display: flex; gap: 20px; margin-bottom: 24px; align-items: flex-start; }
+    .flow-step-num { width: 36px; height: 36px; background: var(--green); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+    .flow-step-content { flex: 1; }
+    .flow-step-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .flow-step-desc { font-size: 13px; color: #666; line-height: 1.9; }
+    .flow-connector { width: 2px; height: 20px; background: #ddd; margin: 0 17px -16px; }
+
+    .warn-box { background: #FFF8F0; border: 2px solid #FFD0A8; border-radius: 16px; padding: 24px; margin-top: 16px; }
+    .warn-title { font-size: 14px; font-weight: 800; color: #E65100; margin-bottom: 10px; }
+    .warn-text { font-size: 14px; color: #555; line-height: 2.0; }
+
+    .report-box { background: var(--light); border-radius: 20px; padding: 32px; margin-top: 32px; }
+    .report-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .report-desc { font-size: 14px; color: #555; line-height: 2.0; margin-bottom: 16px; }
+    .btn-report { display: inline-block; background: var(--navy); color: white; padding: 12px 24px; border-radius: 20px; font-size: 14px; font-weight: 700; text-decoration: none; }
+
+    .divider { border: none; border-top: 1px solid #EFEFEF; margin: 56px 0; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 12px; line-height: 2.0; }
+    footer strong { color: white; }
+    .footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .footer-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 12px; }
+
+    @media (max-width: 768px) {
+      .trust-cards { grid-template-columns: 1fr; }
+      .site-nav { display: none; }
+      .hero-title { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="events.html" class="nav-link">あそびを探す</a>
+      <a href="cases.html" class="nav-link">事例を見る</a>
+      <a href="about.html" class="nav-link active">このサイトについて</a>
+      <a href="faq.html" class="nav-link">よくある質問</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn-login">登録団体ログイン</a>
+      <a href="index.html#register" class="btn-register">✏️ あそびを登録する</a>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">トップ</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="about.html">このサイトについて</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>安心・安全への取り組み</span>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-badge">Safety — 安心・安全</div>
+    <h1 class="hero-title">信頼できる情報を、<br><span>安心して使える場所に。</span></h1>
+    <p class="hero-desc">ASOBI CREATE PARKが、掲載団体・参加者・手伝いたい人すべてが安心できる仕組みについてご説明します。</p>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <!-- 4つの約束 -->
+  <div class="section">
+    <div class="section-label">🛡️ 4つの取り組み</div>
+    <h2 class="section-title">ASOBI CREATE PARKが大切にすること</h2>
+    <div class="trust-cards">
+      <div class="trust-card">
+        <div class="trust-icon">✅</div>
+        <div class="trust-title">確認済み団体のみ掲載</div>
+        <div class="trust-desc">登録申請があった団体に対して、運営から公開問い合わせ先へ確認連絡を行います。確認が取れた団体のみ掲載されます。</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">📢</div>
+        <div class="trust-title">登録情報は公開前提</div>
+        <div class="trust-desc">登録された団体情報・イベント情報・問い合わせ先は原則としてサイト上に公開されます。公開して問題ない情報のみ入力してください。</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">📧</div>
+        <div class="trust-title">問い合わせ先は公開</div>
+        <div class="trust-desc">参加者や手伝いたい人が直接連絡できるよう、問い合わせ先メールを公開します。個人用ではなく、団体用・活動用メールの利用を推奨します。</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">🚩</div>
+        <div class="trust-title">不適切な内容への対応</div>
+        <div class="trust-desc">掲載ガイドラインに反する投稿は、差し戻しまたは非公開化を行います。通報いただいた場合も速やかに対応します。</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 団体確認フロー -->
+  <div class="section">
+    <div class="section-label">🔍 団体確認の流れ</div>
+    <h2 class="section-title">確認が取れた団体のみ、<br>掲載されます。</h2>
+    <p class="body-text">ASOBI CREATE PARKでは、以下のフローで団体確認を行っています。</p>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">団体登録申請</div>
+          <div class="flow-step-desc">団体情報・活動内容・公開問い合わせ先メールを入力して申請します。</div>
+        </div>
+      </div>
+      <div class="flow-connector"></div>
+      <div class="flow-step">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">確認メール送信</div>
+          <div class="flow-step-desc">登録された公開問い合わせ先メールアドレスへ、運営から確認メールを送信します。</div>
+        </div>
+      </div>
+      <div class="flow-connector"></div>
+      <div class="flow-step">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">返信・本人確認</div>
+          <div class="flow-step-desc">返信または確認リンクで、メールアドレスの有効性・団体の実在を確認します。</div>
+        </div>
+      </div>
+      <div class="flow-connector"></div>
+      <div class="flow-step">
+        <div class="flow-step-num">4</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">運営確認・承認</div>
+          <div class="flow-step-desc">内容が掲載ガイドラインに適合していることを運営が確認し、承認を行います。</div>
+        </div>
+      </div>
+      <div class="flow-connector"></div>
+      <div class="flow-step">
+        <div class="flow-step-num">5</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">団体ページ公開・あそび登録可能に</div>
+          <div class="flow-step-desc">承認後、団体ページが公開され、あそびの登録・掲載が可能になります。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 掲載しない内容 -->
+  <div class="section">
+    <div class="section-label">⚠️ 掲載できない内容</div>
+    <h2 class="section-title">地域の信頼を守るために。</h2>
+    <p class="body-text">以下に該当する内容は、掲載をお断りすることがあります。</p>
+    <div class="warn-box">
+      <div class="warn-title">掲載できない内容の例</div>
+      <p class="warn-text">
+        • 虚偽情報・なりすまし<br>
+        • 危険な企画・安全管理が不十分な内容<br>
+        • 過度な営業・勧誘・商業目的の投稿<br>
+        • 公序良俗に反する内容<br>
+        • 差別・誹謗中傷を含む内容<br>
+        • サイトの目的と無関係な内容<br>
+        • 個人情報を不正に収集する内容
+      </p>
+    </div>
+    <p class="body-text" style="margin-top:20px;">
+      詳しくは <a href="guidelines.html" style="color:var(--green); font-weight:700; text-decoration:none;">掲載ガイドライン</a> をご確認ください。
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 修正・取り下げ -->
+  <div class="section">
+    <div class="section-label">🔧 修正・取り下げ</div>
+    <h2 class="section-title">掲載内容の修正や取り下げ</h2>
+    <p class="body-text">掲載中の情報に誤りがあった場合や、掲載を取り下げたい場合は、ログイン後の管理画面から対応できます。または運営までお問い合わせください。</p>
+
+    <div class="report-box">
+      <div class="report-title">🚩 不適切な掲載内容を見つけた場合</div>
+      <div class="report-desc">掲載内容がガイドラインに反していると思われる場合は、運営までご連絡ください。速やかに確認・対応いたします。</div>
+      <a href="mailto:report@asobi-create-park.jp" class="btn-report">通報・お問い合わせ</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-nav">
+    <a href="about.html">このサイトについて</a>
+    <a href="concept.html">コンセプト</a>
+    <a href="safety.html">安心・安全への取り組み</a>
+    <a href="faq.html">よくある質問</a>
+    <a href="guidelines.html">掲載ガイドライン</a>
+  </div>
+  <div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
+  <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
+  © 2024 世田谷区地域あそびプラットフォーム
+</footer>
+
+</body>
+</html>
