@@ -486,6 +486,138 @@
       .org-form-row { grid-template-columns: 1fr; }
       .org-banner-steps { justify-content: center; }
     }
+
+    /* ========== CONCEPT MODAL ========== */
+    .concept-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 2000; display: flex; align-items: flex-start; justify-content: center;
+      overflow-y: auto; padding: 40px 16px 60px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .concept-overlay.show { opacity: 1; pointer-events: all; }
+    .concept-modal {
+      background: white; border-radius: 24px; width: 100%; max-width: 800px;
+      overflow: hidden; box-shadow: 0 20px 80px rgba(0,0,0,0.3);
+      transform: translateY(20px); transition: transform 0.3s;
+    }
+    .concept-overlay.show .concept-modal { transform: translateY(0); }
+
+    .concept-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%);
+      padding: 56px 48px 48px; position: relative; overflow: hidden;
+    }
+    .concept-hero::before {
+      content: '🌿'; position: absolute; right: -20px; bottom: -30px;
+      font-size: 180px; opacity: 0.08; line-height: 1;
+    }
+    .concept-hero-badge {
+      display: inline-block; background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; padding: 4px 12px; border-radius: 20px;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .concept-hero-title {
+      font-size: 32px; font-weight: 900; color: white; line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .concept-hero-title span { color: var(--orange); }
+    .concept-hero-desc {
+      font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.9;
+    }
+    .concept-close {
+      position: absolute; top: 20px; right: 20px;
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      width: 36px; height: 36px; border-radius: 50%; font-size: 16px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .concept-close:hover { background: rgba(255,255,255,0.3); }
+
+    .concept-body { padding: 48px; }
+
+    .concept-section { margin-bottom: 48px; }
+    .concept-section:last-child { margin-bottom: 0; }
+
+    .concept-section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #F0FBF5; color: var(--green); font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; padding: 4px 12px 4px 8px; border-radius: 20px;
+      margin-bottom: 14px; text-transform: uppercase;
+    }
+    .concept-section-title {
+      font-size: 22px; font-weight: 800; color: var(--navy);
+      line-height: 1.4; margin-bottom: 16px;
+    }
+    .concept-section-title .accent { color: var(--orange); }
+    .concept-text {
+      font-size: 14px; color: #444; line-height: 2.0; margin-bottom: 12px;
+    }
+    .concept-quote {
+      background: #F8F9FA; border-left: 4px solid var(--green);
+      border-radius: 0 12px 12px 0; padding: 20px 24px; margin: 20px 0;
+    }
+    .concept-quote p {
+      font-size: 14px; color: #555; line-height: 2.0; margin: 0;
+    }
+
+    .concept-features {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+    }
+    .concept-feature-card {
+      background: #F8F9FA; border-radius: 16px; padding: 24px 20px;
+      border: 1.5px solid transparent; transition: border-color 0.2s;
+    }
+    .concept-feature-card:hover { border-color: var(--green); }
+    .concept-feature-num {
+      font-size: 11px; font-weight: 800; color: var(--green);
+      letter-spacing: 0.1em; margin-bottom: 8px;
+    }
+    .concept-feature-title {
+      font-size: 14px; font-weight: 800; color: var(--navy);
+      margin-bottom: 8px; line-height: 1.4;
+    }
+    .concept-feature-desc { font-size: 12px; color: #666; line-height: 1.8; }
+
+    .concept-tags {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+    }
+    .concept-tag {
+      background: #EEF7FF; color: #1565C0; font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px;
+    }
+
+    .concept-notice {
+      background: #FFF8F0; border: 1.5px solid #FFD0A8; border-radius: 16px;
+      padding: 24px; margin-top: 16px;
+    }
+    .concept-notice-title {
+      font-size: 13px; font-weight: 800; color: #E65100; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .concept-notice p { font-size: 13px; color: #555; line-height: 1.9; margin: 0; }
+
+    .concept-vision {
+      background: linear-gradient(135deg, #F0FBF5, #E8F5E9);
+      border-radius: 20px; padding: 36px 32px; text-align: center;
+      border: 1.5px solid #A5D6A7;
+    }
+    .concept-vision-icon { font-size: 48px; margin-bottom: 16px; }
+    .concept-vision-title {
+      font-size: 20px; font-weight: 900; color: var(--navy); line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .concept-vision-text { font-size: 14px; color: #555; line-height: 2.0; }
+
+    .concept-divider {
+      border: none; border-top: 1px solid #F0F0F0; margin: 48px 0;
+    }
+
+    @media (max-width: 600px) {
+      .concept-hero { padding: 40px 24px 36px; }
+      .concept-hero-title { font-size: 24px; }
+      .concept-body { padding: 32px 24px; }
+      .concept-features { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -651,7 +783,7 @@
       <div class="content-box-body">
         <div class="content-box-title">ASOBI CREATE PARKについて</div>
         <div class="content-box-desc">このサイトは、地域のあそびや体験活動を通して、人と人がつながり、笑顔が広がる社会を目指すプロジェクトです。</div>
-        <button class="btn-content-outline">コンセプト・想いを見る →</button>
+        <button class="btn-content-outline" onclick="openConceptModal()">コンセプト・想いを見る →</button>
       </div>
     </div>
   </div>
@@ -664,6 +796,156 @@
     <div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div>
   </div>
 </section>
+
+<!-- ========== CONCEPT MODAL ========== -->
+<div class="concept-overlay" id="conceptOverlay" onclick="handleConceptOverlayClick(event)">
+  <div class="concept-modal" id="conceptModal">
+    <!-- Hero -->
+    <div class="concept-hero">
+      <button class="concept-close" onclick="closeConceptModal()">✕</button>
+      <div class="concept-hero-badge">About this site</div>
+      <h2 class="concept-hero-title">
+        あそびをつくる人と、<br>
+        <span>関わる人をつなぐ。</span>
+      </h2>
+      <p class="concept-hero-desc">
+        ASOBI CREATE PARKは、地域のあそびやイベントを企画する人と、<br>
+        参加したい人・手伝いたい人をつなぐマッチングサイトです。
+      </p>
+    </div>
+
+    <!-- Body -->
+    <div class="concept-body">
+
+      <!-- What is -->
+      <div class="concept-section">
+        <div class="concept-section-label">🌿 ASOBI CREATE PARKとは</div>
+        <p class="concept-text">
+          学校・PTA・おやじの会・町会・自治会・商店街・地域団体・個人企画者など、地域で「何かやってみたい」と思う人たちが、企画のヒントを見つけたり、仲間を集めたり、イベントを広げたりできる場所を目指しています。
+        </p>
+      </div>
+
+      <hr class="concept-divider">
+
+      <!-- Origin -->
+      <div class="concept-section">
+        <div class="concept-section-label">💬 はじまりのきっかけ</div>
+        <div class="concept-section-title">「他の地域では何をやっているの？」<br>という声から。</div>
+        <p class="concept-text">
+          地域には、たくさんの面白いあそびやイベントがあります。水あそび、外あそび、防災体験、工作、まつり、屋台、自然体験、親子イベント。けれど、その多くは、実施した団体の中だけで終わってしまうことがあります。
+        </p>
+        <div class="concept-quote">
+          <p>
+            「あのイベント、どうやって準備したんだろう」<br>
+            「費用はどれくらいかかったんだろう」<br>
+            「何人くらいで運営したんだろう」<br>
+            「うちの地域でもできるだろうか」<br>
+            「手伝ってくれる人がいたら、できるかもしれない」
+          </p>
+        </div>
+        <p class="concept-text">そんな声をつなげるために、ASOBI CREATE PARKは生まれました。</p>
+      </div>
+
+      <hr class="concept-divider">
+
+      <!-- Mission -->
+      <div class="concept-section">
+        <div class="concept-section-label">✨ ひとつのイベントが次のヒントに</div>
+        <div class="concept-section-title">地域のあそびは、<br>誰かの<span class="accent">「やってみたい」</span>から始まります。</div>
+        <p class="concept-text">
+          でも、最初の一歩は簡単ではありません。場所の調整、道具の準備、人手の確保、安全管理、告知、当日の運営。ひとつのイベントの裏側には、たくさんの工夫と経験があります。
+        </p>
+        <p class="concept-text">
+          ASOBI CREATE PARKでは、そうしたイベントの事例やノウハウを共有し、これから企画したい人が参考にできるようにします。誰かが実施したあそびが、次の地域の「やってみたい」につながる。それが、このサイトの大切な役割です。
+        </p>
+      </div>
+
+      <hr class="concept-divider">
+
+      <!-- Features -->
+      <div class="concept-section">
+        <div class="concept-section-label">🎯 できること</div>
+        <div class="concept-features">
+          <div class="concept-feature-card">
+            <div class="concept-feature-num">01</div>
+            <div class="concept-feature-title">あそびの事例・ヒントを見る</div>
+            <div class="concept-feature-desc">過去に実施された地域イベントの事例を見て、企画の参考にできます。対象年齢、準備物、人数体制、費用感なども確認できます。</div>
+          </div>
+          <div class="concept-feature-card">
+            <div class="concept-feature-num">02</div>
+            <div class="concept-feature-title">あそびを企画・登録する</div>
+            <div class="concept-feature-desc">地域で実施したいイベントを登録し、参加者・スタッフ・協力団体を募集できます。</div>
+          </div>
+          <div class="concept-feature-card">
+            <div class="concept-feature-num">03</div>
+            <div class="concept-feature-title">あそびに参加する</div>
+            <div class="concept-feature-desc">地域で開催されるイベントを探して、親子や友人同士で参加できます。地域とつながるきっかけが生まれます。</div>
+          </div>
+          <div class="concept-feature-card">
+            <div class="concept-feature-num">04</div>
+            <div class="concept-feature-title">スタッフとして手伝う</div>
+            <div class="concept-feature-desc">「受付だけ」「設営・片付けなら」「写真撮影なら」—小さな関わり方も、地域イベントにとっては大きな力になります。</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="concept-divider">
+
+      <!-- Who -->
+      <div class="concept-section">
+        <div class="concept-section-label">👥 対象となる人・団体</div>
+        <div class="concept-section-title">地域のあそびをつくりたい人、広げたい人、支えたい人に<span class="accent">開かれた場所</span>です。</div>
+        <div class="concept-tags">
+          <span class="concept-tag">学校・PTA関係者</span>
+          <span class="concept-tag">おやじの会</span>
+          <span class="concept-tag">町会・自治会</span>
+          <span class="concept-tag">商店街</span>
+          <span class="concept-tag">子育て団体</span>
+          <span class="concept-tag">地域活動団体</span>
+          <span class="concept-tag">NPO</span>
+          <span class="concept-tag">個人企画者</span>
+          <span class="concept-tag">企業・行政と連携した地域活動</span>
+          <span class="concept-tag">地域イベントを手伝いたい人</span>
+          <span class="concept-tag">親子で参加したい人</span>
+        </div>
+        <p class="concept-text" style="margin-top:20px">
+          大切なのは、団体の大きさではありません。「地域で何かをやってみたい」「子どもたちや地域の人に楽しんでもらいたい」「自分たちの経験を、次の誰かの役に立てたい」—そんな思いがあることです。
+        </p>
+      </div>
+
+      <hr class="concept-divider">
+
+      <!-- Notice -->
+      <div class="concept-section">
+        <div class="concept-section-label">📋 登録・利用について</div>
+        <div class="concept-notice">
+          <div class="concept-notice-title">⚠️ 登録情報は公開前提です</div>
+          <p>登録された団体情報・イベント情報・問い合わせ先は、原則としてサイト上に公開されます。個人用メールではなく、団体用・活動用・問い合わせ専用のメールアドレスの利用をおすすめします。</p>
+        </div>
+        <p class="concept-text" style="margin-top:20px">
+          ASOBI CREATE PARKでは、安心して利用できる場所にするため、団体登録時に確認を行います。登録された問い合わせ先に運営から連絡し、正しく確認が取れた団体・活動のみ公開します。掲載内容がサイトの目的に合わない場合や、虚偽情報・なりすまし・危険な内容・過度な営業や勧誘などが確認された場合は、掲載を見送ることがあります。
+        </p>
+      </div>
+
+      <hr class="concept-divider">
+
+      <!-- Vision -->
+      <div class="concept-vision">
+        <div class="concept-vision-icon">🌿</div>
+        <div class="concept-vision-title">
+          地域のあそびの経験が蓄積され、<br>
+          企画したい人がヒントを得られ、<br>
+          参加したい人が出会い、<br>
+          手伝いたい人が関われる。
+        </div>
+        <p class="concept-vision-text">
+          ひとつの学校、ひとつの団体、ひとつの地域だけではできないことも、誰かの経験や手助けがあれば実現できるかもしれません。あそびは、まちをつなぐ力になります。ASOBI CREATE PARKは、そのつながりを少しずつ広げていきます。
+        </p>
+      </div>
+
+    </div><!-- /concept-body -->
+  </div><!-- /concept-modal -->
+</div><!-- /concept-overlay -->
 
 <footer>
   <div class="footer-inner">
@@ -1180,6 +1462,19 @@
     showStep(1);
     document.getElementById('orgModalOverlay').classList.add('show');
     document.body.style.overflow = 'hidden';
+  }
+
+  function openConceptModal() {
+    document.getElementById('conceptOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('conceptOverlay').scrollTop = 0;
+  }
+  function closeConceptModal() {
+    document.getElementById('conceptOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  function handleConceptOverlayClick(e) {
+    if (e.target === document.getElementById('conceptOverlay')) closeConceptModal();
   }
 
   function closeOrgRegister() {
