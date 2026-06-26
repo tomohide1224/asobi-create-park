@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登録団体ログイン | ASOBI CREATE PARK</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; }
+    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; --line: #06C755; }
     body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
 
     .site-header { background: white; border-bottom: 1px solid #F0F0F0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
@@ -25,49 +24,41 @@
     .login-title { font-size: 24px; font-weight: 900; color: var(--navy); text-align: center; margin-bottom: 8px; }
     .login-desc { font-size: 14px; color: var(--gray); text-align: center; line-height: 1.8; margin-bottom: 32px; }
 
-    /* PHASE 1: email input */
-    #phase1 { }
-    #phase2 { display: none; }
-    #phase3 { display: none; }
+    .phase { display: none; }
+    .phase.active { display: block; }
 
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
-    .form-input { width: 100%; border: 2px solid #E0E0E0; border-radius: 14px; padding: 14px 18px; font-size: 15px; outline: none; transition: border-color 0.2s; color: var(--navy); }
-    .form-input:focus { border-color: var(--green); }
-    .form-input.readonly { background: #F8F9FA; color: #888; }
-    .form-hint { font-size: 12px; color: var(--gray); margin-top: 6px; line-height: 1.6; }
+    .btn-line { width: 100%; background: var(--line); color: white; border: none; padding: 16px 24px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.2s; }
+    .btn-line:hover { opacity: 0.9; }
+    .btn-line-icon { width: 28px; height: 28px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .btn-line-icon svg { width: 20px; height: 20px; }
 
-    .btn-primary { width: 100%; background: var(--navy); color: white; border: none; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; margin-top: 8px; }
-    .btn-primary:hover { opacity: 0.9; }
-    .btn-primary:disabled { background: #ccc; cursor: default; opacity: 1; }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 28px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid #F0F0F0; }
+    .divider-text { font-size: 12px; color: var(--gray); }
+
+    .processing-box { text-align: center; padding: 20px 0; }
+    .processing-icon { font-size: 48px; margin-bottom: 16px; animation: spin 1.5s linear infinite; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .processing-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .processing-desc { font-size: 13px; color: var(--gray); }
+
+    .error-box { background: #FFF5F5; border: 1.5px solid #FFCDD2; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+    .error-icon { font-size: 36px; margin-bottom: 10px; }
+    .error-title { font-size: 15px; font-weight: 800; color: #C62828; margin-bottom: 8px; }
+    .error-desc { font-size: 13px; color: #555; line-height: 1.8; }
+
+    .friend-box { background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 20px; text-align: center; margin: 16px 0; }
+    .friend-title { font-size: 14px; font-weight: 800; color: var(--green); margin-bottom: 8px; }
+    .friend-desc { font-size: 12px; color: #555; line-height: 1.8; margin-bottom: 12px; }
+    .btn-friend { display: inline-block; background: var(--line); color: white; padding: 10px 24px; border-radius: 20px; font-size: 13px; font-weight: 800; text-decoration: none; }
+
     .btn-secondary { width: 100%; background: none; border: 1.5px solid #ddd; color: #555; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
     .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
 
-    .mail-sent-box { background: #EEF7FF; border: 1.5px solid #90CAF9; border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: center; }
-    .mail-sent-icon { font-size: 36px; margin-bottom: 10px; }
-    .mail-sent-title { font-size: 15px; font-weight: 800; color: #1565C0; margin-bottom: 6px; }
-    .mail-sent-desc { font-size: 13px; color: #555; line-height: 1.8; }
-    .mail-sent-email { font-weight: 800; color: var(--navy); }
-
-    .poll-indicator { display: flex; align-items: center; gap: 10px; justify-content: center; font-size: 13px; color: var(--gray); margin-top: 16px; }
-    .poll-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s ease infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    .verified-box { background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
-    .verified-icon { font-size: 40px; margin-bottom: 10px; }
-    .verified-title { font-size: 16px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
-    .verified-desc { font-size: 13px; color: #555; }
-
-    .divider { border: none; border-top: 1px solid #F0F0F0; margin: 28px 0; }
-
-    .register-hint { text-align: center; font-size: 13px; color: var(--gray); line-height: 1.8; }
-    .register-hint a { color: var(--green); font-weight: 700; text-decoration: none; }
-
-    .notice { background: var(--light); border-radius: 12px; padding: 14px 16px; font-size: 12px; color: var(--gray); line-height: 1.8; margin-top: 16px; }
-
     .dashboard { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
-    .dashboard-welcome { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
-    .dashboard-email { font-size: 14px; color: var(--gray); margin-bottom: 32px; }
+    .dashboard-welcome { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
+    .dashboard-org { font-size: 14px; color: var(--gray); margin-bottom: 28px; }
+    .line-badge { display: inline-flex; align-items: center; gap: 6px; background: #E8F5E9; color: var(--green); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 24px; }
     .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .menu-item { background: var(--light); border-radius: 16px; padding: 20px; text-decoration: none; color: var(--navy); transition: all 0.2s; border: 1.5px solid transparent; display: block; }
     .menu-item:hover { border-color: var(--green); background: #F0FBF5; }
@@ -76,6 +67,10 @@
     .menu-item-desc { font-size: 12px; color: var(--gray); line-height: 1.6; }
     .btn-logout { width: 100%; background: none; border: 1.5px solid #ddd; color: #888; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 24px; transition: all 0.2s; }
     .btn-logout:hover { border-color: #E53935; color: #E53935; }
+
+    .notice { background: var(--light); border-radius: 12px; padding: 14px 16px; font-size: 12px; color: var(--gray); line-height: 1.8; margin-top: 16px; }
+    .register-hint { text-align: center; font-size: 13px; color: var(--gray); line-height: 1.8; }
+    .register-hint a { color: var(--green); font-weight: 700; text-decoration: none; }
 
     footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
     footer strong { color: white; }
@@ -102,21 +97,27 @@
 
 <div class="page-wrap">
 
-  <!-- PHASE 1: メールアドレス入力 -->
-  <div class="login-card" id="phase1">
+  <div class="login-card phase active" id="phase1">
     <div class="login-icon">🌿</div>
     <div class="login-title">登録団体ログイン</div>
-    <div class="login-desc">確認済み団体の方は、登録メールアドレスで<br>ログインできます。</div>
+    <div class="login-desc">LINEアカウントで安全にログインできます。<br>ログイン後、問い合わせ通知もLINEで届きます。</div>
 
-    <div class="form-group">
-      <label class="form-label">メールアドレス（登録時の問い合わせ先）</label>
-      <input type="email" id="emailInput" class="form-input" placeholder="example@mail.com" autocomplete="email">
-      <div class="form-hint">※ 団体登録時に使用した公開問い合わせ先メールアドレスを入力してください</div>
+    <button class="btn-line" onclick="loginWithLINE()">
+      <div class="btn-line-icon">
+        <svg viewBox="0 0 24 24" fill="#06C755" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+        </svg>
+      </div>
+      LINEでログイン
+    </button>
+
+    <div class="friend-box" style="margin-top:20px">
+      <div class="friend-title">📲 まず公式アカウントを友だち追加</div>
+      <div class="friend-desc">問い合わせ通知を受け取るために、<br>ASOBI CREATE PARKのLINE公式アカウントを友だち追加してください。</div>
+      <a href="https://line.me/R/ti/p/@737ubhvn" target="_blank" class="btn-friend">友だち追加する</a>
     </div>
 
-    <button class="btn-primary" id="btnSend" onclick="sendMagicLink()">認証リンクを送る</button>
-
-    <div class="divider"></div>
+    <div style="margin-top:16px" class="divider"><span class="divider-text">または</span></div>
 
     <div class="register-hint">
       まだ団体登録をしていない方は、<br>
@@ -125,40 +126,31 @@
 
     <div class="notice">
       ⚠️ このログインは、<strong>確認済みの登録団体のみ</strong>が対象です。<br>
-      個人での参加・手伝い申込には登録不要です。
+      初回ログイン前に管理者によるLINE連携設定が必要です。
     </div>
   </div>
 
-  <!-- PHASE 2: メール送信後 -->
-  <div class="login-card" id="phase2">
-    <div class="mail-sent-box">
-      <div class="mail-sent-icon">📧</div>
-      <div class="mail-sent-title">メールを確認してください</div>
-      <div class="mail-sent-desc">
-        <span class="mail-sent-email" id="sentEmailLabel"></span><br>
-        に認証リンクを送りました。<br>
-        メール内の「Sign in」リンクをクリックしてください。
-      </div>
+  <div class="login-card phase" id="phase2">
+    <div class="processing-box">
+      <div class="processing-icon">⚙️</div>
+      <div class="processing-title">認証中...</div>
+      <div class="processing-desc">LINEアカウントを確認しています。<br>少々お待ちください。</div>
     </div>
-
-    <div class="poll-indicator">
-      <div class="poll-dot"></div>
-      <span>認証完了を待っています...</span>
-    </div>
-
-    <div class="notice" style="margin-top:20px">
-      メールが届かない場合は、迷惑メールフォルダをご確認ください。<br>
-      数分待っても届かない場合は再送信してください。
-    </div>
-
-    <button class="btn-secondary" onclick="resend()">🔄 再送信する</button>
-    <button class="btn-secondary" onclick="backToPhase1()" style="margin-top:6px">← メールアドレスを変更する</button>
   </div>
 
-  <!-- PHASE 3: 認証済みダッシュボード -->
-  <div class="dashboard" id="phase3">
-    <div class="dashboard-welcome">おかえりなさい 🌿</div>
-    <div class="dashboard-email" id="dashEmail"></div>
+  <div class="login-card phase" id="phase3">
+    <div class="error-box">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title">団体が見つかりませんでした</div>
+      <div class="error-desc" id="errorMsg">このLINEアカウントに紐付けられた団体が見つかりません。<br>管理者にLINE連携をご依頼ください。</div>
+    </div>
+    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
+  </div>
+
+  <div class="dashboard phase" id="phase4">
+    <div class="dashboard-welcome" id="dashWelcome">おかえりなさい 🌿</div>
+    <div class="line-badge">✅ LINE連携済み</div>
+    <div class="dashboard-org" id="dashOrg"></div>
 
     <div class="menu-grid">
       <a href="index.html#register" class="menu-item">
@@ -193,92 +185,84 @@
 </footer>
 
 <script>
-  const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
-  let client, pollInterval;
+  const LINE_LOGIN_CHANNEL_ID = '2010526701';
+  const SUPABASE_FUNC_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co/functions/v1';
 
-  window.addEventListener('DOMContentLoaded', async () => {
-    client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  function getRedirectUri() {
+    return window.location.origin + window.location.pathname;
+  }
 
-    // すでにログイン済みかチェック
-    const { data: { session } } = await client.auth.getSession();
-    if (session) showDashboard(session.user.email);
+  function showPhase(id) {
+    document.querySelectorAll('.phase').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
 
-    // magic link認証後のリダイレクト検出
-    client.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        clearPoll();
-        showDashboard(session.user.email);
-      }
+  function loginWithLINE() {
+    const state = Math.random().toString(36).slice(2);
+    sessionStorage.setItem('line_state', state);
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: LINE_LOGIN_CHANNEL_ID,
+      redirect_uri: getRedirectUri(),
+      state: state,
+      scope: 'profile',
     });
-  });
+    window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
+  }
 
-  async function sendMagicLink() {
-    const email = document.getElementById('emailInput').value.trim();
-    if (!email || !email.includes('@')) { alert('正しいメールアドレスを入力してください'); return; }
-    const btn = document.getElementById('btnSend');
-    btn.disabled = true; btn.textContent = '送信中...';
-    const { error } = await client.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: false, emailRedirectTo: window.location.href }
-    });
-    btn.disabled = false; btn.textContent = '認証リンクを送る';
-    if (error) {
-      if (error.message.includes('rate limit')) {
-        alert('送信回数の上限に達しました。しばらくお待ちください。');
-      } else if (error.message.includes('not found') || error.message.includes('User')) {
-        alert('このメールアドレスでの登録が見つかりません。団体登録が完了しているかご確認ください。');
+  async function handleLineCallback(code) {
+    showPhase('phase2');
+    try {
+      const res = await fetch(`${SUPABASE_FUNC_URL}/line-auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, redirect_uri: getRedirectUri() }),
+      });
+      const data = await res.json();
+      window.history.replaceState({}, '', window.location.pathname);
+      if (data.success) {
+        sessionStorage.setItem('acp_org', JSON.stringify(data.organization));
+        sessionStorage.setItem('acp_line_name', data.line_display_name);
+        showDashboard(data.organization, data.line_display_name);
       } else {
-        alert('送信に失敗しました: ' + error.message);
+        document.getElementById('errorMsg').textContent = data.error || 'このLINEアカウントに紐付けられた団体が見つかりません。';
+        showPhase('phase3');
       }
-      return;
+    } catch (e) {
+      document.getElementById('errorMsg').textContent = '通信エラーが発生しました。もう一度お試しください。';
+      showPhase('phase3');
     }
-    document.getElementById('sentEmailLabel').textContent = email;
-    document.getElementById('phase1').style.display = 'none';
-    document.getElementById('phase2').style.display = 'block';
-    startPoll(email);
   }
 
-  function startPoll(email) {
-    clearPoll();
-    pollInterval = setInterval(async () => {
-      const { data: { session } } = await client.auth.getSession();
-      if (session && session.user.email === email) {
-        clearPoll();
-        showDashboard(email);
+  function showDashboard(org, lineName) {
+    const name = lineName || org?.org_name || '';
+    document.getElementById('dashWelcome').textContent = `${name} さん、おかえりなさい 🌿`;
+    document.getElementById('dashOrg').textContent = org?.org_name ? `📍 ${org.org_name}` : '';
+    showPhase('phase4');
+  }
+
+  function signOut() {
+    sessionStorage.removeItem('acp_org');
+    sessionStorage.removeItem('acp_line_name');
+    showPhase('phase1');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      handleLineCallback(code);
+    } else {
+      const orgStr = sessionStorage.getItem('acp_org');
+      if (orgStr) {
+        const org = JSON.parse(orgStr);
+        const lineName = sessionStorage.getItem('acp_line_name');
+        showDashboard(org, lineName);
+      } else {
+        showPhase('phase1');
       }
-    }, 2000);
-    setTimeout(clearPoll, 600000);
-  }
-
-  function clearPoll() { if (pollInterval) { clearInterval(pollInterval); pollInterval = null; } }
-
-  function showDashboard(email) {
-    document.getElementById('phase1').style.display = 'none';
-    document.getElementById('phase2').style.display = 'none';
-    document.getElementById('phase3').style.display = 'block';
-    document.getElementById('dashEmail').textContent = '📧 ' + email;
-  }
-
-  async function resend() {
-    const email = document.getElementById('sentEmailLabel').textContent;
-    clearPoll();
-    document.getElementById('phase2').style.display = 'none';
-    document.getElementById('phase1').style.display = 'block';
-    document.getElementById('emailInput').value = email;
-  }
-
-  function backToPhase1() {
-    clearPoll();
-    document.getElementById('phase2').style.display = 'none';
-    document.getElementById('phase1').style.display = 'block';
-  }
-
-  async function signOut() {
-    await client.auth.signOut();
-    document.getElementById('phase3').style.display = 'none';
-    document.getElementById('phase1').style.display = 'block';
-  }
+    }
+  });
 </script>
 </body>
 </html>
