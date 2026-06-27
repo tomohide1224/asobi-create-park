@@ -93,6 +93,72 @@
       .login-card, .dashboard { padding: 32px 24px; }
       .menu-grid { grid-template-columns: 1fr; }
     }
+
+    /* ===== 新ダッシュボード A+B型 ===== */
+    .page-wrap.dashboard-mode { align-items: flex-start; padding-top: 24px; }
+    .dashboard-full { width: 100%; max-width: 680px; }
+
+    .dash-header { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 16px; }
+    .dash-org-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .dash-org-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .dash-org-name { font-size: 18px; font-weight: 900; color: var(--navy); }
+    .dash-welcome-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .line-badge-sm { margin-left: auto; background: #E8F5E9; color: var(--green); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .dash-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .dash-stat-box { background: var(--light); border-radius: 12px; padding: 14px; text-align: center; }
+    .dash-stat-num { font-size: 28px; font-weight: 900; color: var(--green); }
+    .dash-stat-label { font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+    .dash-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .dash-tab { flex: 1; background: white; border: 1.5px solid #E0E0E0; color: var(--gray); padding: 10px 6px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .dash-tab.active { background: var(--green); border-color: var(--green); color: white; }
+
+    .dash-pane { display: none; }
+    .dash-pane.active { display: block; }
+
+    .dash-loading { text-align: center; padding: 40px; color: var(--gray); font-size: 13px; }
+    .dash-empty { text-align: center; padding: 48px 20px; color: var(--gray); font-size: 14px; line-height: 2; }
+
+    /* イベントカード（A: Airbnb風） */
+    .event-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .event-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1.5px solid transparent; transition: all 0.2s; cursor: pointer; }
+    .event-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+    .event-card-img { height: 80px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); display: flex; align-items: center; justify-content: center; font-size: 36px; overflow: hidden; }
+    .event-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .event-card-body { padding: 12px; }
+    .event-card-status { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-bottom: 6px; }
+    .status-active { background: #E8F5E9; color: var(--green); }
+    .status-pending { background: #FFF8E1; color: #F57F17; }
+    .status-closed { background: #F5F5F5; color: #9E9E9E; }
+    .event-card-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 4px; line-height: 1.4; }
+    .event-card-meta { font-size: 11px; color: var(--gray); line-height: 1.6; }
+    .event-card-inquiry { font-size: 11px; color: var(--green); font-weight: 700; margin-top: 6px; }
+
+    /* 問い合わせリスト（B: Peatix風） */
+    .request-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .request-item { background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid var(--green); }
+    .request-event-tag { font-size: 12px; color: var(--green); font-weight: 700; margin-bottom: 6px; }
+    .request-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+    .request-name { font-size: 14px; font-weight: 800; color: var(--navy); }
+    .request-date { font-size: 11px; color: var(--gray); white-space: nowrap; margin-left: 8px; }
+    .request-type-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: #E3F2FD; color: #1565C0; margin-bottom: 4px; }
+    .request-message { font-size: 12px; color: var(--gray); line-height: 1.6; margin-top: 4px; }
+
+    /* 団体情報 */
+    .orginfo-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
+    .orginfo-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F5F5F5; }
+    .orginfo-row:last-child { border-bottom: none; }
+    .orginfo-label { font-size: 12px; font-weight: 700; color: var(--gray); width: 90px; flex-shrink: 0; padding-top: 2px; }
+    .orginfo-value { font-size: 14px; color: var(--navy); flex: 1; line-height: 1.6; }
+
+    .dash-post-btn { margin-top: 8px; }
+    .dash-section-title { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 10px; letter-spacing: 0.05em; }
+
+    @media (max-width: 520px) {
+      .event-cards { grid-template-columns: 1fr; }
+      .dash-tab { font-size: 11px; padding: 8px 4px; }
+      .dashboard-full { max-width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -204,33 +270,59 @@
     <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
   </div>
 
-  <!-- PHASE 4: ダッシュボード -->
-  <div class="dashboard phase" id="phase4">
-    <div class="dashboard-welcome" id="dashWelcome">おかえりなさい 🌿</div>
-    <div class="line-badge">✅ LINE連携済み</div>
-    <div class="dashboard-org" id="dashOrg"></div>
+  <!-- PHASE 4: ダッシュボード（A+B型） -->
+  <div class="dashboard-full phase" id="phase4">
 
-    <div class="menu-grid">
-      <a href="index.html#register" class="menu-item">
-        <div class="menu-item-icon">✏️</div>
-        <div class="menu-item-title">あそびを登録する</div>
-        <div class="menu-item-desc">新しいイベント・あそびを掲載申請する</div>
-      </a>
-      <a href="index.html" class="menu-item">
-        <div class="menu-item-icon">🏅</div>
-        <div class="menu-item-title">団体ページを見る</div>
-        <div class="menu-item-desc">登録した団体情報を確認する</div>
-      </a>
-      <a href="events.html" class="menu-item">
-        <div class="menu-item-icon">🎪</div>
-        <div class="menu-item-title">あそびを探す</div>
-        <div class="menu-item-desc">掲載中のあそびやイベントを見る</div>
-      </a>
-      <a href="about.html" class="menu-item">
-        <div class="menu-item-icon">📋</div>
-        <div class="menu-item-title">掲載ガイドライン</div>
-        <div class="menu-item-desc">掲載ルールを確認する</div>
-      </a>
+    <!-- ヘッダー：団体情報＋サマリー統計 -->
+    <div class="dash-header">
+      <div class="dash-org-row">
+        <div class="dash-org-icon">🌿</div>
+        <div>
+          <div class="dash-org-name" id="dashOrg">団体名</div>
+          <div class="dash-welcome-sub" id="dashWelcome"></div>
+        </div>
+        <div class="line-badge-sm">✅ LINE連携</div>
+      </div>
+      <div class="dash-stats-row">
+        <div class="dash-stat-box">
+          <div class="dash-stat-num" id="statEvents">-</div>
+          <div class="dash-stat-label">イベント数</div>
+        </div>
+        <div class="dash-stat-box">
+          <div class="dash-stat-num" id="statRequests">-</div>
+          <div class="dash-stat-label">問い合わせ</div>
+        </div>
+        <div class="dash-stat-box">
+          <div class="dash-stat-num" id="statNew">-</div>
+          <div class="dash-stat-label">新着（7日）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- タブ切り替え -->
+    <div class="dash-tabs">
+      <button class="dash-tab active" data-tab="events" onclick="switchTab('events')">📅 イベント</button>
+      <button class="dash-tab" data-tab="requests" onclick="switchTab('requests')">📬 問い合わせ</button>
+      <button class="dash-tab" data-tab="orginfo" onclick="switchTab('orginfo')">🏢 団体情報</button>
+    </div>
+
+    <!-- イベントタブ（Aカード型） -->
+    <div class="dash-pane active" id="pane-events">
+      <div class="dash-section-title">自分が登録したイベント</div>
+      <div id="events-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
+      <button class="btn-line dash-post-btn" onclick="alert('イベント投稿機能は近日公開予定です 🌱')">＋ イベントを投稿する</button>
+    </div>
+
+    <!-- 問い合わせタブ（Bリスト型） -->
+    <div class="dash-pane" id="pane-requests">
+      <div class="dash-section-title">イベントへの問い合わせ・参加申請</div>
+      <div id="requests-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
+    </div>
+
+    <!-- 団体情報タブ -->
+    <div class="dash-pane" id="pane-orginfo">
+      <div class="dash-section-title">登録団体情報</div>
+      <div id="orginfo-content"></div>
     </div>
 
     <button class="btn-logout" onclick="signOut()">ログアウト</button>
@@ -291,6 +383,7 @@
         // 団体未登録 → 新規登録フォームへ
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         sessionStorage.setItem('acp_line_name', data.line_display_name || '');
+        // 代表者名をLINE表示名で初期設定
         if (data.line_display_name) {
           document.getElementById('reg_rep_name').value = data.line_display_name;
         }
@@ -364,16 +457,149 @@
     }
   }
 
-  function showDashboard(org, lineName) {
+  async function showDashboard(org, lineName) {
     const name = lineName || org?.org_name || '';
+    document.getElementById('dashOrg').textContent = org?.org_name || '団体名未設定';
     document.getElementById('dashWelcome').textContent = `${name} さん、おかえりなさい 🌿`;
-    document.getElementById('dashOrg').textContent = org?.org_name ? `📍 ${org.org_name}` : '';
     showPhase('phase4');
+    document.querySelector('.page-wrap').classList.add('dashboard-mode');
+    await loadDashboard(org);
+  }
+
+  async function loadDashboard(org) {
+    if (!org?.id) {
+      document.getElementById('statEvents').textContent = '0';
+      document.getElementById('statRequests').textContent = '0';
+      document.getElementById('statNew').textContent = '0';
+      document.getElementById('events-list').innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      document.getElementById('requests-list').innerHTML = '<div class="dash-empty">💭 まだ問い合わせはありません</div>';
+      renderOrgInfo(org || {});
+      return;
+    }
+
+    try {
+      const eventsRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/events?organization_id=eq.${org.id}&order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      const events = eventsRes.ok ? await eventsRes.json() : [];
+
+      let requests = [];
+      if (events.length > 0) {
+        const ids = events.map(e => e.id).join(',');
+        const reqRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/participation_requests?event_id=in.(${ids})&order=created_at.desc`,
+          { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
+        requests = reqRes.ok ? await reqRes.json() : [];
+      }
+
+      document.getElementById('statEvents').textContent = events.length;
+      document.getElementById('statRequests').textContent = requests.length;
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const newCount = requests.filter(r => new Date(r.created_at) > oneWeekAgo).length;
+      document.getElementById('statNew').textContent = newCount;
+
+      renderEvents(events, requests);
+      renderRequests(requests, events);
+      renderOrgInfo(org);
+    } catch(e) {
+      document.getElementById('events-list').innerHTML = '<div class="dash-empty">⚠️ データの読み込みに失敗しました</div>';
+    }
+  }
+
+  function renderEvents(events, requests) {
+    const el = document.getElementById('events-list');
+    if (events.length === 0) {
+      el.innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      return;
+    }
+    const countMap = {};
+    requests.forEach(r => { countMap[r.event_id] = (countMap[r.event_id] || 0) + 1; });
+    const statusLabel = { active: '掘載中', pending: '審査中', closed: '終了' };
+    const statusClass = { active: 'status-active', pending: 'status-pending', closed: 'status-closed' };
+
+    const cards = events.map(ev => {
+      const count = countMap[ev.id] || 0;
+      const sLabel = statusLabel[ev.status] || '掘載中';
+      const sClass = statusClass[ev.status] || 'status-active';
+      const imgHtml = ev.image_url
+        ? `<img src="${escHtml(ev.image_url)}" alt="">`
+        : '🎪';
+      return `<div class="event-card">
+        <div class="event-card-img">${imgHtml}</div>
+        <div class="event-card-body">
+          <span class="event-card-status ${sClass}">${sLabel}</span>
+          <div class="event-card-title">${escHtml(ev.title)}</div>
+          <div class="event-card-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>
+          ${count > 0 ? `<div class="event-card-inquiry">📬 問い合わせ ${count}件</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    el.innerHTML = `<div class="event-cards">${cards}</div>`;
+  }
+
+  function renderRequests(requests, events) {
+    const el = document.getElementById('requests-list');
+    if (requests.length === 0) {
+      el.innerHTML = '<div class="dash-empty">💭 まだ問い合わせ・参加申請はありません</div>';
+      return;
+    }
+    const eventMap = {};
+    events.forEach(e => { eventMap[e.id] = e.title; });
+    const typeLabel = { participate: '参加希望', help: '手伝い希望', inquiry: 'お問い合わせ' };
+
+    const items = requests.map(r => {
+      const date = new Date(r.created_at).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+      const type = typeLabel[r.request_type] || r.request_type || 'お問い合わせ';
+      return `<div class="request-item">
+        <div class="request-event-tag">📅 ${escHtml(eventMap[r.event_id] || 'イベント不明')}</div>
+        <div class="request-header">
+          <div>
+            <span class="request-type-badge">${escHtml(type)}</span>
+            <div class="request-name">${escHtml(r.name || '匿名')}</div>
+          </div>
+          <div class="request-date">${date}</div>
+        </div>
+        ${r.message ? `<div class="request-message">${escHtml(r.message)}</div>` : ''}
+      </div>`;
+    }).join('');
+    el.innerHTML = `<div class="request-list">${items}</div>`;
+  }
+
+  function renderOrgInfo(org) {
+    const el = document.getElementById('orginfo-content');
+    const rows = [
+      ['団体名', org.org_name],
+      ['種別', org.org_type],
+      ['活動エリア', org.area],
+      ['代表者名', org.rep_name],
+      ['メール', org.email],
+      ['紹介文', org.description],
+      ['LINE', '✅ 連携済み'],
+    ].filter(([, v]) => v);
+
+    const rowsHtml = rows.map(([k, v]) =>
+      `<div class="orginfo-row"><div class="orginfo-label">${k}</div><div class="orginfo-value">${escHtml(String(v))}</div></div>`
+    ).join('');
+    el.innerHTML = `<div class="orginfo-card">${rowsHtml}</div>`;
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.dash-pane').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById(`pane-${tab}`).classList.add('active');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   function signOut() {
     sessionStorage.removeItem('acp_org');
     sessionStorage.removeItem('acp_line_name');
+    document.querySelector('.page-wrap').classList.remove('dashboard-mode');
     showPhase('phase1');
   }
 
@@ -383,8 +609,10 @@
     const code = params.get('code');
 
     if (code) {
+      // LINEからのコールバック
       handleLineCallback(code);
     } else {
+      // セッション復元チェック
       const orgStr = sessionStorage.getItem('acp_org');
       if (orgStr) {
         const org = JSON.parse(orgStr);
