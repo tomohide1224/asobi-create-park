@@ -27,6 +27,7 @@
     .phase { display: none; }
     .phase.active { display: block; }
 
+    /* LINEログインボタン */
     .btn-line { width: 100%; background: var(--line); color: white; border: none; padding: 16px 24px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.2s; }
     .btn-line:hover { opacity: 0.9; }
     .btn-line-icon { width: 28px; height: 28px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -36,17 +37,20 @@
     .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid #F0F0F0; }
     .divider-text { font-size: 12px; color: var(--gray); }
 
+    /* 処理中 */
     .processing-box { text-align: center; padding: 20px 0; }
     .processing-icon { font-size: 48px; margin-bottom: 16px; animation: spin 1.5s linear infinite; }
     @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     .processing-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
     .processing-desc { font-size: 13px; color: var(--gray); }
 
+    /* エラー */
     .error-box { background: #FFF5F5; border: 1.5px solid #FFCDD2; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
     .error-icon { font-size: 36px; margin-bottom: 10px; }
     .error-title { font-size: 15px; font-weight: 800; color: #C62828; margin-bottom: 8px; }
     .error-desc { font-size: 13px; color: #555; line-height: 1.8; }
 
+    /* LINE友だち追加 */
     .friend-box { background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 20px; text-align: center; margin: 16px 0; }
     .friend-title { font-size: 14px; font-weight: 800; color: var(--green); margin-bottom: 8px; }
     .friend-desc { font-size: 12px; color: #555; line-height: 1.8; margin-bottom: 12px; }
@@ -55,6 +59,7 @@
     .btn-secondary { width: 100%; background: none; border: 1.5px solid #ddd; color: #555; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
     .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
 
+    /* ダッシュボード */
     .dashboard { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
     .dashboard-welcome { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
     .dashboard-org { font-size: 14px; color: var(--gray); margin-bottom: 28px; }
@@ -75,6 +80,7 @@
     footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
     footer strong { color: white; }
 
+    /* 登録フォーム */
     .register-form { margin-bottom: 16px; }
     .form-group { margin-bottom: 16px; }
     .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
@@ -88,6 +94,7 @@
       .menu-grid { grid-template-columns: 1fr; }
     }
 
+    /* ===== 新ダッシュボード A+B型 ===== */
     .page-wrap.dashboard-mode { align-items: flex-start; padding-top: 24px; }
     .dashboard-full { width: 100%; max-width: 680px; }
 
@@ -115,6 +122,7 @@
     .dash-loading { text-align: center; padding: 40px; color: var(--gray); font-size: 13px; }
     .dash-empty { text-align: center; padding: 48px 20px; color: var(--gray); font-size: 14px; line-height: 2; }
 
+    /* イベントカード（A: Airbnb風） */
     .event-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .event-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1.5px solid transparent; transition: all 0.2s; cursor: pointer; }
     .event-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
@@ -129,6 +137,7 @@
     .event-card-meta { font-size: 11px; color: var(--gray); line-height: 1.6; }
     .event-card-inquiry { font-size: 11px; color: var(--green); font-weight: 700; margin-top: 6px; }
 
+    /* 問い合わせリスト（B: Peatix風） */
     .request-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .request-item { background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid var(--green); }
     .request-event-tag { font-size: 12px; color: var(--green); font-weight: 700; margin-bottom: 6px; }
@@ -138,6 +147,7 @@
     .request-type-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: #E3F2FD; color: #1565C0; margin-bottom: 4px; }
     .request-message { font-size: 12px; color: var(--gray); line-height: 1.6; margin-top: 4px; }
 
+    /* 団体情報 */
     .orginfo-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
     .orginfo-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F5F5F5; }
     .orginfo-row:last-child { border-bottom: none; }
@@ -147,6 +157,7 @@
     .dash-post-btn { margin-top: 8px; }
     .dash-section-title { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 10px; letter-spacing: 0.05em; }
 
+    /* 団体情報編集 */
     .orginfo-edit-btn { width: 100%; background: none; border: 1.5px solid var(--green); color: var(--green); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: all 0.2s; font-family: inherit; }
     .orginfo-edit-btn:hover { background: var(--green); color: white; }
     .orginfo-edit-form { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
@@ -157,6 +168,7 @@
     .btn-cancel:hover { border-color: #999; color: #555; }
     .orginfo-save-msg { font-size: 13px; color: var(--green); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
 
+    /* 画像アップロードエリア */
     .img-upload-area { border: 2px dashed #E0E0E0; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; background: var(--light); }
     .img-upload-area:hover { border-color: var(--green); background: #F0FBF5; }
     .img-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
@@ -168,6 +180,7 @@
     .logo-preview.has-img { display: block; }
     .upload-progress { font-size: 12px; color: var(--green); font-weight: 700; text-align: center; margin-top: 6px; display: none; }
 
+    /* 団体ヘッダーロゴ */
     .dash-org-logo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 
     @media (max-width: 520px) {
@@ -198,6 +211,7 @@
     <div class="login-icon">🌿</div>
     <div class="login-title">登録団体ログイン</div>
     <div class="login-desc">LINEアカウントで安全にログインできます。<br>ログイン後、問い合わせ通知もLINEで届きます。</div>
+
     <button class="btn-line" onclick="loginWithLINE()">
       <div class="btn-line-icon">
         <svg viewBox="0 0 24 24" fill="#06C755" xmlns="http://www.w3.org/2000/svg">
@@ -206,12 +220,16 @@
       </div>
       LINEでログイン
     </button>
+
     <div class="friend-box" style="margin-top:20px">
       <div class="friend-title">🌱 登録の前に友だち追加が必要です</div>
       <div class="friend-desc">ASOBI CREATE PARKとやり取りするために、まず公式LINEアカウントを友だち追加してください。<br>問い合わせへの返信や重要な連絡はLINEで届きます。</div>
       <a href="https://line.me/R/ti/p/@737ubhvn" target="_blank" class="btn-friend">友だち追加する</a>
     </div>
-    <div class="notice">友だち追加が完了したら、上の「LINEでログイン」ボタンで登録・ログインできます。</div>
+
+    <div class="notice">
+      友だち追加が完了したら、上の「LINEでログイン」ボタンで登録・ログインできます。
+    </div>
   </div>
 
   <!-- PHASE 2: 処理中 -->
@@ -238,6 +256,7 @@
     <div class="login-icon">🌱</div>
     <div class="login-title">団体を登録する</div>
     <div class="login-desc">LINEアカウントと紐付けて、団体情報を登録してください。</div>
+
     <div class="register-form">
       <div class="form-group">
         <label class="form-label">団体名 <span class="required">*</span></label>
@@ -271,6 +290,7 @@
         <label class="form-label">団体の紹介文</label>
         <textarea id="reg_description" class="form-input" rows="3" placeholder="どんな活動をしていますか？"></textarea>
       </div>
+
       <button class="btn-line" onclick="registerOrg()" style="margin-top:8px" id="reg_submit_btn">
         🌱 団体を登録してログイン
       </button>
@@ -279,8 +299,10 @@
     <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
   </div>
 
-  <!-- PHASE 4: ダッシュボード -->
+  <!-- PHASE 4: ダッシュボード（A+B型） -->
   <div class="dashboard-full phase" id="phase4">
+
+    <!-- ヘッダー：団体情報＋サマリー統計 -->
     <div class="dash-header">
       <div class="dash-org-row">
         <div class="dash-org-icon-wrap" onclick="openLogoPicker()">
@@ -301,29 +323,47 @@
         <div class="line-badge-sm">✅ LINE連携</div>
       </div>
       <div class="dash-stats-row">
-        <div class="dash-stat-box"><div class="dash-stat-num" id="statEvents">-</div><div class="dash-stat-label">イベント数</div></div>
-        <div class="dash-stat-box"><div class="dash-stat-num" id="statRequests">-</div><div class="dash-stat-label">問い合わせ</div></div>
-        <div class="dash-stat-box"><div class="dash-stat-num" id="statNew">-</div><div class="dash-stat-label">新着（7日）</div></div>
+        <div class="dash-stat-box">
+          <div class="dash-stat-num" id="statEvents">-</div>
+          <div class="dash-stat-label">イベント数</div>
+        </div>
+        <div class="dash-stat-box">
+          <div class="dash-stat-num" id="statRequests">-</div>
+          <div class="dash-stat-label">問い合わせ</div>
+        </div>
+        <div class="dash-stat-box">
+          <div class="dash-stat-num" id="statNew">-</div>
+          <div class="dash-stat-label">新着（7日）</div>
+        </div>
       </div>
     </div>
+
+    <!-- タブ切り替え -->
     <div class="dash-tabs">
       <button class="dash-tab active" data-tab="events" onclick="switchTab('events')">📅 イベント</button>
       <button class="dash-tab" data-tab="requests" onclick="switchTab('requests')">📬 問い合わせ</button>
       <button class="dash-tab" data-tab="orginfo" onclick="switchTab('orginfo')">🏢 団体情報</button>
     </div>
+
+    <!-- イベントタブ（Aカード型） -->
     <div class="dash-pane active" id="pane-events">
       <div class="dash-section-title">自分が登録したイベント</div>
       <div id="events-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
       <button class="btn-line dash-post-btn" onclick="showEventForm()">＋ イベントを投稿する</button>
     </div>
+
+    <!-- 問い合わせタブ（Bリスト型） -->
     <div class="dash-pane" id="pane-requests">
       <div class="dash-section-title">イベントへの問い合わせ・参加申請</div>
       <div id="requests-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
     </div>
+
+    <!-- 団体情報タブ -->
     <div class="dash-pane" id="pane-orginfo">
       <div class="dash-section-title">登録団体情報</div>
       <div id="orginfo-content"></div>
     </div>
+
     <button class="btn-logout" onclick="signOut()">ログアウト</button>
   </div>
 
@@ -333,24 +373,48 @@
       <button onclick="showPhase('phase4')" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
       <div style="font-size:18px;font-weight:900;color:var(--navy);">📅 イベントを投稿する</div>
     </div>
+
     <div class="register-form">
       <div class="form-group">
         <label class="form-label">イベント画像</label>
         <div class="img-upload-area" id="event-img-area">
           <input type="file" id="event_image_file" accept="image/*" onchange="previewEventImage(this)">
           <img id="event_img_preview" class="img-preview" src="" alt="">
-          <div id="event-img-placeholder"><div class="img-upload-icon">🖼️</div><div class="img-upload-label">タップして画像を選択（JPEG/PNG、5MBまで）</div></div>
+          <div id="event-img-placeholder">
+            <div class="img-upload-icon">🖼️</div>
+            <div class="img-upload-label">タップして画像を選択（JPEG/PNG、5MBまで）</div>
+          </div>
         </div>
         <div id="event-img-progress" class="upload-progress">📤 アップロード中...</div>
       </div>
-      <div class="form-group"><label class="form-label">イベント名 <span class="required">*</span></label><input type="text" id="ev_title" class="form-input" placeholder="例：親子で遊ぶ自然体験"></div>
-      <div class="form-group"><label class="form-label">開催日</label><input type="date" id="ev_event_date" class="form-input"></div>
-      <div class="form-group"><label class="form-label">開催場所</label><input type="text" id="ev_location" class="form-input" placeholder="例：世田谷公園"></div>
-      <div class="form-group"><label class="form-label">対象年齢・人数</label><input type="text" id="ev_target" class="form-input" placeholder="例：3〜10歳、20名程度"></div>
-      <div class="form-group"><label class="form-label">イベント説明</label><textarea id="ev_description" class="form-input" rows="4" placeholder="どんなイベントですか？"></textarea></div>
-      <div class="form-group"><label class="form-label">参加費</label><input type="text" id="ev_price" class="form-input" placeholder="例：無料、500円/人"></div>
+      <div class="form-group">
+        <label class="form-label">イベント名 <span class="required">*</span></label>
+        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遊ぶ自然体験">
+      </div>
+      <div class="form-group">
+        <label class="form-label">開催日</label>
+        <input type="date" id="ev_event_date" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">開催場所</label>
+        <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷公園">
+      </div>
+      <div class="form-group">
+        <label class="form-label">対象年齢・人数</label>
+        <input type="text" id="ev_target" class="form-input" placeholder="例：3〜10歳、20名程度">
+      </div>
+      <div class="form-group">
+        <label class="form-label">イベント説明</label>
+        <textarea id="ev_description" class="form-input" rows="4" placeholder="どんなイベントですか？"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">参加費</label>
+        <input type="text" id="ev_price" class="form-input" placeholder="例：無料、500円/人">
+      </div>
       <div id="ev_error" style="color:#C62828;font-size:13px;margin-bottom:10px;text-align:center;display:none;"></div>
-      <button class="btn-line" id="ev_submit_btn" onclick="saveEvent()" style="margin-top:4px">🌱 イベントを公開する</button>
+      <button class="btn-line" id="ev_submit_btn" onclick="saveEvent()" style="margin-top:4px">
+        🌱 イベントを公開する
+      </button>
     </div>
   </div>
 
@@ -376,15 +440,23 @@
       </svg>
     </div>
   </div>
-  <div style="padding:16px 16px 28px;background:#111;display:flex;flex-direction:column;align-items:center;gap:12px;flex-shrink:0;">
-    <div style="color:rgba(255,255,255,0.5);font-size:12px;">ドラッグで位置調整・スクロールで拡大縮小</div>
-    <div style="display:flex;align-items:center;gap:24px;">
-      <div onclick="rotateCropImg()" style="cursor:pointer;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;">
-        <div style="font-size:28px;">↻</div>
-        <div style="font-size:12px;letter-spacing:0.05em;">回転</div>
+  <div style="padding:16px 16px 32px;background:#111;display:flex;flex-direction:column;align-items:center;gap:14px;flex-shrink:0;">
+    <div style="color:rgba(255,255,255,0.45);font-size:11px;">ドラッグで移動・ボタンまたはピンチで拡大縮小</div>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <div onclick="zoomCropImg(0.85)" style="cursor:pointer;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:44px;height:44px;border:2px solid rgba(255,255,255,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1;">−</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);">縮小</div>
       </div>
-      <button onclick="confirmCrop()" id="crop-confirm-btn" style="background:#1a73e8;color:white;border:none;padding:14px 48px;border-radius:28px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.03em;">次へ</button>
+      <div onclick="rotateCropImg()" style="cursor:pointer;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:44px;height:44px;border:2px solid rgba(255,255,255,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;">↻</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);">回転</div>
+      </div>
+      <div onclick="zoomCropImg(1.15)" style="cursor:pointer;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:44px;height:44px;border:2px solid rgba(255,255,255,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;">＋</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);">拡大</div>
+      </div>
     </div>
+    <button onclick="confirmCrop()" id="crop-confirm-btn" style="width:100%;max-width:320px;background:#1a73e8;color:white;border:none;padding:15px;border-radius:28px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.03em;">次へ</button>
   </div>
 </div>
 
@@ -398,7 +470,9 @@
   const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 
-  function getRedirectUri() { return window.location.origin + window.location.pathname; }
+  function getRedirectUri() {
+    return window.location.origin + window.location.pathname;
+  }
 
   function showPhase(id) {
     document.querySelectorAll('.phase').forEach(el => el.classList.remove('active'));
@@ -408,30 +482,47 @@
   function loginWithLINE() {
     const state = Math.random().toString(36).slice(2);
     sessionStorage.setItem('line_state', state);
-    const params = new URLSearchParams({ response_type:'code', client_id: LINE_LOGIN_CHANNEL_ID, redirect_uri: getRedirectUri(), state, scope:'profile' });
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: LINE_LOGIN_CHANNEL_ID,
+      redirect_uri: getRedirectUri(),
+      state: state,
+      scope: 'profile',
+    });
     window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
   }
 
   async function handleLineCallback(code) {
     showPhase('phase2');
     try {
-      const res = await fetch(`${SUPABASE_FUNC_URL}/line-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ code, redirect_uri: getRedirectUri() }) });
+      const res = await fetch(`${SUPABASE_FUNC_URL}/line-auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, redirect_uri: getRedirectUri() }),
+      });
       const data = await res.json();
+
+      // URLのパラメータを消す
       window.history.replaceState({}, '', window.location.pathname);
+
       if (data.success) {
         sessionStorage.setItem('acp_org', JSON.stringify(data.organization));
         sessionStorage.setItem('acp_line_name', data.line_display_name);
         showDashboard(data.organization, data.line_display_name);
       } else if (data.line_user_id) {
+        // 団体未登録 → 新規登録フォームへ
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         sessionStorage.setItem('acp_line_name', data.line_display_name || '');
-        if (data.line_display_name) document.getElementById('reg_rep_name').value = data.line_display_name;
+        // 代表者名をLINE表示名で初期設定
+        if (data.line_display_name) {
+          document.getElementById('reg_rep_name').value = data.line_display_name;
+        }
         showPhase('phase5');
       } else {
         document.getElementById('errorMsg').textContent = data.error || '通信エラーが発生しました。';
         showPhase('phase3');
       }
-    } catch(e) {
+    } catch (e) {
       document.getElementById('errorMsg').textContent = '通信エラーが発生しました。もう一度お試しください。';
       showPhase('phase3');
     }
@@ -439,25 +530,60 @@
 
   async function registerOrg() {
     const org_name = document.getElementById('reg_org_name').value.trim();
-    if (!org_name) { document.getElementById('reg_error').textContent = '団体名は必須です。'; document.getElementById('reg_error').style.display = 'block'; return; }
+    if (!org_name) {
+      document.getElementById('reg_error').textContent = '団体名は必須です。';
+      document.getElementById('reg_error').style.display = 'block';
+      return;
+    }
     const line_user_id = sessionStorage.getItem('acp_line_user_id');
     const line_display_name = sessionStorage.getItem('acp_line_name');
-    if (!line_user_id) { showPhase('phase1'); return; }
+    if (!line_user_id) {
+      showPhase('phase1');
+      return;
+    }
+
     const btn = document.getElementById('reg_submit_btn');
-    btn.disabled = true; btn.textContent = '登録中...';
+    btn.disabled = true;
+    btn.textContent = '登録中...';
     document.getElementById('reg_error').style.display = 'none';
+
     try {
-      const body = { org_name, org_type: document.getElementById('reg_org_type').value, area: document.getElementById('reg_area').value.trim(), rep_name: document.getElementById('reg_rep_name').value.trim(), email: document.getElementById('reg_email').value.trim(), description: document.getElementById('reg_description').value.trim(), line_user_id, line_display_name };
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations`, { method:'POST', headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation'}, body: JSON.stringify(body) });
-      if (!res.ok) { const err = await res.json(); throw new Error(err.message || '登録に失敗しました。'); }
+      const body = {
+        org_name,
+        org_type: document.getElementById('reg_org_type').value,
+        area: document.getElementById('reg_area').value.trim(),
+        rep_name: document.getElementById('reg_rep_name').value.trim(),
+        email: document.getElementById('reg_email').value.trim(),
+        description: document.getElementById('reg_description').value.trim(),
+        line_user_id,
+        line_display_name,
+      };
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '登録に失敗しました。');
+      }
+
       const [org] = await res.json();
       sessionStorage.setItem('acp_org', JSON.stringify(org));
       sessionStorage.removeItem('acp_line_user_id');
       showDashboard(org, line_display_name);
-    } catch(e) {
+    } catch (e) {
       document.getElementById('reg_error').textContent = e.message;
       document.getElementById('reg_error').style.display = 'block';
-      btn.disabled = false; btn.textContent = '🌱 団体を登録してログイン';
+      btn.disabled = false;
+      btn.textContent = '🌱 団体を登録してログイン';
     }
   }
 
@@ -465,10 +591,14 @@
     const name = lineName || org?.org_name || '';
     document.getElementById('dashOrg').textContent = org?.org_name || '団体名未設定';
     document.getElementById('dashWelcome').textContent = `${name} さん、おかえりなさい 🌿`;
+    // ロゴがあれば画像、なければ絵文字
     const iconEl = document.getElementById('dashOrgIcon');
     if (iconEl) {
-      if (org?.logo_url) iconEl.innerHTML = `<img src="${escHtml(org.logo_url)}" class="dash-org-logo" alt="ロゴ">`;
-      else iconEl.innerHTML = makeLandscapeIcon();
+      if (org?.logo_url) {
+        iconEl.innerHTML = `<img src="${escHtml(org.logo_url)}" class="dash-org-logo" alt="ロゴ">`;
+      } else {
+        iconEl.innerHTML = makeLandscapeIcon();
+      }
     }
     showPhase('phase4');
     document.querySelector('.page-wrap').classList.add('dashboard-mode');
@@ -480,17 +610,27 @@
   }
 
   // ===== Google風ロゴピッカー =====
-  const CIRCLE_R = 140;
-  let _cropRotation = 0, _imgScale = 1, _imgX = 0, _imgY = 0;
-  let _logoPickerMode = 'dashboard';
+  const CIRCLE_R = 140; // 固定円半径(px)
+  let _cropRotation = 0;
+  let _imgScale = 1;
+  let _imgX = 0;
+  let _imgY = 0;
+  let _logoPickerMode = 'dashboard'; // 'dashboard' | 'form'
   let _pendingLogoBlob = null;
 
-  function openLogoPicker() { _logoPickerMode = 'dashboard'; document.getElementById('direct_logo_input').click(); }
-  function openLogoPickerForForm() { _logoPickerMode = 'form'; document.getElementById('direct_logo_input').click(); }
+  function openLogoPicker() {
+    _logoPickerMode = 'dashboard';
+    document.getElementById('direct_logo_input').click();
+  }
+
+  function openLogoPickerForForm() {
+    _logoPickerMode = 'form';
+    document.getElementById('direct_logo_input').click();
+  }
 
   function updateCropImgTransform() {
-    document.getElementById('crop-img').style.transform =
-      `translate(${_imgX}px,${_imgY}px) rotate(${_cropRotation}deg) scale(${_imgScale})`;
+    const img = document.getElementById('crop-img');
+    img.style.transform = `translate(${_imgX}px,${_imgY}px) rotate(${_cropRotation}deg) scale(${_imgScale})`;
   }
 
   function handleDirectLogoSelect(input) {
@@ -500,6 +640,7 @@
     reader.onload = e => {
       const img = document.getElementById('crop-img');
       img.onload = () => {
+        // 円を覆う最小スケールで初期化
         _imgScale = (CIRCLE_R * 2) / Math.min(img.naturalWidth, img.naturalHeight);
         updateCropImgTransform();
       };
@@ -509,9 +650,17 @@
     reader.readAsDataURL(input.files[0]);
   }
 
+  function zoomCropImg(factor) {
+    const img = document.getElementById('crop-img');
+    if (!img.naturalWidth) return;
+    const minScale = (CIRCLE_R * 2) / Math.min(img.naturalWidth, img.naturalHeight);
+    _imgScale = Math.max(minScale, _imgScale * factor);
+    updateCropImgTransform();
+  }
+
   function rotateCropImg() {
     _cropRotation = (_cropRotation + 90) % 360;
-    _imgX = 0; _imgY = 0;
+    _imgX = 0; _imgY = 0; // 回転時は位置リセット
     const img = document.getElementById('crop-img');
     const minScale = (CIRCLE_R * 2) / Math.min(img.naturalWidth, img.naturalHeight);
     if (_imgScale < minScale) _imgScale = minScale;
@@ -527,7 +676,12 @@
   function setupCropInteraction() {
     const area = document.getElementById('crop-area');
     let dragging = false, lastX = 0, lastY = 0;
-    area.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; area.style.cursor = 'grabbing'; e.preventDefault(); });
+
+    area.addEventListener('mousedown', e => {
+      dragging = true; lastX = e.clientX; lastY = e.clientY;
+      area.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
     window.addEventListener('mousemove', e => {
       if (!dragging) return;
       _imgX += e.clientX - lastX; _imgY += e.clientY - lastY;
@@ -535,6 +689,7 @@
       updateCropImgTransform();
     });
     window.addEventListener('mouseup', () => { dragging = false; area.style.cursor = 'grab'; });
+
     area.addEventListener('wheel', e => {
       e.preventDefault();
       const img = document.getElementById('crop-img');
@@ -543,22 +698,27 @@
       _imgScale = Math.max(minScale, _imgScale * (e.deltaY < 0 ? 1.1 : 0.9));
       updateCropImgTransform();
     }, { passive: false });
+
+    // タッチ（ドラッグ＋ピンチ）
     let lastDist = 0, lastTX = 0, lastTY = 0;
     area.addEventListener('touchstart', e => {
       e.preventDefault();
-      if (e.touches.length === 1) { lastTX = e.touches[0].clientX; lastTY = e.touches[0].clientY; lastDist = 0; }
-      else if (e.touches.length >= 2) {
+      if (e.touches.length === 1) {
+        lastTX = e.touches[0].clientX; lastTY = e.touches[0].clientY; lastDist = 0;
+      } else if (e.touches.length >= 2) {
         lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
         lastTX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
         lastTY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
       }
     }, { passive: false });
+
     area.addEventListener('touchmove', e => {
       e.preventDefault();
       const img = document.getElementById('crop-img');
       const minScale = img.naturalWidth ? (CIRCLE_R * 2) / Math.min(img.naturalWidth, img.naturalHeight) : 1;
       if (e.touches.length === 1) {
-        _imgX += e.touches[0].clientX - lastTX; _imgY += e.touches[0].clientY - lastTY;
+        _imgX += e.touches[0].clientX - lastTX;
+        _imgY += e.touches[0].clientY - lastTY;
         lastTX = e.touches[0].clientX; lastTY = e.touches[0].clientY;
       } else if (e.touches.length >= 2) {
         const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
@@ -570,6 +730,7 @@
       }
       updateCropImgTransform();
     }, { passive: false });
+
     area.addEventListener('touchend', e => {
       if (e.touches.length === 1) { lastTX = e.touches[0].clientX; lastTY = e.touches[0].clientY; lastDist = 0; }
       else if (e.touches.length === 0) { lastDist = 0; }
@@ -579,19 +740,21 @@
   async function confirmCrop() {
     const img = document.getElementById('crop-img');
     const btn = document.getElementById('crop-confirm-btn');
-    btn.disabled = true; btn.textContent = 'アップロード中...';
+    btn.disabled = true;
+    btn.textContent = 'アップロード中...';
 
     const size = 400;
     const canvas = document.createElement('canvas');
     canvas.width = size; canvas.height = size;
     const ctx = canvas.getContext('2d');
 
+    // 円形クリップ
     ctx.beginPath();
     ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
     ctx.clip();
 
-    // 画面上の円の中身を正確に再現
-    const sf = (size / 2) / CIRCLE_R;
+    // 画面上の円の中身を再現（ドラッグ位置・スケール・回転を反映）
+    const sf = (size / 2) / CIRCLE_R; // 画面px → キャンバスpx
     ctx.translate(size/2, size/2);
     ctx.scale(sf, sf);
     ctx.translate(_imgX, _imgY);
@@ -600,29 +763,44 @@
     ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
 
     canvas.toBlob(async blob => {
+      // フォームモード：プレビューだけ更新して保存は後で
       if (_logoPickerMode === 'form') {
         _pendingLogoBlob = blob;
         const blobUrl = URL.createObjectURL(blob);
         const formPreview = document.getElementById('formLogoPreview');
-        if (formPreview) formPreview.innerHTML = `<img src="${blobUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" alt="ロゴ">`;
+        if (formPreview) {
+          formPreview.innerHTML = `<img src="${blobUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" alt="ロゴ">`;
+        }
         closeCropOverlay();
         btn.disabled = false; btn.textContent = '次へ';
         return;
       }
+
+      // ダッシュボードモード：即時アップロード＆DB保存
       const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
       if (!org.id) { closeCropOverlay(); btn.disabled=false; btn.textContent='次へ'; return; }
+
       const iconEl = document.getElementById('dashOrgIcon');
       closeCropOverlay();
       if (iconEl) iconEl.innerHTML = '<div style="font-size:20px;animation:spin 1s linear infinite">⚙️</div>';
+
       try {
         const path = `organizations/${org.id}/logo_${Date.now()}.jpg`;
         const logo_url = await uploadImage(blob, path);
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations?id=eq.${org.id}`, { method:'PATCH', headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation'}, body: JSON.stringify({ logo_url }) });
+
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations?id=eq.${org.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation' },
+          body: JSON.stringify({ logo_url })
+        });
         if (res.ok) {
           const [updated] = await res.json();
-          sessionStorage.setItem('acp_org', JSON.stringify({ ...org, ...updated }));
+          const newOrg = { ...org, ...updated };
+          sessionStorage.setItem('acp_org', JSON.stringify(newOrg));
           if (iconEl) iconEl.innerHTML = `<img src="${escHtml(logo_url)}" class="dash-org-logo" alt="ロゴ">`;
-        } else throw new Error('保存に失敗しました');
+        } else {
+          throw new Error('保存に失敗しました');
+        }
       } catch(e) {
         alert('アップロードに失敗しました: ' + e.message);
         if (iconEl) iconEl.innerHTML = makeLandscapeIcon();
@@ -633,26 +811,42 @@
 
   async function loadDashboard(org) {
     if (!org?.id) {
+      // IDがない場合はデモ表示
       document.getElementById('statEvents').textContent = '0';
       document.getElementById('statRequests').textContent = '0';
       document.getElementById('statNew').textContent = '0';
       document.getElementById('events-list').innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
       document.getElementById('requests-list').innerHTML = '<div class="dash-empty">📭 まだ問い合わせはありません</div>';
-      renderOrgInfo(org || {}); return;
+      renderOrgInfo(org || {});
+      return;
     }
+
     try {
-      const eventsRes = await fetch(`${SUPABASE_URL}/rest/v1/events?organization_id=eq.${org.id}&order=created_at.desc`, { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`} });
+      // イベント取得
+      const eventsRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/events?organization_id=eq.${org.id}&order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
       const events = eventsRes.ok ? await eventsRes.json() : [];
+
+      // 問い合わせ取得
       let requests = [];
       if (events.length > 0) {
         const ids = events.map(e => e.id).join(',');
-        const reqRes = await fetch(`${SUPABASE_URL}/rest/v1/participation_requests?event_id=in.(${ids})&order=created_at.desc`, { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`} });
+        const reqRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/participation_requests?event_id=in.(${ids})&order=created_at.desc`,
+          { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
         requests = reqRes.ok ? await reqRes.json() : [];
       }
+
+      // 統計
       document.getElementById('statEvents').textContent = events.length;
       document.getElementById('statRequests').textContent = requests.length;
-      const oneWeekAgo = new Date(Date.now() - 7*24*60*60*1000);
-      document.getElementById('statNew').textContent = requests.filter(r => new Date(r.created_at) > oneWeekAgo).length;
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const newCount = requests.filter(r => new Date(r.created_at) > oneWeekAgo).length;
+      document.getElementById('statNew').textContent = newCount;
+
       renderEvents(events, requests);
       renderRequests(requests, events);
       renderOrgInfo(org);
@@ -663,39 +857,85 @@
 
   function renderEvents(events, requests) {
     const el = document.getElementById('events-list');
-    if (events.length === 0) { el.innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>'; return; }
+    if (events.length === 0) {
+      el.innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      return;
+    }
     const countMap = {};
     requests.forEach(r => { countMap[r.event_id] = (countMap[r.event_id] || 0) + 1; });
-    const sLabel = { active:'掲載中', pending:'審査中', closed:'終了' };
-    const sClass = { active:'status-active', pending:'status-pending', closed:'status-closed' };
+    const statusLabel = { active: '掲載中', pending: '審査中', closed: '終了' };
+    const statusClass = { active: 'status-active', pending: 'status-pending', closed: 'status-closed' };
+
     const cards = events.map(ev => {
-      const cnt = countMap[ev.id] || 0;
-      const imgHtml = ev.image_url ? `<img src="${escHtml(ev.image_url)}" alt="">` : '🎪';
-      return `<div class="event-card"><div class="event-card-img">${imgHtml}</div><div class="event-card-body"><span class="event-card-status ${sClass[ev.status]||'status-active'}">${sLabel[ev.status]||'掲載中'}</span><div class="event-card-title">${escHtml(ev.title)}</div><div class="event-card-meta">${ev.event_date?'📅 '+escHtml(ev.event_date):''}${ev.location?' 📍 '+escHtml(ev.location):''}</div>${cnt>0?`<div class="event-card-inquiry">📬 問い合わせ ${cnt}件</div>`:''}</div></div>`;
+      const count = countMap[ev.id] || 0;
+      const sLabel = statusLabel[ev.status] || '掲載中';
+      const sClass = statusClass[ev.status] || 'status-active';
+      const imgHtml = ev.image_url
+        ? `<img src="${escHtml(ev.image_url)}" alt="">`
+        : '🎪';
+      return `<div class="event-card">
+        <div class="event-card-img">${imgHtml}</div>
+        <div class="event-card-body">
+          <span class="event-card-status ${sClass}">${sLabel}</span>
+          <div class="event-card-title">${escHtml(ev.title)}</div>
+          <div class="event-card-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>
+          ${count > 0 ? `<div class="event-card-inquiry">📬 問い合わせ ${count}件</div>` : ''}
+        </div>
+      </div>`;
     }).join('');
     el.innerHTML = `<div class="event-cards">${cards}</div>`;
   }
 
   function renderRequests(requests, events) {
     const el = document.getElementById('requests-list');
-    if (requests.length === 0) { el.innerHTML = '<div class="dash-empty">📭 まだ問い合わせ・参加申請はありません</div>'; return; }
+    if (requests.length === 0) {
+      el.innerHTML = '<div class="dash-empty">📭 まだ問い合わせ・参加申請はありません</div>';
+      return;
+    }
     const eventMap = {};
     events.forEach(e => { eventMap[e.id] = e.title; });
-    const typeLabel = { participate:'参加希望', help:'手伝い希望', inquiry:'お問い合わせ' };
+    const typeLabel = { participate: '参加希望', help: '手伝い希望', inquiry: 'お問い合わせ' };
+
     const items = requests.map(r => {
-      const date = new Date(r.created_at).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'});
+      const date = new Date(r.created_at).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
       const type = typeLabel[r.request_type] || r.request_type || 'お問い合わせ';
-      return `<div class="request-item"><div class="request-event-tag">📅 ${escHtml(eventMap[r.event_id]||'イベント不明')}</div><div class="request-header"><div><span class="request-type-badge">${escHtml(type)}</span><div class="request-name">${escHtml(r.name||'匿名')}</div></div><div class="request-date">${date}</div></div>${r.message?`<div class="request-message">${escHtml(r.message)}</div>`:''}</div>`;
+      return `<div class="request-item">
+        <div class="request-event-tag">📅 ${escHtml(eventMap[r.event_id] || 'イベント不明')}</div>
+        <div class="request-header">
+          <div>
+            <span class="request-type-badge">${escHtml(type)}</span>
+            <div class="request-name">${escHtml(r.name || '匿名')}</div>
+          </div>
+          <div class="request-date">${date}</div>
+        </div>
+        ${r.message ? `<div class="request-message">${escHtml(r.message)}</div>` : ''}
+      </div>`;
     }).join('');
     el.innerHTML = `<div class="request-list">${items}</div>`;
   }
 
   function renderOrgInfo(org) {
     const el = document.getElementById('orginfo-content');
-    const rows = [['団体名',org.org_name],['種別',org.org_type],['活動エリア',org.area],['代表者名',org.rep_name],['メール',org.email],['紹介文',org.description],['LINE','✅ 連携済み']].filter(([,v])=>v);
-    const rowsHtml = rows.map(([k,v])=>`<div class="orginfo-row"><div class="orginfo-label">${k}</div><div class="orginfo-value">${escHtml(String(v))}</div></div>`).join('');
-    const logoHtml = org.logo_url ? `<div style="text-align:center;margin-bottom:16px;"><img src="${escHtml(org.logo_url)}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(0,0,0,0.15);" alt="ロゴ"></div>` : '';
-    el.innerHTML = `<div class="orginfo-card">${logoHtml}${rowsHtml}</div><button class="orginfo-edit-btn" onclick="showOrgEditForm()">✏️ 団体情報を編集する</button>`;
+    const rows = [
+      ['団体名', org.org_name],
+      ['種別', org.org_type],
+      ['活動エリア', org.area],
+      ['代表者名', org.rep_name],
+      ['メール', org.email],
+      ['紹介文', org.description],
+      ['LINE', '✅ 連携済み'],
+    ].filter(([, v]) => v);
+
+    const rowsHtml = rows.map(([k, v]) =>
+      `<div class="orginfo-row"><div class="orginfo-label">${k}</div><div class="orginfo-value">${escHtml(String(v))}</div></div>`
+    ).join('');
+    const logoHtml = org.logo_url
+      ? `<div style="text-align:center;margin-bottom:16px;"><img src="${escHtml(org.logo_url)}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(0,0,0,0.15);" alt="ロゴ"></div>`
+      : '';
+    el.innerHTML = `
+      <div class="orginfo-card">${logoHtml}${rowsHtml}</div>
+      <button class="orginfo-edit-btn" onclick="showOrgEditForm()">✏️ 団体情報を編集する</button>
+    `;
   }
 
   function showOrgEditForm() {
@@ -718,27 +958,58 @@
           </div>
           <div id="logo-upload-progress" class="upload-progress" style="display:none;">📤 アップロード中...</div>
         </div>
-        <div class="form-group"><label class="form-label">団体名 <span class="required">*</span></label><input type="text" id="edit_org_name" class="form-input" value="${escHtml(org.org_name||'')}"></div>
-        <div class="form-group"><label class="form-label">団体種別</label><select id="edit_org_type" class="form-input">${['任意団体','NPO法人','一般社団法人','ボランティア団体','企業','個人','その他'].map(t=>`<option value="${t}"${org.org_type===t?' selected':''}>${t}</option>`).join('')}</select></div>
-        <div class="form-group"><label class="form-label">活動エリア</label><input type="text" id="edit_area" class="form-input" value="${escHtml(org.area||'')}"></div>
-        <div class="form-group"><label class="form-label">代表者名</label><input type="text" id="edit_rep_name" class="form-input" value="${escHtml(org.rep_name||'')}"></div>
-        <div class="form-group"><label class="form-label">メールアドレス</label><input type="email" id="edit_email" class="form-input" value="${escHtml(org.email||'')}"></div>
-        <div class="form-group"><label class="form-label">団体の紹介文</label><textarea id="edit_description" class="form-input" rows="3">${escHtml(org.description||'')}</textarea></div>
+        <div class="form-group">
+          <label class="form-label">団体名 <span class="required">*</span></label>
+          <input type="text" id="edit_org_name" class="form-input" value="${escHtml(org.org_name || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">団体種別</label>
+          <select id="edit_org_type" class="form-input">
+            ${['任意団体','NPO法人','一般社団法人','ボランティア団体','企業','個人','その他'].map(t =>
+              `<option value="${t}"${org.org_type === t ? ' selected' : ''}>${t}</option>`
+            ).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">活動エリア</label>
+          <input type="text" id="edit_area" class="form-input" value="${escHtml(org.area || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">代表者名</label>
+          <input type="text" id="edit_rep_name" class="form-input" value="${escHtml(org.rep_name || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">メールアドレス</label>
+          <input type="email" id="edit_email" class="form-input" value="${escHtml(org.email || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">団体の紹介文</label>
+          <textarea id="edit_description" class="form-input" rows="3">${escHtml(org.description || '')}</textarea>
+        </div>
         <div id="orginfo-save-msg" class="orginfo-save-msg">✅ 保存しました！</div>
         <div class="orginfo-edit-actions">
           <button class="btn-save" id="orginfo-save-btn" onclick="saveOrgInfo()">💾 保存する</button>
           <button class="btn-cancel" onclick="renderOrgInfo(JSON.parse(sessionStorage.getItem('acp_org')||'{}'))">キャンセル</button>
         </div>
-      </div>`;
+      </div>
+    `;
   }
 
   async function saveOrgInfo() {
     const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
     if (!org.id) return;
+
     const org_name = document.getElementById('edit_org_name').value.trim();
-    if (!org_name) { alert('団体名は必須です。'); return; }
+    if (!org_name) {
+      alert('団体名は必須です。');
+      return;
+    }
+
     const btn = document.getElementById('orginfo-save-btn');
-    btn.disabled = true; btn.textContent = '保存中...';
+    btn.disabled = true;
+    btn.textContent = '保存中...';
+
+    // ロゴ画像アップロード（クロップ済みblobがあればそれを使う）
     let logo_url = org.logo_url || null;
     if (_pendingLogoBlob) {
       const path = `organizations/${org.id}/logo_${Date.now()}.jpg`;
@@ -750,67 +1021,152 @@
       } catch(e) {
         if (progress) progress.style.display = 'none';
         alert('ロゴのアップロードに失敗しました: ' + e.message);
-        btn.disabled = false; btn.textContent = '💾 保存する'; return;
+        btn.disabled = false;
+        btn.textContent = '💾 保存する';
+        return;
       }
       if (progress) progress.style.display = 'none';
     }
-    const body = { org_name, org_type: document.getElementById('edit_org_type').value, area: document.getElementById('edit_area').value.trim(), rep_name: document.getElementById('edit_rep_name').value.trim(), email: document.getElementById('edit_email').value.trim(), description: document.getElementById('edit_description').value.trim(), logo_url };
+
+    const body = {
+      org_name,
+      org_type: document.getElementById('edit_org_type').value,
+      area: document.getElementById('edit_area').value.trim(),
+      rep_name: document.getElementById('edit_rep_name').value.trim(),
+      email: document.getElementById('edit_email').value.trim(),
+      description: document.getElementById('edit_description').value.trim(),
+      logo_url,
+    };
+
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations?id=eq.${org.id}`, { method:'PATCH', headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation'}, body: JSON.stringify(body) });
-      if (!res.ok) { const err = await res.json(); throw new Error(err.message || '更新に失敗しました。'); }
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations?id=eq.${org.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '更新に失敗しました。');
+      }
+
       const [updated] = await res.json();
       const newOrg = { ...org, ...updated };
       sessionStorage.setItem('acp_org', JSON.stringify(newOrg));
+
+      // ヘッダーの団体名・ロゴも更新
       document.getElementById('dashOrg').textContent = newOrg.org_name || '';
       const iconEl = document.getElementById('dashOrgIcon');
-      if (iconEl && newOrg.logo_url) { iconEl.innerHTML = `<img src="${escHtml(newOrg.logo_url)}" class="dash-org-logo" alt="ロゴ">`; iconEl.className = ''; }
-      document.getElementById('orginfo-save-msg').style.display = 'block';
-      btn.disabled = false; btn.textContent = '💾 保存する';
-      setTimeout(() => renderOrgInfo(newOrg), 1200);
+      if (iconEl && newOrg.logo_url) {
+        iconEl.innerHTML = `<img src="${escHtml(newOrg.logo_url)}" class="dash-org-logo" alt="ロゴ">`;
+        iconEl.className = '';
+      }
+
+      const msg = document.getElementById('orginfo-save-msg');
+      msg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '💾 保存する';
+
+      setTimeout(() => {
+        renderOrgInfo(newOrg);
+      }, 1200);
     } catch(e) {
       alert('エラー: ' + e.message);
-      btn.disabled = false; btn.textContent = '💾 保存する';
+      btn.disabled = false;
+      btn.textContent = '💾 保存する';
     }
   }
 
+  // ===== 画像アップロード共通関数 =====
   async function uploadImage(file, path) {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, { method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':file.type,'x-upsert':'true'}, body: file });
-    if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.message || '画像のアップロードに失敗しました。'); }
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': file.type,
+        'x-upsert': 'true',
+      },
+      body: file,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || '画像のアップロードに失敗しました。');
+    }
     return `${SUPABASE_URL}/storage/v1/object/public/images/${path}`;
   }
 
+  // ===== ロゴプレビュー =====
+  function previewLogo(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById('logo_preview');
+      if (prev) {
+        prev.src = e.target.result;
+        prev.classList.add('has-img');
+        const placeholder = document.getElementById('logo-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  // ===== イベント画像プレビュー =====
   function previewEventImage(input) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
     reader.onload = e => {
       const prev = document.getElementById('event_img_preview');
-      prev.src = e.target.result; prev.classList.add('has-img');
+      prev.src = e.target.result;
+      prev.classList.add('has-img');
       document.getElementById('event-img-placeholder').style.display = 'none';
     };
     reader.readAsDataURL(input.files[0]);
   }
 
+  // ===== イベント投稿フォーム表示 =====
   function showEventForm() {
-    ['ev_title','ev_event_date','ev_location','ev_target','ev_description','ev_price'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    // フォームリセット
+    ['ev_title','ev_event_date','ev_location','ev_target','ev_description','ev_price'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
     const prev = document.getElementById('event_img_preview');
     if (prev) { prev.src = ''; prev.classList.remove('has-img'); }
     const ph = document.getElementById('event-img-placeholder');
     if (ph) ph.style.display = '';
-    const fi = document.getElementById('event_image_file'); if (fi) fi.value = '';
+    const fileInput = document.getElementById('event_image_file');
+    if (fileInput) fileInput.value = '';
     document.getElementById('ev_error').style.display = 'none';
     document.querySelector('.page-wrap').classList.remove('dashboard-mode');
     showPhase('phase6');
   }
 
+  // ===== イベント保存 =====
   async function saveEvent() {
     const title = document.getElementById('ev_title').value.trim();
-    if (!title) { document.getElementById('ev_error').textContent = 'イベント名は必須です。'; document.getElementById('ev_error').style.display = 'block'; return; }
+    if (!title) {
+      document.getElementById('ev_error').textContent = 'イベント名は必須です。';
+      document.getElementById('ev_error').style.display = 'block';
+      return;
+    }
+
     const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
     if (!org.id) { showPhase('phase1'); return; }
+
     const btn = document.getElementById('ev_submit_btn');
-    btn.disabled = true; btn.textContent = '投稿中...';
+    btn.disabled = true;
+    btn.textContent = '投稿中...';
     document.getElementById('ev_error').style.display = 'none';
+
     try {
+      // 画像アップロード
       let image_url = null;
       const fileInput = document.getElementById('event_image_file');
       if (fileInput.files && fileInput.files[0]) {
@@ -821,15 +1177,45 @@
         image_url = await uploadImage(file, path);
         document.getElementById('event-img-progress').style.display = 'none';
       }
-      const body = { title, event_date: document.getElementById('ev_event_date').value||null, location: document.getElementById('ev_location').value.trim()||null, target: document.getElementById('ev_target').value.trim()||null, description: document.getElementById('ev_description').value.trim()||null, price: document.getElementById('ev_price').value.trim()||null, organization_id: org.id, status:'active', image_url };
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/events`, { method:'POST', headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation'}, body: JSON.stringify(body) });
-      if (!res.ok) { const err = await res.json(); throw new Error(err.message || '投稿に失敗しました。'); }
+
+      const body = {
+        title,
+        event_date: document.getElementById('ev_event_date').value || null,
+        location: document.getElementById('ev_location').value.trim() || null,
+        target: document.getElementById('ev_target').value.trim() || null,
+        description: document.getElementById('ev_description').value.trim() || null,
+        price: document.getElementById('ev_price').value.trim() || null,
+        organization_id: org.id,
+        status: 'active',
+        image_url,
+      };
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '投稿に失敗しました。');
+      }
+
+      // ダッシュボードに戻ってリロード
       document.querySelector('.page-wrap').classList.add('dashboard-mode');
-      showPhase('phase4'); switchTab('events'); await loadDashboard(org);
+      showPhase('phase4');
+      switchTab('events');
+      await loadDashboard(org);
     } catch(e) {
       document.getElementById('ev_error').textContent = 'エラー: ' + e.message;
       document.getElementById('ev_error').style.display = 'block';
-      btn.disabled = false; btn.textContent = '🌱 イベントを公開する';
+      btn.disabled = false;
+      btn.textContent = '🌱 イベントを公開する';
       document.getElementById('event-img-progress').style.display = 'none';
     }
   }
@@ -846,22 +1232,28 @@
   }
 
   function signOut() {
-    sessionStorage.removeItem('acp_org'); sessionStorage.removeItem('acp_line_name');
+    sessionStorage.removeItem('acp_org');
+    sessionStorage.removeItem('acp_line_name');
     document.querySelector('.page-wrap').classList.remove('dashboard-mode');
     showPhase('phase1');
   }
 
+  // ページ読み込み時の処理
   window.addEventListener('DOMContentLoaded', () => {
     setupCropInteraction();
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
+
     if (code) {
+      // LINEからのコールバック
       handleLineCallback(code);
     } else {
+      // セッション復元チェック
       const orgStr = sessionStorage.getItem('acp_org');
       if (orgStr) {
         const org = JSON.parse(orgStr);
-        showDashboard(org, sessionStorage.getItem('acp_line_name'));
+        const lineName = sessionStorage.getItem('acp_line_name');
+        showDashboard(org, lineName);
       } else {
         showPhase('phase1');
       }
