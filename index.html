@@ -36,17 +36,112 @@
     .btn-register-event:hover { opacity: 0.9; }
 
     /* ========== HERO ========== */
-    .hero-section { background: linear-gradient(160deg, #E8F5E9 0%, #F1F8E9 40%, #FFF8E1 100%); overflow: hidden; position: relative; min-height: 380px; display: flex; align-items: stretch; }
-    .hero-content { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; padding: 48px 28px 40px; gap: 32px; }
-    .hero-text { flex: 1; z-index: 2; }
-    .hero-title { font-size: 42px; font-weight: 900; color: #2a6e3f; line-height: 1.25; margin-bottom: 16px; letter-spacing: -1px; }
-    .hero-desc { font-size: 14px; line-height: 1.9; color: #555; margin-bottom: 0; max-width: 380px; }
-    .hero-illustration { flex: 1; position: relative; min-height: 280px; display: flex; align-items: center; justify-content: center; }
-    .hero-art { width: 100%; max-width: 480px; height: 280px; background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 30%, #fff9c4 60%, #b3e5fc 100%); border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-    .hero-art-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 80px; letter-spacing: -4px; opacity: 0.85; }
-    .hero-art-banner { position: absolute; top: 12px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #2a6e3f; }
-    .hero-art-flags { position: absolute; top: 0; left: 0; right: 0; height: 32px; display: flex; gap: 0; }
-    .hero-flag { flex: 1; height: 32px; }
+    .hero-section {
+      position: relative;
+      min-height: clamp(480px, 64vh, 680px);
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      isolation: isolate;
+      background: #173d2b;
+      color: white;
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 44%;
+      z-index: -3;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(90deg, rgba(13, 47, 33, 0.94) 0%, rgba(13, 47, 33, 0.82) 42%, rgba(13, 47, 33, 0.28) 72%, rgba(13, 47, 33, 0.12) 100%);
+    }
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0;
+      height: 34%;
+      z-index: -1;
+      background: linear-gradient(0deg, rgba(8, 28, 20, 0.38), transparent);
+      pointer-events: none;
+    }
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 72px 28px 64px;
+    }
+    .hero-text { max-width: 620px; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,0.38);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.13);
+      backdrop-filter: blur(6px);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .hero-title {
+      margin-bottom: 18px;
+      color: white;
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: 0;
+      text-wrap: balance;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.24);
+    }
+    .hero-desc {
+      max-width: 500px;
+      margin-bottom: 28px;
+      color: rgba(255,255,255,0.92);
+      font-size: 16px;
+      line-height: 1.85;
+      font-weight: 600;
+    }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .hero-btn:hover { transform: translateY(-2px); }
+    .hero-btn-primary { border: 1px solid var(--orange); background: var(--orange); color: white; }
+    .hero-btn-secondary { border: 1px solid rgba(255,255,255,0.72); background: rgba(255,255,255,0.95); color: #245b3a; }
+    .hero-note {
+      margin-top: 13px;
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .hero-credit {
+      position: absolute;
+      right: 16px;
+      bottom: 10px;
+      color: rgba(255,255,255,0.72);
+      font-size: 10px;
+      text-decoration: none;
+      z-index: 2;
+    }
 
     /* ========== ACTION CARDS ========== */
     .action-section { background: white; padding: 32px 28px 0; }
@@ -285,8 +380,14 @@
     .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
 
     @media (max-width: 768px) {
-      .hero-title { font-size: 28px; }
-      .hero-illustration { display: none; }
+      .hero-section { min-height: 560px; }
+      .hero-media { object-position: 64% center; }
+      .hero-section::before { background: linear-gradient(90deg, rgba(13,47,33,0.94) 0%, rgba(13,47,33,0.78) 72%, rgba(13,47,33,0.38) 100%); }
+      .hero-content { align-items: flex-end; padding: 72px 20px 48px; }
+      .hero-text { max-width: 520px; }
+      .hero-title { font-size: 38px; }
+      .hero-desc { font-size: 14px; line-height: 1.75; }
+      .hero-credit { right: 10px; bottom: 6px; }
       .action-cards { grid-template-columns: 1fr; }
       .trust-grid { grid-template-columns: 1fr 1fr; }
       .content-grid { grid-template-columns: 1fr; }
@@ -647,28 +748,28 @@
 
 <!-- ========== HERO ========== -->
 <section class="hero-section">
+  <img
+    class="hero-media"
+    src="https://images.unsplash.com/photo-1771648283737-ce89788c4111?auto=format&fit=crop&fm=jpg&q=82&w=2400"
+    alt="地域の屋外イベントで子どもたちが元気に遊ぶ様子"
+    width="2400"
+    height="1350"
+    fetchpriority="high"
+    decoding="async"
+  >
   <div class="hero-content">
     <div class="hero-text">
-      <h1 class="hero-title">やってみたい！<br>を、カタチにしよう。</h1>
-      <p class="hero-desc">地域のあそびやイベント、体験活動。<br>あなたの「やってみたい」が、<br>誰かの「参加したい」「手伝いたい」につながります。<br>さあ、一緒にあそびを広げていこう！</p>
-    </div>
-    <div class="hero-illustration">
-      <div class="hero-art">
-        <div class="hero-art-flags">
-          <div class="hero-flag" style="background:#FF6B35"></div>
-          <div class="hero-flag" style="background:#FFD600"></div>
-          <div class="hero-flag" style="background:#2D9E6B"></div>
-          <div class="hero-flag" style="background:#42A5F5"></div>
-          <div class="hero-flag" style="background:#AB47BC"></div>
-          <div class="hero-flag" style="background:#FF6B35"></div>
-          <div class="hero-flag" style="background:#FFD600"></div>
-          <div class="hero-flag" style="background:#2D9E6B"></div>
-        </div>
-        <div class="hero-art-content">🌳🧒🎨👨🛶🌊🎪</div>
-        <div style="position:absolute;bottom:12px;right:16px;font-size:11px;font-weight:800;color:#2a6e3f;letter-spacing:1px">TODAY! ASOBI PARK</div>
+      <div class="hero-eyebrow">地域のあそびを見つける・つくる</div>
+      <h1 class="hero-title">あそびをつくろう。<br>まちで、みんなで。</h1>
+      <p class="hero-desc">誰かの「やってみたい」が、次のあそびにつながる場所。参加する人も、手伝う人も、企画する人も、ここからつながります。</p>
+      <div class="hero-actions">
+        <a class="hero-btn hero-btn-secondary" href="#events-section">あそびを探す</a>
+        <button class="hero-btn hero-btn-primary" type="button" onclick="openEventRegisterInfo()">あそびを登録する</button>
       </div>
+      <p class="hero-note">見る・探すだけなら登録不要です</p>
     </div>
   </div>
+  <a class="hero-credit" href="https://unsplash.com/photos/uNIzjTX6T4U" target="_blank" rel="noopener noreferrer">Photo: nugh hade / Unsplash</a>
 </section>
 
 <!-- ========== ACTION CARDS ========== -->
@@ -1602,3 +1703,4 @@
 </script>
 </body>
 </html>
+
