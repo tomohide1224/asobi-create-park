@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ASOBI CREATE PARK — あつまる・つくる・あそぶ</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -21,12 +22,8 @@
     /* ========== HEADER ========== */
     .site-header { background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; gap: 16px; max-width: 1200px; margin: 0 auto; }
-    .logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; text-decoration: none; }
-    .logo-icon { font-size: 26px; line-height: 1; }
-    .logo-text { display: flex; flex-direction: column; line-height: 1; }
-    .logo-main { font-size: 16px; font-weight: 900; letter-spacing: 1px; color: var(--navy); }
-    .logo-main span { color: var(--orange); }
-    .logo-sub { font-size: 9px; color: var(--gray); margin-top: 2px; letter-spacing: 0.5px; }
+    .logo { display: block; flex-shrink: 0; line-height: 0; text-decoration: none; }
+    .logo-image { display: block; width: clamp(230px, 24vw, 315px); height: auto; }
     .site-nav { display: flex; gap: 4px; align-items: center; }
     .nav-link { color: var(--navy); text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 6px; transition: background 0.2s; white-space: nowrap; }
     .nav-link:hover { background: #f0f0f0; }
@@ -389,11 +386,14 @@
       .content-grid { grid-template-columns: 1fr; }
       .site-nav { display: none; }
       .header-actions .btn-login { display: none; }
+      .logo-image { width: 170px; }
       .org-form-row { grid-template-columns: 1fr; }
     }
     @media (max-width: 480px) {
       .trust-grid { grid-template-columns: 1fr; }
-      .header-inner { padding: 10px 16px; }
+      .header-inner { padding: 10px 16px; gap: 8px; }
+      .logo-image { width: 132px; }
+      .btn-register-event { padding: 8px 10px; font-size: 11px; }
     }
     .section-title { font-size: 16px; font-weight: 800; color: var(--navy); }
     .event-count { font-size: 12px; color: var(--gray); }
@@ -723,11 +723,10 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="logo" href="#">
-      <div class="logo-icon">🌿</div>
-      <div class="logo-text">
-        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
-        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
-      </div>
+      <picture>
+        <source media="(max-width: 768px)" srcset="asobi-create-park-logo-mobile.svg">
+        <img class="logo-image" src="asobi-create-park-logo.svg" alt="ASOBI CREATE PARK">
+      </picture>
     </a>
     <nav class="site-nav">
       <a href="cases.html" class="nav-link">事例を見る</a>
