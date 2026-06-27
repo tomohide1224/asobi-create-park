@@ -154,6 +154,17 @@
     .dash-post-btn { margin-top: 8px; }
     .dash-section-title { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 10px; letter-spacing: 0.05em; }
 
+    /* 団体情報編集 */
+    .orginfo-edit-btn { width: 100%; background: none; border: 1.5px solid var(--green); color: var(--green); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: all 0.2s; font-family: inherit; }
+    .orginfo-edit-btn:hover { background: var(--green); color: white; }
+    .orginfo-edit-form { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
+    .orginfo-edit-actions { display: flex; gap: 8px; margin-top: 16px; }
+    .btn-save { flex: 1; background: var(--green); color: white; border: none; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .btn-save:hover { opacity: 0.9; }
+    .btn-cancel { flex: 1; background: none; border: 1.5px solid #ddd; color: #888; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-cancel:hover { border-color: #999; color: #555; }
+    .orginfo-save-msg { font-size: 13px; color: var(--green); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
+
     @media (max-width: 520px) {
       .event-cards { grid-template-columns: 1fr; }
       .dash-tab { font-size: 11px; padding: 8px 4px; }
@@ -219,7 +230,7 @@
       <div class="error-title">エラーが発生しました</div>
       <div class="error-desc" id="errorMsg">通信エラーが発生しました。もう一度お試しください。</div>
     </div>
-    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
+    <button class="btn-secondary" onclick="showPhase('phase1')">&#8592; ログイン画面に戻る</button>
   </div>
 
   <!-- PHASE 5: 新規団体登録 -->
@@ -267,7 +278,7 @@
       </button>
       <div id="reg_error" style="color:#C62828;font-size:13px;margin-top:10px;text-align:center;display:none;"></div>
     </div>
-    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
+    <button class="btn-secondary" onclick="showPhase('phase1')">&#8592; ログイン画面に戻る</button>
   </div>
 
   <!-- PHASE 4: ダッシュボード（A+B型） -->
@@ -331,7 +342,7 @@
 </div>
 
 <footer>
-  <strong>ASOBI CREATE PARK</strong> © 2024 世田谷区地域あそびプラットフォーム
+  <strong>ASOBI CREATE PARK</strong> &copy; 2024 世田谷区地域あそびプラットフォーム
 </footer>
 
 <script>
@@ -471,8 +482,8 @@
       document.getElementById('statEvents').textContent = '0';
       document.getElementById('statRequests').textContent = '0';
       document.getElementById('statNew').textContent = '0';
-      document.getElementById('events-list').innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
-      document.getElementById('requests-list').innerHTML = '<div class="dash-empty">💭 まだ問い合わせはありません</div>';
+      document.getElementById('events-list').innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      document.getElementById('requests-list').innerHTML = '<div class="dash-empty">📭 まだ問い合わせはありません</div>';
       renderOrgInfo(org || {});
       return;
     }
@@ -511,21 +522,21 @@
   function renderEvents(events, requests) {
     const el = document.getElementById('events-list');
     if (events.length === 0) {
-      el.innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      el.innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
       return;
     }
     const countMap = {};
     requests.forEach(r => { countMap[r.event_id] = (countMap[r.event_id] || 0) + 1; });
-    const statusLabel = { active: '掘載中', pending: '審査中', closed: '終了' };
+    const statusLabel = { active: '掲載中', pending: '審査中', closed: '終了' };
     const statusClass = { active: 'status-active', pending: 'status-pending', closed: 'status-closed' };
 
     const cards = events.map(ev => {
       const count = countMap[ev.id] || 0;
-      const sLabel = statusLabel[ev.status] || '掘載中';
+      const sLabel = statusLabel[ev.status] || '掲載中';
       const sClass = statusClass[ev.status] || 'status-active';
       const imgHtml = ev.image_url
         ? `<img src="${escHtml(ev.image_url)}" alt="">`
-        : '🎪';
+        : '🎤';
       return `<div class="event-card">
         <div class="event-card-img">${imgHtml}</div>
         <div class="event-card-body">
@@ -542,7 +553,7 @@
   function renderRequests(requests, events) {
     const el = document.getElementById('requests-list');
     if (requests.length === 0) {
-      el.innerHTML = '<div class="dash-empty">💭 まだ問い合わせ・参加申請はありません</div>';
+      el.innerHTML = '<div class="dash-empty">📭 まだ問い合わせ・参加申請はありません</div>';
       return;
     }
     const eventMap = {};
@@ -582,7 +593,113 @@
     const rowsHtml = rows.map(([k, v]) =>
       `<div class="orginfo-row"><div class="orginfo-label">${k}</div><div class="orginfo-value">${escHtml(String(v))}</div></div>`
     ).join('');
-    el.innerHTML = `<div class="orginfo-card">${rowsHtml}</div>`;
+    el.innerHTML = `
+      <div class="orginfo-card">${rowsHtml}</div>
+      <button class="orginfo-edit-btn" onclick="showOrgEditForm()">✏️ 団体情報を編集する</button>
+    `;
+  }
+
+  function showOrgEditForm() {
+    const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
+    const el = document.getElementById('orginfo-content');
+    el.innerHTML = `
+      <div class="orginfo-edit-form">
+        <div class="form-group">
+          <label class="form-label">団体名 <span class="required">*</span></label>
+          <input type="text" id="edit_org_name" class="form-input" value="${escHtml(org.org_name || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">団体種別</label>
+          <select id="edit_org_type" class="form-input">
+            ${['任意団体','NPO法人','一般社団法人','ボランティア団体','企業','個人','その他'].map(t =>
+              `<option value="${t}"${org.org_type === t ? ' selected' : ''}>${t}</option>`
+            ).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">活動エリア</label>
+          <input type="text" id="edit_area" class="form-input" value="${escHtml(org.area || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">代表者名</label>
+          <input type="text" id="edit_rep_name" class="form-input" value="${escHtml(org.rep_name || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">メールアドレス</label>
+          <input type="email" id="edit_email" class="form-input" value="${escHtml(org.email || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">団体の紹介文</label>
+          <textarea id="edit_description" class="form-input" rows="3">${escHtml(org.description || '')}</textarea>
+        </div>
+        <div id="orginfo-save-msg" class="orginfo-save-msg">✅ 保存しました！</div>
+        <div class="orginfo-edit-actions">
+          <button class="btn-save" id="orginfo-save-btn" onclick="saveOrgInfo()">💾 保存する</button>
+          <button class="btn-cancel" onclick="renderOrgInfo(JSON.parse(sessionStorage.getItem('acp_org')||'{}'))">キャンセル</button>
+        </div>
+      </div>
+    `;
+  }
+
+  async function saveOrgInfo() {
+    const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
+    if (!org.id) return;
+
+    const org_name = document.getElementById('edit_org_name').value.trim();
+    if (!org_name) {
+      alert('団体名は必須です。');
+      return;
+    }
+
+    const btn = document.getElementById('orginfo-save-btn');
+    btn.disabled = true;
+    btn.textContent = '保存中...';
+
+    const body = {
+      org_name,
+      org_type: document.getElementById('edit_org_type').value,
+      area: document.getElementById('edit_area').value.trim(),
+      rep_name: document.getElementById('edit_rep_name').value.trim(),
+      email: document.getElementById('edit_email').value.trim(),
+      description: document.getElementById('edit_description').value.trim(),
+    };
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations?id=eq.${org.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '更新に失敗しました。');
+      }
+
+      const [updated] = await res.json();
+      const newOrg = { ...org, ...updated };
+      sessionStorage.setItem('acp_org', JSON.stringify(newOrg));
+
+      document.getElementById('dashOrg').textContent = newOrg.org_name || '';
+
+      const msg = document.getElementById('orginfo-save-msg');
+      msg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '💾 保存する';
+
+      setTimeout(() => {
+        renderOrgInfo(newOrg);
+      }, 1200);
+    } catch(e) {
+      alert('エラー: ' + e.message);
+      btn.disabled = false;
+      btn.textContent = '💾 保存する';
+    }
   }
 
   function switchTab(tab) {
@@ -603,16 +720,13 @@
     showPhase('phase1');
   }
 
-  // ページ読み込み時の処理
   window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
 
     if (code) {
-      // LINEからのコールバック
       handleLineCallback(code);
     } else {
-      // セッション復元チェック
       const orgStr = sessionStorage.getItem('acp_org');
       if (orgStr) {
         const org = JSON.parse(orgStr);
