@@ -80,6 +80,15 @@
     footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
     footer strong { color: white; }
 
+    /* 登録フォーム */
+    .register-form { margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .form-label .required { color: #E53935; }
+    .form-input { width: 100%; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 10px 14px; font-size: 14px; color: var(--navy); outline: none; transition: border-color 0.2s; font-family: inherit; }
+    .form-input:focus { border-color: var(--green); }
+    textarea.form-input { resize: vertical; }
+
     @media (max-width: 480px) {
       .login-card, .dashboard { padding: 32px 24px; }
       .menu-grid { grid-template-columns: 1fr; }
@@ -123,16 +132,9 @@
       <a href="https://line.me/R/ti/p/@737ubhvn" target="_blank" class="btn-friend">友だち追加する</a>
     </div>
 
-    <div style="margin-top:16px" class="divider"><span class="divider-text">または</span></div>
-
-    <div class="register-hint">
-      まだ団体登録をしていない方は、<br>
-      <a href="index.html#register">こちらから団体ページを作成</a>してください。
-    </div>
-
     <div class="notice">
-      ⚠️ このログインは、<strong>確認済みの登録団体のみ</strong>が対象です。<br>
-      初回ログイン前に管理者によるLINE連携設定が必要です。
+      🌱 <strong>初めての方もOK！</strong><br>
+      LINEでログイン後、団体情報を入力するだけで登録完了です。
     </div>
   </div>
 
@@ -149,8 +151,56 @@
   <div class="login-card phase" id="phase3">
     <div class="error-box">
       <div class="error-icon">⚠️</div>
-      <div class="error-title">団体が見つかりませんでした</div>
-      <div class="error-desc" id="errorMsg">このLINEアカウントに紐付けられた団体が見つかりません。<br>管理者にLINE連携をご依頼ください。</div>
+      <div class="error-title">エラーが発生しました</div>
+      <div class="error-desc" id="errorMsg">通信エラーが発生しました。もう一度お試しください。</div>
+    </div>
+    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
+  </div>
+
+  <!-- PHASE 5: 新規団体登録 -->
+  <div class="login-card phase" id="phase5">
+    <div class="login-icon">🌱</div>
+    <div class="login-title">団体を登録する</div>
+    <div class="login-desc">LINEアカウントと紐付けて、団体情報を登録してください。</div>
+
+    <div class="register-form">
+      <div class="form-group">
+        <label class="form-label">団体名 <span class="required">*</span></label>
+        <input type="text" id="reg_org_name" class="form-input" placeholder="例：世田谷あそび隊" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">団体種別</label>
+        <select id="reg_org_type" class="form-input">
+          <option value="任意団体">任意団体</option>
+          <option value="NPO法人">NPO法人</option>
+          <option value="一般社団法人">一般社団法人</option>
+          <option value="ボランティア団体">ボランティア団体</option>
+          <option value="企業">企業</option>
+          <option value="個人">個人</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">活動エリア</label>
+        <input type="text" id="reg_area" class="form-input" placeholder="例：世田谷区 三軒茶屋">
+      </div>
+      <div class="form-group">
+        <label class="form-label">代表者名</label>
+        <input type="text" id="reg_rep_name" class="form-input" placeholder="例：山田 太郎">
+      </div>
+      <div class="form-group">
+        <label class="form-label">メールアドレス</label>
+        <input type="email" id="reg_email" class="form-input" placeholder="例：info@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">団体の紹介文</label>
+        <textarea id="reg_description" class="form-input" rows="3" placeholder="どんな活動をしていますか？"></textarea>
+      </div>
+
+      <button class="btn-line" onclick="registerOrg()" style="margin-top:8px" id="reg_submit_btn">
+        🌱 団体を登録してログイン
+      </button>
+      <div id="reg_error" style="color:#C62828;font-size:13px;margin-top:10px;text-align:center;display:none;"></div>
     </div>
     <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
   </div>
@@ -196,6 +246,8 @@
 <script>
   const LINE_LOGIN_CHANNEL_ID = '2010526701';
   const SUPABASE_FUNC_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co/functions/v1';
+  const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 
   function getRedirectUri() {
     return window.location.origin + window.location.pathname;
@@ -236,18 +288,80 @@
         sessionStorage.setItem('acp_org', JSON.stringify(data.organization));
         sessionStorage.setItem('acp_line_name', data.line_display_name);
         showDashboard(data.organization, data.line_display_name);
-      } else {
-        let msg = data.error || 'このLINEアカウントに紐付けられた団体が見つかりません。';
-        if (data.line_user_id) {
-          msg += '\n\n【LINE User ID】\n' + data.line_user_id;
+      } else if (data.line_user_id) {
+        // 団体未登録 → 新規登録フォームへ
+        sessionStorage.setItem('acp_line_user_id', data.line_user_id);
+        sessionStorage.setItem('acp_line_name', data.line_display_name || '');
+        if (data.line_display_name) {
+          document.getElementById('reg_rep_name').value = data.line_display_name;
         }
-        document.getElementById('errorMsg').textContent = msg;
-        document.getElementById('errorMsg').style.whiteSpace = 'pre-wrap';
+        showPhase('phase5');
+      } else {
+        document.getElementById('errorMsg').textContent = data.error || '通信エラーが発生しました。';
         showPhase('phase3');
       }
     } catch (e) {
       document.getElementById('errorMsg').textContent = '通信エラーが発生しました。もう一度お試しください。';
       showPhase('phase3');
+    }
+  }
+
+  async function registerOrg() {
+    const org_name = document.getElementById('reg_org_name').value.trim();
+    if (!org_name) {
+      document.getElementById('reg_error').textContent = '団体名は必須です。';
+      document.getElementById('reg_error').style.display = 'block';
+      return;
+    }
+    const line_user_id = sessionStorage.getItem('acp_line_user_id');
+    const line_display_name = sessionStorage.getItem('acp_line_name');
+    if (!line_user_id) {
+      showPhase('phase1');
+      return;
+    }
+
+    const btn = document.getElementById('reg_submit_btn');
+    btn.disabled = true;
+    btn.textContent = '登録中...';
+    document.getElementById('reg_error').style.display = 'none';
+
+    try {
+      const body = {
+        org_name,
+        org_type: document.getElementById('reg_org_type').value,
+        area: document.getElementById('reg_area').value.trim(),
+        rep_name: document.getElementById('reg_rep_name').value.trim(),
+        email: document.getElementById('reg_email').value.trim(),
+        description: document.getElementById('reg_description').value.trim(),
+        line_user_id,
+        line_display_name,
+      };
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '登録に失敗しました。');
+      }
+
+      const [org] = await res.json();
+      sessionStorage.setItem('acp_org', JSON.stringify(org));
+      sessionStorage.removeItem('acp_line_user_id');
+      showDashboard(org, line_display_name);
+    } catch (e) {
+      document.getElementById('reg_error').textContent = e.message;
+      document.getElementById('reg_error').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '🌱 団体を登録してログイン';
     }
   }
 
@@ -270,10 +384,8 @@
     const code = params.get('code');
 
     if (code) {
-      // LINEからのコールバック
       handleLineCallback(code);
     } else {
-      // セッション復元チェック
       const orgStr = sessionStorage.getItem('acp_org');
       if (orgStr) {
         const org = JSON.parse(orgStr);
