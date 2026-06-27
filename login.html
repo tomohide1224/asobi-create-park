@@ -100,7 +100,10 @@
 
     .dash-header { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 16px; }
     .dash-org-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .dash-org-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .dash-org-icon { width: 56px; height: 56px; background: linear-gradient(to bottom, #87CEEB 45%, #4CAF78 45%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; cursor: pointer; }
+    .dash-org-icon-wrap { position: relative; flex-shrink: 0; cursor: pointer; }
+    .dash-org-icon-wrap:hover .logo-cam-badge { background: var(--green); }
+    .logo-cam-badge { position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.25); transition: background 0.2s; border: 1.5px solid white; }
     .dash-org-name { font-size: 18px; font-weight: 900; color: var(--navy); }
     .dash-welcome-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
     .line-badge-sm { margin-left: auto; background: #E8F5E9; color: var(--green); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
@@ -173,12 +176,12 @@
     .img-upload-label { font-size: 12px; color: var(--gray); }
     .img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; display: none; }
     .img-preview.has-img { display: block; }
-    .logo-preview { width: 72px; height: 72px; border-radius: 14px; object-fit: cover; display: none; margin: 0 auto 8px; }
+    .logo-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: none; margin: 0 auto 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
     .logo-preview.has-img { display: block; }
     .upload-progress { font-size: 12px; color: var(--green); font-weight: 700; text-align: center; margin-top: 6px; display: none; }
 
     /* 団体ヘッダーロゴ */
-    .dash-org-logo { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
+    .dash-org-logo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 
     @media (max-width: 520px) {
       .event-cards { grid-template-columns: 1fr; }
@@ -245,7 +248,7 @@
       <div class="error-title">エラーが発生しました</div>
       <div class="error-desc" id="errorMsg">通信エラーが発生しました。もう一度お試しください。</div>
     </div>
-    <button class="btn-secondary" onclick="showPhase('phase1')">&#8592; ログイン画面に戻る</button>
+    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
   </div>
 
   <!-- PHASE 5: 新規団体登録 -->
@@ -293,7 +296,7 @@
       </button>
       <div id="reg_error" style="color:#C62828;font-size:13px;margin-top:10px;text-align:center;display:none;"></div>
     </div>
-    <button class="btn-secondary" onclick="showPhase('phase1')">&#8592; ログイン画面に戻る</button>
+    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
   </div>
 
   <!-- PHASE 4: ダッシュボード（A+B型） -->
@@ -302,7 +305,17 @@
     <!-- ヘッダー：団体情報＋サマリー統計 -->
     <div class="dash-header">
       <div class="dash-org-row">
-        <div class="dash-org-icon" id="dashOrgIcon">🌿</div>
+        <div class="dash-org-icon-wrap" onclick="openLogoPicker()">
+          <div class="dash-org-icon" id="dashOrgIcon">
+            <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" style="width:56px;height:56px;display:block;">
+              <rect width="56" height="56" fill="#87CEEB"/>
+              <ellipse cx="28" cy="56" rx="32" ry="22" fill="#2D9E6B"/>
+              <ellipse cx="28" cy="50" rx="20" ry="14" fill="#4CAF78"/>
+              <circle cx="42" cy="14" r="7" fill="#FFF176" opacity="0.9"/>
+            </svg>
+          </div>
+          <div class="logo-cam-badge">📷</div>
+        </div>
         <div>
           <div class="dash-org-name" id="dashOrg">団体名</div>
           <div class="dash-welcome-sub" id="dashWelcome"></div>
@@ -357,7 +370,7 @@
   <!-- PHASE 6: イベント投稿フォーム -->
   <div class="login-card phase" id="phase6" style="max-width:520px">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-      <button onclick="document.querySelector('.page-wrap').classList.add('dashboard-mode');showPhase('phase4');" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
+      <button onclick="showPhase('phase4')" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
       <div style="font-size:18px;font-weight:900;color:var(--navy);">📅 イベントを投稿する</div>
     </div>
 
@@ -376,7 +389,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">イベント名 <span class="required">*</span></label>
-        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遥ぶ自然体験">
+        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遊ぶ自然体験">
       </div>
       <div class="form-group">
         <label class="form-label">開催日</label>
@@ -388,7 +401,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">対象年齢・人数</label>
-        <input type="text" id="ev_target" class="form-input" placeholder="例：3～10歳。0名程度">
+        <input type="text" id="ev_target" class="form-input" placeholder="例：3〜10歳、20名程度">
       </div>
       <div class="form-group">
         <label class="form-label">イベント説明</label>
@@ -407,8 +420,37 @@
 
 </div>
 
+<!-- ロゴ直接アップロード用 -->
+<input type="file" id="direct_logo_input" accept="image/*" style="display:none" onchange="handleDirectLogoSelect(this)">
+
+<!-- 切り抜きオーバーレイ -->
+<div id="crop-overlay" style="position:fixed;inset:0;background:#111;z-index:9999;display:none;flex-direction:column;">
+  <div style="display:flex;align-items:center;padding:14px 16px;flex-shrink:0;">
+    <button onclick="closeCropOverlay()" style="background:none;border:none;color:white;font-size:26px;cursor:pointer;line-height:1;padding:0 8px 0 0;">←</button>
+    <div style="flex:1;text-align:center;color:white;font-size:16px;font-weight:700;">切り抜きと回転</div>
+    <div style="width:40px;"></div>
+  </div>
+  <div style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#222;min-height:0;">
+    <img id="crop-img" src="" alt="" style="max-width:90%;max-height:90%;object-fit:contain;display:block;transform-origin:center;transition:transform 0.35s ease;">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs><mask id="circ-mask"><rect width="100%" height="100%" fill="white"/><circle cx="50%" cy="50%" r="42%" fill="black"/></mask></defs>
+        <rect width="100%" height="100%" fill="rgba(0,0,0,0.52)" mask="url(#circ-mask)"/>
+        <circle cx="50%" cy="50%" r="42%" fill="none" stroke="white" stroke-width="2" opacity="0.85"/>
+      </svg>
+    </div>
+  </div>
+  <div style="padding:20px 16px 32px;background:#111;display:flex;flex-direction:column;align-items:center;gap:16px;flex-shrink:0;">
+    <div onclick="rotateCropImg()" style="cursor:pointer;color:white;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div style="font-size:28px;">↻</div>
+      <div style="font-size:12px;letter-spacing:0.05em;">回転</div>
+    </div>
+    <button onclick="confirmCrop()" id="crop-confirm-btn" style="width:100%;max-width:320px;background:#1a73e8;color:white;border:none;padding:15px;border-radius:28px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:0.03em;">次へ</button>
+  </div>
+</div>
+
 <footer>
-  <strong>ASOBI CREATE PARK</strong> &copy; 2024 世田谷区地域あそびプラットフォーム
+  <strong>ASOBI CREATE PARK</strong> © 2024 世田谷区地域あそびプラットフォーム
 </footer>
 
 <script>
@@ -481,7 +523,10 @@
     }
     const line_user_id = sessionStorage.getItem('acp_line_user_id');
     const line_display_name = sessionStorage.getItem('acp_line_name');
-    if (!line_user_id) { showPhase('phase1'); return; }
+    if (!line_user_id) {
+      showPhase('phase1');
+      return;
+    }
 
     const btn = document.getElementById('reg_submit_btn');
     btn.disabled = true;
@@ -536,15 +581,125 @@
     if (iconEl) {
       if (org?.logo_url) {
         iconEl.innerHTML = `<img src="${escHtml(org.logo_url)}" class="dash-org-logo" alt="ロゴ">`;
-        iconEl.className = '';
       } else {
-        iconEl.innerHTML = '🌿';
-        iconEl.className = 'dash-org-icon';
+        iconEl.innerHTML = makeLandscapeIcon();
       }
     }
     showPhase('phase4');
     document.querySelector('.page-wrap').classList.add('dashboard-mode');
     await loadDashboard(org);
+  }
+
+  function makeLandscapeIcon() {
+    return '<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" style="width:56px;height:56px;display:block;"><rect width="56" height="56" fill="#87CEEB"/><ellipse cx="28" cy="56" rx="32" ry="22" fill="#2D9E6B"/><ellipse cx="28" cy="50" rx="20" ry="14" fill="#4CAF78"/><circle cx="42" cy="14" r="7" fill="#FFF176" opacity="0.9"/></svg>';
+  }
+
+  // ===== Google風ロゴピッカー =====
+  let _cropRotation = 0;
+  let _logoPickerMode = 'dashboard';
+  let _pendingLogoBlob = null;
+
+  function openLogoPicker() {
+    _logoPickerMode = 'dashboard';
+    document.getElementById('direct_logo_input').click();
+  }
+
+  function openLogoPickerForForm() {
+    _logoPickerMode = 'form';
+    document.getElementById('direct_logo_input').click();
+  }
+
+  function handleDirectLogoSelect(input) {
+    if (!input.files || !input.files[0]) return;
+    _cropRotation = 0;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('crop-img');
+      img.onload = () => { img.style.transform = 'rotate(0deg)'; };
+      img.src = e.target.result;
+      document.getElementById('crop-overlay').style.display = 'flex';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function rotateCropImg() {
+    _cropRotation = (_cropRotation + 90) % 360;
+    document.getElementById('crop-img').style.transform = `rotate(${_cropRotation}deg)`;
+  }
+
+  function closeCropOverlay() {
+    document.getElementById('crop-overlay').style.display = 'none';
+    document.getElementById('direct_logo_input').value = '';
+    _cropRotation = 0;
+  }
+
+  async function confirmCrop() {
+    const img = document.getElementById('crop-img');
+    const btn = document.getElementById('crop-confirm-btn');
+    btn.disabled = true;
+    btn.textContent = 'アップロード中...';
+
+    const size = 400;
+    const canvas = document.createElement('canvas');
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
+    ctx.clip();
+
+    ctx.save();
+    ctx.translate(size/2, size/2);
+    ctx.rotate(_cropRotation * Math.PI / 180);
+    const nw = img.naturalWidth, nh = img.naturalHeight;
+    const minD = Math.min(nw, nh);
+    const sc = size / minD;
+    ctx.drawImage(img, -nw*sc/2, -nh*sc/2, nw*sc, nh*sc);
+    ctx.restore();
+
+    canvas.toBlob(async blob => {
+      if (_logoPickerMode === 'form') {
+        _pendingLogoBlob = blob;
+        const blobUrl = URL.createObjectURL(blob);
+        const formPreview = document.getElementById('formLogoPreview');
+        if (formPreview) {
+          formPreview.innerHTML = `<img src="${blobUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" alt="ロゴ">`;
+        }
+        closeCropOverlay();
+        btn.disabled = false; btn.textContent = '次へ';
+        return;
+      }
+
+      const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
+      if (!org.id) { closeCropOverlay(); btn.disabled=false; btn.textContent='次へ'; return; }
+
+      const iconEl = document.getElementById('dashOrgIcon');
+      closeCropOverlay();
+      if (iconEl) iconEl.innerHTML = '<div style="font-size:20px;animation:spin 1s linear infinite">⚙️</div>';
+
+      try {
+        const path = `organizations/${org.id}/logo_${Date.now()}.jpg`;
+        const logo_url = await uploadImage(blob, path);
+
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/organizations?id=eq.${org.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation' },
+          body: JSON.stringify({ logo_url })
+        });
+        if (res.ok) {
+          const [updated] = await res.json();
+          const newOrg = { ...org, ...updated };
+          sessionStorage.setItem('acp_org', JSON.stringify(newOrg));
+          if (iconEl) iconEl.innerHTML = `<img src="${escHtml(logo_url)}" class="dash-org-logo" alt="ロゴ">`;
+        } else {
+          throw new Error('保存に失敗しました');
+        }
+      } catch(e) {
+        alert('アップロードに失敗しました: ' + e.message);
+        if (iconEl) iconEl.innerHTML = makeLandscapeIcon();
+      }
+      btn.disabled = false; btn.textContent = '次へ';
+    }, 'image/jpeg', 0.92);
   }
 
   async function loadDashboard(org) {
@@ -606,7 +761,7 @@
       const sClass = statusClass[ev.status] || 'status-active';
       const imgHtml = ev.image_url
         ? `<img src="${escHtml(ev.image_url)}" alt="">`
-        : '🎤';
+        : '🎪';
       return `<div class="event-card">
         <div class="event-card-img">${imgHtml}</div>
         <div class="event-card-body">
@@ -664,7 +819,7 @@
       `<div class="orginfo-row"><div class="orginfo-label">${k}</div><div class="orginfo-value">${escHtml(String(v))}</div></div>`
     ).join('');
     const logoHtml = org.logo_url
-      ? `<div style="text-align:center;margin-bottom:16px;"><img src="${escHtml(org.logo_url)}" style="width:80px;height:80px;border-radius:16px;object-fit:cover;box-shadow:0 2px 12px rgba(0,0,0,0.12);" alt="ロゴ"></div>`
+      ? `<div style="text-align:center;margin-bottom:16px;"><img src="${escHtml(org.logo_url)}" style="width:88px;height:88px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(0,0,0,0.15);" alt="ロゴ"></div>`
       : '';
     el.innerHTML = `
       <div class="orginfo-card">${logoHtml}${rowsHtml}</div>
@@ -674,20 +829,23 @@
 
   function showOrgEditForm() {
     const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
+    _pendingLogoBlob = null;
     const el = document.getElementById('orginfo-content');
+    const logoInner = org.logo_url
+      ? `<img src="${escHtml(org.logo_url)}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" alt="ロゴ">`
+      : `<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" style="width:80px;height:80px;display:block;"><rect width="56" height="56" fill="#87CEEB"/><ellipse cx="28" cy="56" rx="32" ry="22" fill="#2D9E6B"/><ellipse cx="28" cy="50" rx="20" ry="14" fill="#4CAF78"/><circle cx="42" cy="14" r="7" fill="#FFF176" opacity="0.9"/></svg>`;
     el.innerHTML = `
       <div class="orginfo-edit-form">
         <div class="form-group">
           <label class="form-label">団体ロゴ画像</label>
-          <div class="img-upload-area" id="logo-upload-area">
-            <input type="file" id="logo_file" accept="image/*" onchange="previewLogo(this)">
-            ${org.logo_url ? `<img id="logo_preview" class="logo-preview has-img" src="${escHtml(org.logo_url)}" alt="">` : `<img id="logo_preview" class="logo-preview" src="" alt="">`}
-            <div id="logo-placeholder" style="${org.logo_url ? 'display:none' : ''}">
-              <div class="img-upload-icon">🏷️</div>
-              <div class="img-upload-label">タップしてロゴを選択（JPEG/PNG）</div>
+          <div style="display:flex;align-items:center;gap:20px;padding:8px 0;">
+            <div class="dash-org-icon-wrap" onclick="openLogoPickerForForm()" style="width:80px;height:80px;cursor:pointer;">
+              <div id="formLogoPreview" style="width:80px;height:80px;background:linear-gradient(to bottom,#87CEEB 45%,#4CAF78 45%);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.15);">${logoInner}</div>
+              <div class="logo-cam-badge">📷</div>
             </div>
+            <div style="color:#888;font-size:13px;line-height:1.8;">タップしてロゴを変更<br><span style="font-size:11px;color:#aaa;">切り抜き画面が開きます</span></div>
           </div>
-          <div id="logo-upload-progress" class="upload-progress">📤 アップロード中...</div>
+          <div id="logo-upload-progress" class="upload-progress" style="display:none;">📤 アップロード中...</div>
         </div>
         <div class="form-group">
           <label class="form-label">団体名 <span class="required">*</span></label>
@@ -731,27 +889,29 @@
     if (!org.id) return;
 
     const org_name = document.getElementById('edit_org_name').value.trim();
-    if (!org_name) { alert('団体名は必須です。'); return; }
+    if (!org_name) {
+      alert('団体名は必須です。');
+      return;
+    }
 
     const btn = document.getElementById('orginfo-save-btn');
     btn.disabled = true;
     btn.textContent = '保存中...';
 
-    // ロゴ画像アップロード
     let logo_url = org.logo_url || null;
-    const logoFile = document.getElementById('logo_file');
-    if (logoFile && logoFile.files && logoFile.files[0]) {
-      const file = logoFile.files[0];
-      const ext = file.name.split('.').pop();
-      const path = `organizations/${org.id}/logo_${Date.now()}.${ext}`;
+    if (_pendingLogoBlob) {
+      const path = `organizations/${org.id}/logo_${Date.now()}.jpg`;
       const progress = document.getElementById('logo-upload-progress');
       if (progress) progress.style.display = 'block';
       try {
-        logo_url = await uploadImage(file, path);
+        logo_url = await uploadImage(_pendingLogoBlob, path);
+        _pendingLogoBlob = null;
       } catch(e) {
         if (progress) progress.style.display = 'none';
         alert('ロゴのアップロードに失敗しました: ' + e.message);
-        btn.disabled = false; btn.textContent = '💾 保存する'; return;
+        btn.disabled = false;
+        btn.textContent = '💾 保存する';
+        return;
       }
       if (progress) progress.style.display = 'none';
     }
@@ -799,7 +959,9 @@
       btn.disabled = false;
       btn.textContent = '💾 保存する';
 
-      setTimeout(() => { renderOrgInfo(newOrg); }, 1200);
+      setTimeout(() => {
+        renderOrgInfo(newOrg);
+      }, 1200);
     } catch(e) {
       alert('エラー: ' + e.message);
       btn.disabled = false;
@@ -807,7 +969,6 @@
     }
   }
 
-  // ===== 画像アップロード共通関数 =====
   async function uploadImage(file, path) {
     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, {
       method: 'POST',
@@ -834,8 +995,8 @@
       if (prev) {
         prev.src = e.target.result;
         prev.classList.add('has-img');
-        const ph = document.getElementById('logo-placeholder');
-        if (ph) ph.style.display = 'none';
+        const placeholder = document.getElementById('logo-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
       }
     };
     reader.readAsDataURL(input.files[0]);
@@ -862,8 +1023,8 @@
     if (prev) { prev.src = ''; prev.classList.remove('has-img'); }
     const ph = document.getElementById('event-img-placeholder');
     if (ph) ph.style.display = '';
-    const fi = document.getElementById('event_image_file');
-    if (fi) fi.value = '';
+    const fileInput = document.getElementById('event_image_file');
+    if (fileInput) fileInput.value = '';
     document.getElementById('ev_error').style.display = 'none';
     document.querySelector('.page-wrap').classList.remove('dashboard-mode');
     showPhase('phase6');
