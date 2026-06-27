@@ -165,6 +165,21 @@
     .btn-cancel:hover { border-color: #999; color: #555; }
     .orginfo-save-msg { font-size: 13px; color: var(--green); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
 
+    /* 画像アップロードエリア */
+    .img-upload-area { border: 2px dashed #E0E0E0; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; background: var(--light); }
+    .img-upload-area:hover { border-color: var(--green); background: #F0FBF5; }
+    .img-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .img-upload-icon { font-size: 28px; margin-bottom: 6px; }
+    .img-upload-label { font-size: 12px; color: var(--gray); }
+    .img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; display: none; }
+    .img-preview.has-img { display: block; }
+    .logo-preview { width: 72px; height: 72px; border-radius: 14px; object-fit: cover; display: none; margin: 0 auto 8px; }
+    .logo-preview.has-img { display: block; }
+    .upload-progress { font-size: 12px; color: var(--green); font-weight: 700; text-align: center; margin-top: 6px; display: none; }
+
+    /* 団体ヘッダーロゴ */
+    .dash-org-logo { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
+
     @media (max-width: 520px) {
       .event-cards { grid-template-columns: 1fr; }
       .dash-tab { font-size: 11px; padding: 8px 4px; }
@@ -287,7 +302,7 @@
     <!-- ヘッダー：団体情報＋サマリー統計 -->
     <div class="dash-header">
       <div class="dash-org-row">
-        <div class="dash-org-icon">🌿</div>
+        <div class="dash-org-icon" id="dashOrgIcon">🌿</div>
         <div>
           <div class="dash-org-name" id="dashOrg">団体名</div>
           <div class="dash-welcome-sub" id="dashWelcome"></div>
@@ -321,7 +336,7 @@
     <div class="dash-pane active" id="pane-events">
       <div class="dash-section-title">自分が登録したイベント</div>
       <div id="events-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
-      <button class="btn-line dash-post-btn" onclick="alert('イベント投稿機能は近日公開予定です 🌱')">＋ イベントを投稿する</button>
+      <button class="btn-line dash-post-btn" onclick="showEventForm()">＋ イベントを投稿する</button>
     </div>
 
     <!-- 問い合わせタブ（Bリスト型） -->
@@ -337,6 +352,57 @@
     </div>
 
     <button class="btn-logout" onclick="signOut()">ログアウト</button>
+  </div>
+
+  <!-- PHASE 6: イベント投稿フォーム -->
+  <div class="login-card phase" id="phase6" style="max-width:520px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+      <button onclick="document.querySelector('.page-wrap').classList.add('dashboard-mode');showPhase('phase4');" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
+      <div style="font-size:18px;font-weight:900;color:var(--navy);">📅 イベントを投稿する</div>
+    </div>
+
+    <div class="register-form">
+      <div class="form-group">
+        <label class="form-label">イベント画像</label>
+        <div class="img-upload-area" id="event-img-area">
+          <input type="file" id="event_image_file" accept="image/*" onchange="previewEventImage(this)">
+          <img id="event_img_preview" class="img-preview" src="" alt="">
+          <div id="event-img-placeholder">
+            <div class="img-upload-icon">🖼️</div>
+            <div class="img-upload-label">タップして画像を選択（JPEG/PNG、5MBまで）</div>
+          </div>
+        </div>
+        <div id="event-img-progress" class="upload-progress">📤 アップロード中...</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">イベント名 <span class="required">*</span></label>
+        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遥ぶ自然体験">
+      </div>
+      <div class="form-group">
+        <label class="form-label">開催日</label>
+        <input type="date" id="ev_event_date" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">開催場所</label>
+        <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷公園">
+      </div>
+      <div class="form-group">
+        <label class="form-label">対象年齢・人数</label>
+        <input type="text" id="ev_target" class="form-input" placeholder="例：3～10歳。0名程度">
+      </div>
+      <div class="form-group">
+        <label class="form-label">イベント説明</label>
+        <textarea id="ev_description" class="form-input" rows="4" placeholder="どんなイベントですか？"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">参加費</label>
+        <input type="text" id="ev_price" class="form-input" placeholder="例：無料、500円/人">
+      </div>
+      <div id="ev_error" style="color:#C62828;font-size:13px;margin-bottom:10px;text-align:center;display:none;"></div>
+      <button class="btn-line" id="ev_submit_btn" onclick="saveEvent()" style="margin-top:4px">
+        🌱 イベントを公開する
+      </button>
+    </div>
   </div>
 
 </div>
@@ -383,7 +449,6 @@
       });
       const data = await res.json();
 
-      // URLのパラメータを消す
       window.history.replaceState({}, '', window.location.pathname);
 
       if (data.success) {
@@ -391,10 +456,8 @@
         sessionStorage.setItem('acp_line_name', data.line_display_name);
         showDashboard(data.organization, data.line_display_name);
       } else if (data.line_user_id) {
-        // 団体未登録 → 新規登録フォームへ
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         sessionStorage.setItem('acp_line_name', data.line_display_name || '');
-        // 代表者名をLINE表示名で初期設定
         if (data.line_display_name) {
           document.getElementById('reg_rep_name').value = data.line_display_name;
         }
@@ -418,10 +481,7 @@
     }
     const line_user_id = sessionStorage.getItem('acp_line_user_id');
     const line_display_name = sessionStorage.getItem('acp_line_name');
-    if (!line_user_id) {
-      showPhase('phase1');
-      return;
-    }
+    if (!line_user_id) { showPhase('phase1'); return; }
 
     const btn = document.getElementById('reg_submit_btn');
     btn.disabled = true;
@@ -472,6 +532,16 @@
     const name = lineName || org?.org_name || '';
     document.getElementById('dashOrg').textContent = org?.org_name || '団体名未設定';
     document.getElementById('dashWelcome').textContent = `${name} さん、おかえりなさい 🌿`;
+    const iconEl = document.getElementById('dashOrgIcon');
+    if (iconEl) {
+      if (org?.logo_url) {
+        iconEl.innerHTML = `<img src="${escHtml(org.logo_url)}" class="dash-org-logo" alt="ロゴ">`;
+        iconEl.className = '';
+      } else {
+        iconEl.innerHTML = '🌿';
+        iconEl.className = 'dash-org-icon';
+      }
+    }
     showPhase('phase4');
     document.querySelector('.page-wrap').classList.add('dashboard-mode');
     await loadDashboard(org);
@@ -593,8 +663,11 @@
     const rowsHtml = rows.map(([k, v]) =>
       `<div class="orginfo-row"><div class="orginfo-label">${k}</div><div class="orginfo-value">${escHtml(String(v))}</div></div>`
     ).join('');
+    const logoHtml = org.logo_url
+      ? `<div style="text-align:center;margin-bottom:16px;"><img src="${escHtml(org.logo_url)}" style="width:80px;height:80px;border-radius:16px;object-fit:cover;box-shadow:0 2px 12px rgba(0,0,0,0.12);" alt="ロゴ"></div>`
+      : '';
     el.innerHTML = `
-      <div class="orginfo-card">${rowsHtml}</div>
+      <div class="orginfo-card">${logoHtml}${rowsHtml}</div>
       <button class="orginfo-edit-btn" onclick="showOrgEditForm()">✏️ 団体情報を編集する</button>
     `;
   }
@@ -604,6 +677,18 @@
     const el = document.getElementById('orginfo-content');
     el.innerHTML = `
       <div class="orginfo-edit-form">
+        <div class="form-group">
+          <label class="form-label">団体ロゴ画像</label>
+          <div class="img-upload-area" id="logo-upload-area">
+            <input type="file" id="logo_file" accept="image/*" onchange="previewLogo(this)">
+            ${org.logo_url ? `<img id="logo_preview" class="logo-preview has-img" src="${escHtml(org.logo_url)}" alt="">` : `<img id="logo_preview" class="logo-preview" src="" alt="">`}
+            <div id="logo-placeholder" style="${org.logo_url ? 'display:none' : ''}">
+              <div class="img-upload-icon">🏷️</div>
+              <div class="img-upload-label">タップしてロゴを選択（JPEG/PNG）</div>
+            </div>
+          </div>
+          <div id="logo-upload-progress" class="upload-progress">📤 アップロード中...</div>
+        </div>
         <div class="form-group">
           <label class="form-label">団体名 <span class="required">*</span></label>
           <input type="text" id="edit_org_name" class="form-input" value="${escHtml(org.org_name || '')}">
@@ -646,14 +731,30 @@
     if (!org.id) return;
 
     const org_name = document.getElementById('edit_org_name').value.trim();
-    if (!org_name) {
-      alert('団体名は必須です。');
-      return;
-    }
+    if (!org_name) { alert('団体名は必須です。'); return; }
 
     const btn = document.getElementById('orginfo-save-btn');
     btn.disabled = true;
     btn.textContent = '保存中...';
+
+    // ロゴ画像アップロード
+    let logo_url = org.logo_url || null;
+    const logoFile = document.getElementById('logo_file');
+    if (logoFile && logoFile.files && logoFile.files[0]) {
+      const file = logoFile.files[0];
+      const ext = file.name.split('.').pop();
+      const path = `organizations/${org.id}/logo_${Date.now()}.${ext}`;
+      const progress = document.getElementById('logo-upload-progress');
+      if (progress) progress.style.display = 'block';
+      try {
+        logo_url = await uploadImage(file, path);
+      } catch(e) {
+        if (progress) progress.style.display = 'none';
+        alert('ロゴのアップロードに失敗しました: ' + e.message);
+        btn.disabled = false; btn.textContent = '💾 保存する'; return;
+      }
+      if (progress) progress.style.display = 'none';
+    }
 
     const body = {
       org_name,
@@ -662,6 +763,7 @@
       rep_name: document.getElementById('edit_rep_name').value.trim(),
       email: document.getElementById('edit_email').value.trim(),
       description: document.getElementById('edit_description').value.trim(),
+      logo_url,
     };
 
     try {
@@ -686,19 +788,153 @@
       sessionStorage.setItem('acp_org', JSON.stringify(newOrg));
 
       document.getElementById('dashOrg').textContent = newOrg.org_name || '';
+      const iconEl = document.getElementById('dashOrgIcon');
+      if (iconEl && newOrg.logo_url) {
+        iconEl.innerHTML = `<img src="${escHtml(newOrg.logo_url)}" class="dash-org-logo" alt="ロゴ">`;
+        iconEl.className = '';
+      }
 
       const msg = document.getElementById('orginfo-save-msg');
       msg.style.display = 'block';
       btn.disabled = false;
       btn.textContent = '💾 保存する';
 
-      setTimeout(() => {
-        renderOrgInfo(newOrg);
-      }, 1200);
+      setTimeout(() => { renderOrgInfo(newOrg); }, 1200);
     } catch(e) {
       alert('エラー: ' + e.message);
       btn.disabled = false;
       btn.textContent = '💾 保存する';
+    }
+  }
+
+  // ===== 画像アップロード共通関数 =====
+  async function uploadImage(file, path) {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': file.type,
+        'x-upsert': 'true',
+      },
+      body: file,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || '画像のアップロードに失敗しました。');
+    }
+    return `${SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+  }
+
+  function previewLogo(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById('logo_preview');
+      if (prev) {
+        prev.src = e.target.result;
+        prev.classList.add('has-img');
+        const ph = document.getElementById('logo-placeholder');
+        if (ph) ph.style.display = 'none';
+      }
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function previewEventImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById('event_img_preview');
+      prev.src = e.target.result;
+      prev.classList.add('has-img');
+      document.getElementById('event-img-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function showEventForm() {
+    ['ev_title','ev_event_date','ev_location','ev_target','ev_description','ev_price'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    const prev = document.getElementById('event_img_preview');
+    if (prev) { prev.src = ''; prev.classList.remove('has-img'); }
+    const ph = document.getElementById('event-img-placeholder');
+    if (ph) ph.style.display = '';
+    const fi = document.getElementById('event_image_file');
+    if (fi) fi.value = '';
+    document.getElementById('ev_error').style.display = 'none';
+    document.querySelector('.page-wrap').classList.remove('dashboard-mode');
+    showPhase('phase6');
+  }
+
+  async function saveEvent() {
+    const title = document.getElementById('ev_title').value.trim();
+    if (!title) {
+      document.getElementById('ev_error').textContent = 'イベント名は必須です。';
+      document.getElementById('ev_error').style.display = 'block';
+      return;
+    }
+
+    const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
+    if (!org.id) { showPhase('phase1'); return; }
+
+    const btn = document.getElementById('ev_submit_btn');
+    btn.disabled = true;
+    btn.textContent = '投稿中...';
+    document.getElementById('ev_error').style.display = 'none';
+
+    try {
+      let image_url = null;
+      const fileInput = document.getElementById('event_image_file');
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const ext = file.name.split('.').pop();
+        const path = `events/${org.id}_${Date.now()}.${ext}`;
+        document.getElementById('event-img-progress').style.display = 'block';
+        image_url = await uploadImage(file, path);
+        document.getElementById('event-img-progress').style.display = 'none';
+      }
+
+      const body = {
+        title,
+        event_date: document.getElementById('ev_event_date').value || null,
+        location: document.getElementById('ev_location').value.trim() || null,
+        target: document.getElementById('ev_target').value.trim() || null,
+        description: document.getElementById('ev_description').value.trim() || null,
+        price: document.getElementById('ev_price').value.trim() || null,
+        organization_id: org.id,
+        status: 'active',
+        image_url,
+      };
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || '投稿に失敗しました。');
+      }
+
+      document.querySelector('.page-wrap').classList.add('dashboard-mode');
+      showPhase('phase4');
+      switchTab('events');
+      await loadDashboard(org);
+    } catch(e) {
+      document.getElementById('ev_error').textContent = 'エラー: ' + e.message;
+      document.getElementById('ev_error').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '🌱 イベントを公開する';
+      document.getElementById('event-img-progress').style.display = 'none';
     }
   }
 
