@@ -27,6 +27,7 @@
     .phase { display: none; }
     .phase.active { display: block; }
 
+    /* LINEログインボタン */
     .btn-line { width: 100%; background: var(--line); color: white; border: none; padding: 16px 24px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.2s; }
     .btn-line:hover { opacity: 0.9; }
     .btn-line-icon { width: 28px; height: 28px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -36,17 +37,20 @@
     .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid #F0F0F0; }
     .divider-text { font-size: 12px; color: var(--gray); }
 
+    /* 処理中 */
     .processing-box { text-align: center; padding: 20px 0; }
     .processing-icon { font-size: 48px; margin-bottom: 16px; animation: spin 1.5s linear infinite; }
     @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     .processing-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
     .processing-desc { font-size: 13px; color: var(--gray); }
 
+    /* エラー */
     .error-box { background: #FFF5F5; border: 1.5px solid #FFCDD2; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
     .error-icon { font-size: 36px; margin-bottom: 10px; }
     .error-title { font-size: 15px; font-weight: 800; color: #C62828; margin-bottom: 8px; }
     .error-desc { font-size: 13px; color: #555; line-height: 1.8; }
 
+    /* LINE友だち追加 */
     .friend-box { background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 20px; text-align: center; margin: 16px 0; }
     .friend-title { font-size: 14px; font-weight: 800; color: var(--green); margin-bottom: 8px; }
     .friend-desc { font-size: 12px; color: #555; line-height: 1.8; margin-bottom: 12px; }
@@ -55,6 +59,7 @@
     .btn-secondary { width: 100%; background: none; border: 1.5px solid #ddd; color: #555; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
     .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
 
+    /* ダッシュボード */
     .dashboard { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
     .dashboard-welcome { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
     .dashboard-org { font-size: 14px; color: var(--gray); margin-bottom: 28px; }
@@ -97,6 +102,7 @@
 
 <div class="page-wrap">
 
+  <!-- PHASE 1: LINEログイン -->
   <div class="login-card phase active" id="phase1">
     <div class="login-icon">🌿</div>
     <div class="login-title">登録団体ログイン</div>
@@ -130,6 +136,7 @@
     </div>
   </div>
 
+  <!-- PHASE 2: 処理中 -->
   <div class="login-card phase" id="phase2">
     <div class="processing-box">
       <div class="processing-icon">⚙️</div>
@@ -138,6 +145,7 @@
     </div>
   </div>
 
+  <!-- PHASE 3: エラー -->
   <div class="login-card phase" id="phase3">
     <div class="error-box">
       <div class="error-icon">⚠️</div>
@@ -147,6 +155,7 @@
     <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
   </div>
 
+  <!-- PHASE 4: ダッシュボード -->
   <div class="dashboard phase" id="phase4">
     <div class="dashboard-welcome" id="dashWelcome">おかえりなさい 🌿</div>
     <div class="line-badge">✅ LINE連携済み</div>
@@ -219,13 +228,21 @@
         body: JSON.stringify({ code, redirect_uri: getRedirectUri() }),
       });
       const data = await res.json();
+
+      // URLのパラメータを消す
       window.history.replaceState({}, '', window.location.pathname);
+
       if (data.success) {
         sessionStorage.setItem('acp_org', JSON.stringify(data.organization));
         sessionStorage.setItem('acp_line_name', data.line_display_name);
         showDashboard(data.organization, data.line_display_name);
       } else {
-        document.getElementById('errorMsg').textContent = data.error || 'このLINEアカウントに紐付けられた団体が見つかりません。';
+        let msg = data.error || 'このLINEアカウントに紐付けられた団体が見つかりません。';
+        if (data.line_user_id) {
+          msg += '\n\n【LINE User ID】\n' + data.line_user_id;
+        }
+        document.getElementById('errorMsg').textContent = msg;
+        document.getElementById('errorMsg').style.whiteSpace = 'pre-wrap';
         showPhase('phase3');
       }
     } catch (e) {
@@ -247,12 +264,16 @@
     showPhase('phase1');
   }
 
+  // ページ読み込み時の処理
   window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
+
     if (code) {
+      // LINEからのコールバック
       handleLineCallback(code);
     } else {
+      // セッション復元チェック
       const orgStr = sessionStorage.getItem('acp_org');
       if (orgStr) {
         const org = JSON.parse(orgStr);
