@@ -292,7 +292,7 @@
     client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const [catsRes, eventsRes, orgsRes] = await Promise.all([
       client.from('event_categories').select('*').order('id'),
-      client.from('events').select('*, event_categories(name, emoji)').eq('status', 'published').order('id'),
+      client.from('events').select('*, event_categories(name, emoji)').eq('status', 'active').order('id'),
       client.from('organizations').select('*')
     ]);
     allCategories = catsRes.data || [];
