@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>あそびを探す | ASOBI CREATE PARK</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,8 +13,11 @@
     /* HEADER */
     .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
-    .logo { display: block; flex-shrink: 0; line-height: 0; text-decoration: none; }
-    .logo-image { display: block; width: min(260px, 22vw); height: auto; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
+    .logo-main span { color: var(--green); }
+    .logo-sub { font-size: 9px; color: var(--gray); }
     .site-nav { display: flex; gap: 4px; margin-left: auto; }
     .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
     .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
@@ -150,17 +152,6 @@
       .events-grid { grid-template-columns: 1fr; }
       .site-nav { display: none; }
     }
-  
-    @media (max-width: 900px) {
-      .logo-image { width: 150px; }
-      .header-actions .btn-login { display: none; }
-      .header-inner { gap: 12px; }
-    }
-    @media (max-width: 480px) {
-      .header-inner { padding-left: 16px; padding-right: 16px; gap: 8px; }
-      .logo-image { width: 132px; }
-      .btn-register, .btn-register-event { padding: 8px 10px; font-size: 11px; }
-    }
   </style>
 </head>
 <body>
@@ -168,10 +159,11 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="logo" href="index.html">
-      <picture>
-        <source media="(max-width: 900px)" srcset="asobi-create-park-logo-mobile.svg">
-        <img class="logo-image" src="asobi-create-park-logo.svg" alt="ASOBI CREATE PARK">
-      </picture>
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+      </div>
     </a>
     <nav class="site-nav">
       <a href="events.html" class="nav-link active">あそびを探す</a>
@@ -275,7 +267,7 @@
     <a href="guidelines.html">掲載ガイドライン</a>
   </div>
   <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
-  © 2024 世田谷区地域あそびプラットフォーム
+  © 2025 ASOBI CREATE Park
 </footer>
 
 <script>
@@ -428,11 +420,12 @@
       <p class="modal-desc">${ev.description || ''}</p>
       <div class="info-grid">
         ${ev.event_date ? `<div class="info-item"><div class="info-label">🗓️ 開催時期</div><div class="info-value">${ev.event_date}</div></div>` : ''}
-        ${ev.location ? `<div class="info-item"><div class="info-label">📍 場所</div><div class="info-value">${ev.location}</div></div>` : ''}
+        ${ev.location ? `<div class="info-item"><div class="info-label">📍 場所</div><div class="info-value">${ev.location}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--green);font-weight:700;">🗺️ Googleマップで見る</a></div></div>` : ''}
         ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${ev.target_audience}</div></div>` : ''}
         <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${ev.fee || '無料'}</div></div>
         ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 定員</div><div class="info-value">${ev.max_participants}名</div></div>` : ''}
       </div>
+      ${ev.event_url ? `<a href="${ev.event_url}" target="_blank" rel="noopener" style="display:block;background:var(--green);color:white;text-align:center;padding:13px;border-radius:14px;font-size:14px;font-weight:800;text-decoration:none;margin-bottom:16px;">🔗 イベント詳細ページを見る</a>` : ''}
       ${ev.knowhow_summary ? `<div style="background:#F0FBF5;border-radius:14px;padding:16px;margin-bottom:16px"><div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px">💡 ノウハウ・ポイント</div><div style="font-size:14px;color:#444;line-height:1.9">${ev.knowhow_summary}</div></div>` : ''}
       ${ev.tools_needed ? `<div style="background:#FFF8E1;border-radius:14px;padding:16px;margin-bottom:16px"><div style="font-size:13px;font-weight:800;color:#F57F17;margin-bottom:8px">🛠️ 必要な道具・準備物</div><div style="font-size:14px;color:#444;line-height:1.9">${ev.tools_needed}</div></div>` : ''}
       ${org && org.contact_email ? `<div class="contact-box"><div class="contact-title">📧 このあそびについて問い合わせる</div><a href="mailto:${org.contact_email}" class="contact-email">${org.contact_email}</a></div>` : ''}
@@ -453,7 +446,7 @@
           <button type="submit" class="submit-btn" id="sbtn-${ev.id}">送信する →</button>
           <div class="success-msg" id="smsg-${ev.id}">🎉 送信しました！後ほどご連絡します。</div>
         </form>
-      </div>` : ''}`;
+      </div>` : ''}` ;
 
     document.getElementById('modalOverlay').classList.add('show');
     document.getElementById('modalCloseBtn').classList.add('show');
