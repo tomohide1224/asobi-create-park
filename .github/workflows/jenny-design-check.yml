@@ -1,0 +1,108 @@
+name: 🎨 Jenny Design Auto-Check & Merge
+
+on:
+  push:
+    branches:
+      - jenny-design
+
+jobs:
+  check-and-merge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch main
+        run: git fetch origin main
+
+      - name: Get added lines (diff vs main)
+        id: diff
+        run: |
+          git diff origin/main...origin/jenny-design -- '*.html' '*.css' '*.svg' '*.js' \
+            | grep '^+' | grep -v '^+++' > /tmp/added_lines.txt
+          echo "Added lines:"
+          cat /tmp/added_lines.txt || echo "(none)"
+
+      - name: 🔍 Check for DB / backend code
+        id: check
+        run: |
+          FORBIDDEN=(
+            "supabase.co"
+            "SUPABASE_URL"
+            "SUPABASE_KEY"
+            "SUPABASE_ANON_KEY"
+            "rest/v1"
+            "functions/v1"
+            "line-auth"
+            "jenny-gateway"
+            "createClient"
+            "sessionStorage.setItem"
+            "sessionStorage.removeItem"
+          )
+
+          VIOLATIONS=""
+          for pattern in "${FORBIDDEN[@]}"; do
+            if grep -q "$pattern" /tmp/added_lines.txt 2>/dev/null; then
+              VIOLATIONS="$VIOLATIONS\n❌ 禁止パターン検出: '$pattern'"
+            fi
+          done
+
+          if [ -n "$VIOLATIONS" ]; then
+            echo "has_violations=true" >> $GITHUB_OUTPUT
+            printf "$VIOLATIONS" >> /tmp/violations.txt
+          else
+            echo "has_violations=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🚫 Block — DB/backend code detected
+        if: steps.check.outputs.has_violations == 'true'
+        run: |
+          echo "============================================"
+          echo "🚫 Jennyのデザインブランチへの制限違反を検出"
+          echo "============================================"
+          echo "以下のDB・バックエンドコードが含まれています："
+          cat /tmp/violations.txt
+          echo ""
+          echo "【ルール】jenny-design ブランチには"
+          echo "  ✅ HTML構造・テキスト・CSSのみOK"
+          echo "  ❌ Supabase・LINE認証・API接続コードはNG"
+          echo "  → タクミに連絡してDB部分は依頼してください"
+          exit 1
+
+      - name: ✅ Clean — Auto-merge to main
+        if: steps.check.outputs.has_violations == 'false'
+        run: |
+          git config user.name "Takumi Bot 🤖"
+          git config user.email "takumi-bot@asobi-create-park.dev"
+
+          git checkout main
+          git pull origin main
+
+          # jenny-designをmainにsquash merge
+          git merge origin/jenny-design --squash --allow-unrelated-histories
+
+          # 差分がなければスキップ
+          if git diff --cached --quiet; then
+            echo "✅ 差分なし。スキップします。"
+            exit 0
+          fi
+
+          git commit -m "🎨 Jenny デザイン自動マージ: $(date '+%Y-%m-%d %H:%M JST')"
+          git push origin main
+
+          echo "================================================"
+          echo "✅ main にマージ完了！"
+          echo "   Cloudflare Pages が自動デプロイを開始します。"
+          echo "================================================"
+
+      - name: 🔄 Sync jenny-design back to main
+        if: steps.check.outputs.has_violations == 'false'
+        run: |
+          git push origin main:jenny-design --force
+          echo "✅ jenny-design を main と同期しました"
