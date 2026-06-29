@@ -401,7 +401,19 @@
       </div>
       <div class="form-group">
         <label class="form-label">開催場所</label>
-        <input type="text" id="ev_location" class="form-input" placeholder="例：代々木公園">
+        <div style="display:flex;gap:8px;align-items:stretch;">
+          <input type="text" id="ev_location" class="form-input" placeholder="例：東京都世田谷区太子堂4丁目9-10" style="flex:1;margin:0;" oninput="resetMapPreview()">
+          <button type="button" onclick="searchMapLocation()" id="map_search_btn" style="flex-shrink:0;padding:0 16px;background:#2D9E6B;color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔍 地図で確認</button>
+        </div>
+        <div id="ev_map_preview" style="display:none;margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid #E0E0E0;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+          <iframe id="ev_map_iframe" width="100%" height="260" frameborder="0" style="border:0;display:block;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <div style="padding:10px 14px;background:#F8F9FA;border-top:1px solid #E0E0E0;display:flex;align-items:center;gap:10px;font-size:12px;color:#6C757D;">
+            <span style="font-weight:600;color:#1A1A2E;">地図のタイプ：</span>
+            <button type="button" onclick="setMapType('roadmap')" id="map_type_road" style="padding:3px 12px;border-radius:20px;border:1px solid #2D9E6B;background:#2D9E6B;color:white;font-size:12px;font-weight:700;cursor:pointer;">地図</button>
+            <button type="button" onclick="setMapType('satellite')" id="map_type_sat" style="padding:3px 12px;border-radius:20px;border:1px solid #CCC;background:white;color:#6C757D;font-size:12px;font-weight:700;cursor:pointer;">Earth</button>
+            <span id="ev_map_address_display" style="flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">対象年齢・人数</label>
@@ -1151,6 +1163,11 @@
   // ===== イベント投稿フォーム表示 =====
   function showEventForm() {
     // フォームリセット
+    // マッププレビューをリセット
+    const mapPreview = document.getElementById('ev_map_preview');
+    if (mapPreview) { mapPreview.style.display = 'none'; }
+    const mapIframe = document.getElementById('ev_map_iframe');
+    if (mapIframe) { mapIframe.src = ''; }
     ['ev_title','ev_event_date','ev_location','ev_target','ev_description','ev_price','ev_event_url'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
@@ -1164,6 +1181,48 @@
     document.getElementById('ev_error').style.display = 'none';
     document.querySelector('.page-wrap').classList.remove('dashboard-mode');
     showPhase('phase6');
+  }
+
+  // ===== Googleマップ確認 =====
+  function searchMapLocation() {
+    const addr = document.getElementById('ev_location').value.trim();
+    if (!addr) {
+      document.getElementById('ev_location').focus();
+      return;
+    }
+    const encoded = encodeURIComponent(addr);
+    document.getElementById('ev_map_iframe').src =
+      'https://maps.google.com/maps?q=' + encoded + '&output=embed&hl=ja';
+    document.getElementById('ev_map_preview').style.display = 'block';
+    document.getElementById('ev_map_address_display').textContent = addr;
+    // 地図タイプをリセット
+    document.getElementById('map_type_road').style.background = '#2D9E6B';
+    document.getElementById('map_type_road').style.color = 'white';
+    document.getElementById('map_type_road').style.borderColor = '#2D9E6B';
+    document.getElementById('map_type_sat').style.background = 'white';
+    document.getElementById('map_type_sat').style.color = '#6C757D';
+    document.getElementById('map_type_sat').style.borderColor = '#CCC';
+  }
+
+  function setMapType(type) {
+    const addr = document.getElementById('ev_location').value.trim();
+    if (!addr) return;
+    const encoded = encodeURIComponent(addr);
+    const typeParam = type === 'satellite' ? '&t=k' : '';
+    document.getElementById('ev_map_iframe').src =
+      'https://maps.google.com/maps?q=' + encoded + '&output=embed&hl=ja' + typeParam;
+    const isRoad = type === 'roadmap';
+    document.getElementById('map_type_road').style.background = isRoad ? '#2D9E6B' : 'white';
+    document.getElementById('map_type_road').style.color = isRoad ? 'white' : '#6C757D';
+    document.getElementById('map_type_road').style.borderColor = isRoad ? '#2D9E6B' : '#CCC';
+    document.getElementById('map_type_sat').style.background = isRoad ? 'white' : '#2D9E6B';
+    document.getElementById('map_type_sat').style.color = isRoad ? '#6C757D' : 'white';
+    document.getElementById('map_type_sat').style.borderColor = isRoad ? '#CCC' : '#2D9E6B';
+  }
+
+  function resetMapPreview() {
+    const preview = document.getElementById('ev_map_preview');
+    if (preview) preview.style.display = 'none';
   }
 
   // ===== イベント保存 =====
