@@ -3,51 +3,769 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASOBI CREATE PARK — やってみたいを、みんなでカタチに。</title>
+<title>ASOBI CREATE PARK — あつまる・つくる・あそぶ</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--orange:#FF6B35;--green:#2D9E6B;--green-light:#4CAF78;--navy:#1A1A2E;--light:#F8F9FA;--gray:#6C757D;--blue:#2F80ED;--card-shadow:0 10px 30px rgba(26,26,46,.08)}
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Helvetica Neue','Hiragino Kaku Gothic ProN',sans-serif;background:#FAFAF8;color:var(--navy)}button,a{font-family:inherit}.site-header{background:rgba(255,255,255,.96);border-bottom:1px solid #eee;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.06);backdrop-filter:blur(8px)}.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;gap:16px;max-width:1280px;margin:0 auto}.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;color:var(--navy)}.logo-icon{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#E8F5E9,#FFF3E0);display:flex;align-items:center;justify-content:center;font-size:22px}.logo-text{display:flex;flex-direction:column;line-height:1}.logo-main{font-size:18px;font-weight:900;letter-spacing:.5px;color:var(--green)}.logo-main span{color:var(--blue)}.logo-sub{font-size:10px;color:var(--gray);margin-top:4px;letter-spacing:.5px;font-weight:700}.site-nav{display:flex;gap:6px;align-items:center}.nav-link{color:var(--navy);text-decoration:none;font-size:13px;font-weight:800;padding:8px 12px;border-radius:999px;transition:background .2s,color .2s;white-space:nowrap}.nav-link:hover{background:#F1F8E9;color:var(--green)}.header-actions{display:flex;gap:10px;align-items:center;flex-shrink:0}.btn-login{background:transparent;color:var(--navy);border:0;padding:8px 10px;border-radius:20px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;text-decoration:none}.btn-register-event{background:var(--green);color:white;border:none;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:900;cursor:pointer;white-space:nowrap;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 18px rgba(45,158,107,.22)}.btn-register-event:hover{transform:translateY(-1px)}.hero-section{background:linear-gradient(180deg,#FFF 0%,#FFFDF7 100%);overflow:hidden;position:relative}.hero-content{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:minmax(420px,.92fr) minmax(520px,1.08fr);gap:36px;align-items:center;padding:44px 28px 36px}.hero-text{position:relative;z-index:2}.hero-kicker{display:inline-flex;align-items:center;gap:8px;background:#F1F8E9;color:var(--green);border:1px solid #D6EEDC;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:900;margin-bottom:18px}.hero-title{font-size:42px;font-weight:900;color:var(--navy);line-height:1.35;margin-bottom:18px;letter-spacing:-1px}.hero-title .orange{color:var(--orange)}.hero-title .green{color:var(--green)}.hero-desc{font-size:15px;line-height:2;color:#374151;margin-bottom:24px;max-width:520px;font-weight:600}.hero-desc strong{color:var(--navy)}.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}.hero-btn{border:none;border-radius:18px;padding:15px 22px;font-size:15px;font-weight:900;cursor:pointer;display:inline-flex;gap:10px;align-items:center;transition:transform .2s,box-shadow .2s}.hero-btn:hover{transform:translateY(-2px)}.hero-btn.plan{background:var(--green);color:white;box-shadow:0 10px 20px rgba(45,158,107,.24)}.hero-btn.support{background:var(--orange);color:white;box-shadow:0 10px 20px rgba(255,107,53,.24)}.hero-note{font-size:12px;color:var(--gray);font-weight:800;display:flex;align-items:center;gap:6px}.hero-visual{position:relative;min-height:390px;border-radius:32px;background:linear-gradient(135deg,#E7F6FF 0%,#F4FFE8 48%,#FFF4DA 100%);overflow:hidden;box-shadow:0 24px 60px rgba(26,26,46,.12)}.hero-visual:before{content:"";position:absolute;inset:auto -30px -70px -30px;height:190px;background:linear-gradient(180deg,#8DCE73,#52B869);border-radius:50% 50% 0 0/45% 45% 0 0}.skyline{position:absolute;right:18px;top:72px;color:rgba(47,128,237,.16);font-size:86px;letter-spacing:8px}.sun{position:absolute;left:46%;top:34px;width:42px;height:42px;border-radius:50%;background:#FFD966;box-shadow:0 0 0 18px rgba(255,217,102,.18)}.flag-line{position:absolute;right:40px;top:34px;width:210px;height:80px;border-top:4px solid rgba(255,107,53,.35);border-radius:50%;transform:rotate(8deg)}.flag-line span{position:absolute;top:-1px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:18px solid var(--orange)}.flag-line span:nth-child(1){left:30px}.flag-line span:nth-child(2){left:70px;border-top-color:#FFD600}.flag-line span:nth-child(3){left:110px;border-top-color:var(--green)}.flag-line span:nth-child(4){left:150px;border-top-color:var(--blue)}.cycle-arrow{position:absolute;border:6px solid transparent;border-top-color:rgba(45,158,107,.55);border-radius:50%;width:310px;height:230px;left:150px;top:78px;transform:rotate(20deg)}.cycle-arrow:after{content:"";position:absolute;right:18px;top:18px;width:0;height:0;border-left:18px solid rgba(45,158,107,.75);border-top:11px solid transparent;border-bottom:11px solid transparent;transform:rotate(-22deg)}.person{position:absolute;border-radius:24px;background:white;box-shadow:0 10px 26px rgba(26,26,46,.12);border:2px solid rgba(255,255,255,.8)}.person .face{width:44px;height:44px;border-radius:50%;background:#FFD8B5;margin:0 auto 8px;position:relative}.person .face:before,.person .face:after{content:"";position:absolute;top:18px;width:5px;height:5px;background:#1f2937;border-radius:50%}.person .face:before{left:13px}.person .face:after{right:13px}.person .body{height:44px;border-radius:16px 16px 10px 10px}.person.creator{left:88px;bottom:78px;width:118px;padding:14px;background:rgba(255,255,255,.9)}.person.creator .body{background:#F4B64A}.person.supporter{right:78px;bottom:86px;width:118px;padding:14px;background:rgba(255,255,255,.9)}.person.supporter .body{background:#4CAF78}.person.kids{left:48%;bottom:42px;width:150px;padding:12px;background:rgba(255,255,255,.9);display:flex;gap:8px;justify-content:center}.kid{width:42px}.kid .face{width:34px;height:34px}.kid .body{height:34px;background:#FF6B35}.kid:nth-child(2) .body{background:#2F80ED}.kid:nth-child(3) .body{background:#FFD600}.table{position:absolute;left:210px;bottom:56px;width:190px;height:74px;border-radius:26px;background:#FFF;box-shadow:0 12px 26px rgba(26,26,46,.14);transform:rotate(-3deg)}.table:before{content:"企画メモ";position:absolute;left:22px;top:18px;color:var(--navy);font-weight:900;font-size:14px}.table:after{content:"";position:absolute;left:24px;right:24px;bottom:22px;height:6px;background:linear-gradient(90deg,#FFD600 0 30%,#FF6B35 30% 60%,#2D9E6B 60%);border-radius:999px}.bubble{position:absolute;background:white;border-radius:18px;padding:10px 14px;box-shadow:0 10px 24px rgba(26,26,46,.12);font-weight:900;font-size:13px}.bubble small{display:block;color:var(--gray);font-weight:800;font-size:10px;margin-top:4px}.bubble.plan{left:40px;top:160px;color:var(--green);border:2px solid #D6EEDC}.bubble.support{right:70px;top:78px;color:var(--orange);border:2px solid #FFD5B8}.bubble.open{right:210px;bottom:120px;color:var(--blue);border:2px solid #CFE3FF}.step-strip{max-width:1280px;margin:0 auto;padding:0 28px 28px}.steps-box{background:white;border-radius:24px;box-shadow:var(--card-shadow);display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;overflow:hidden;border:1px solid #EFEFEF}.step-item-home{padding:22px;display:flex;gap:14px;align-items:flex-start;border-right:1px dashed #ddd}.step-item-home:last-child{border-right:0}.step-icon{width:50px;height:50px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0}.step-item-home:nth-child(1) .step-icon{background:#E8F5E9}.step-item-home:nth-child(2) .step-icon{background:#FFF3E0}.step-item-home:nth-child(3) .step-icon{background:#E3F2FD}.step-title{font-size:15px;font-weight:900;margin-bottom:5px}.step-desc{font-size:12px;color:#555;line-height:1.7;font-weight:600}.action-section{background:#FAFAF8;padding:34px 28px 0}.action-cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1280px;margin:0 auto}.action-card{border-radius:24px;padding:30px;display:flex;gap:20px;align-items:flex-start;background:white;box-shadow:var(--card-shadow)}.action-card-plan{border:2px solid #C8E6C9}.action-card-experience{border:2px solid #FFD5B8}.action-card-icon-box{width:70px;height:70px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0}.action-card-plan .action-card-icon-box{background:#E8F5E9}.action-card-experience .action-card-icon-box{background:#FFF3E0}.action-card-body{flex:1}.action-card-tag{font-size:11px;font-weight:900;letter-spacing:1px;margin-bottom:7px}.action-card-plan .action-card-tag{color:var(--green)}.action-card-experience .action-card-tag{color:var(--orange)}.action-card-title{font-size:24px;font-weight:900;margin-bottom:7px;color:var(--navy)}.action-card-sub{font-size:13px;font-weight:800;color:var(--gray);margin-bottom:10px}.action-card-desc{font-size:13px;color:#555;line-height:1.8;margin-bottom:18px;font-weight:600}.action-btns{display:flex;gap:10px;flex-wrap:wrap}.btn-outline-green,.btn-solid-green,.btn-solid-orange,.btn-outline-orange{padding:10px 18px;border-radius:999px;font-size:13px;font-weight:900;cursor:pointer;white-space:nowrap;transition:all .2s}.btn-outline-green{background:white;color:var(--green);border:2px solid var(--green)}.btn-outline-green:hover{background:var(--green);color:white}.btn-solid-green{background:var(--green);color:white;border:none}.btn-solid-green:hover{opacity:.9}.btn-solid-orange{background:var(--orange);color:white;border:none}.btn-solid-orange:hover{opacity:.9}.btn-outline-orange{background:white;color:var(--orange);border:2px solid var(--orange)}.btn-outline-orange:hover{background:var(--orange);color:white}.action-note{max-width:1280px;margin:18px auto 0;padding:12px 0 0;display:flex;gap:24px;flex-wrap:wrap}.action-note span{font-size:12px;color:var(--gray);display:flex;align-items:center;gap:4px;font-weight:800}.trust-section{background:#FAFAF8;padding:22px 28px 30px}.trust-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.trust-item{display:flex;gap:12px;align-items:flex-start;padding:18px;background:white;border-radius:18px;box-shadow:0 8px 24px rgba(26,26,46,.06)}.trust-icon{font-size:25px;flex-shrink:0;margin-top:2px}.trust-title{font-size:13px;font-weight:900;color:var(--navy);margin-bottom:5px}.trust-desc{font-size:11px;color:var(--gray);line-height:1.6;font-weight:600}.events-section{padding:36px 0 0;background:#FAFAF8}.section-header-row{display:flex;align-items:center;justify-content:space-between;padding:0 28px;margin-bottom:16px;max-width:1280px;margin-left:auto;margin-right:auto}.section-title-lg{font-size:20px;font-weight:900;color:var(--navy);display:flex;align-items:center;gap:8px}.section-link{font-size:13px;color:var(--orange);font-weight:800;text-decoration:none;cursor:pointer}.filter-section{background:#FAFAF8;padding:0 28px 16px}.filter-inner{max-width:1280px;margin:0 auto}.filter-tags{display:flex;gap:8px;flex-wrap:wrap}.filter-tag{background:white;border:1.5px solid #e0e0e0;color:var(--navy);padding:6px 14px;border-radius:999px;font-size:13px;cursor:pointer;transition:all .2s;font-weight:800;white-space:nowrap}.filter-tag:hover{border-color:var(--orange);color:var(--orange)}.filter-tag.active{background:var(--orange);border-color:var(--orange);color:white}.events-scroll{overflow-x:auto;padding:8px 28px 24px;-webkit-overflow-scrolling:touch;scrollbar-width:none}.events-scroll::-webkit-scrollbar{display:none}.events-row{display:flex;gap:16px;width:max-content}.event-card{width:240px;background:white;border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow);cursor:pointer;transition:transform .2s,box-shadow .2s;flex-shrink:0}.event-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.14)}.card-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}.card-cat-badge{position:absolute;top:10px;left:10px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:8px}.card-body{padding:14px}.card-title{font-size:14px;font-weight:800;line-height:1.4;margin-bottom:8px;color:var(--navy)}.card-meta-row{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}.card-meta{font-size:11px;color:var(--gray);display:flex;align-items:center;gap:4px}.card-badges{display:flex;gap:4px;flex-wrap:wrap}.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px}.badge-participate{background:#E8F5E9;color:#2D9E6B}.badge-help{background:#FFF3E0;color:#FF6B35}.content-section{padding:36px 28px 40px;background:#FAFAF8}.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1280px;margin:0 auto}.content-box{border-radius:20px;padding:28px;display:flex;gap:20px;align-items:flex-start}.content-box-idea{background:linear-gradient(135deg,#FFF9C4,#FFF3E0)}.content-box-about{background:linear-gradient(135deg,#E8F5E9,#F1F8E9)}.content-box-icon{font-size:48px;flex-shrink:0}.content-box-body{flex:1}.content-box-title{font-size:16px;font-weight:900;color:var(--navy);margin-bottom:8px;line-height:1.4}.content-box-desc{font-size:13px;color:#555;line-height:1.7;margin-bottom:16px}.btn-content{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;border:none;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .2s}.btn-content:hover{opacity:.9}.btn-content-outline{display:inline-flex;align-items:center;gap:6px;background:white;color:var(--navy);border:2px solid #ddd;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s}.btn-content-outline:hover{border-color:var(--green);color:var(--green)}.org-section{padding:36px 28px;background:white}.org-section-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;max-width:1280px;margin-left:auto;margin-right:auto}.org-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-width:1280px;margin:0 auto}.org-card{background:#F8F9FA;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;gap:12px;align-items:flex-start}.org-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--orange),#ff9a6c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.org-info{flex:1;min-width:0}.org-name{font-size:14px;font-weight:800;margin-bottom:2px}.org-type-badge{font-size:10px;font-weight:700;color:var(--orange);margin-bottom:4px}.org-desc-short{font-size:12px;color:#555;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:flex-end;justify-content:center}.modal-overlay.show{display:flex}.modal{background:white;border-radius:24px 24px 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;animation:slideUp .3s ease}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}.modal-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:14px auto 0}.modal-header{padding:20px 24px 16px}.modal-category{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px;margin-bottom:12px}.modal-title{font-size:22px;font-weight:900;line-height:1.4;margin-bottom:6px}.modal-organizer{font-size:13px;color:var(--gray);font-weight:600}.modal-body{padding:0 24px 24px}.modal-desc{font-size:14px;line-height:1.8;color:#333;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #f0f0f0}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}.info-item{background:var(--light);border-radius:12px;padding:12px}.info-item-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gray);margin-bottom:4px}.info-item-value{font-size:13px;font-weight:700;color:var(--navy)}.knowhow-section{background:#FFFDF0;border:1px solid #FFE082;border-radius:12px;padding:16px;margin-bottom:16px}.knowhow-title{font-size:12px;font-weight:700;color:#F57F17;letter-spacing:1px;margin-bottom:8px}.knowhow-text{font-size:13px;line-height:1.7;color:#555}.tools-section{background:#F3E5F5;border-radius:12px;padding:16px;margin-bottom:16px}.tools-title{font-size:12px;font-weight:700;color:#7B1FA2;letter-spacing:1px;margin-bottom:8px}.tools-text{font-size:13px;line-height:1.7;color:#555}.org-profile-box{background:#F0F7FF;border:1px solid #BBDEFB;border-radius:12px;padding:16px;margin-bottom:16px}.org-profile-label{font-size:11px;font-weight:700;color:#1565C0;letter-spacing:1px;margin-bottom:10px}.org-profile-inner{display:flex;gap:12px;align-items:flex-start}.org-profile-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--orange),#ff9a6c);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}.org-profile-name{font-size:15px;font-weight:800;margin-bottom:2px}.org-profile-type{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px}.org-profile-desc{font-size:12px;line-height:1.6;color:#555}.org-profile-links{display:flex;gap:8px;margin-top:8px}.org-profile-link{font-size:11px;color:#1565C0;text-decoration:none;font-weight:600}.form-section{background:var(--navy);border-radius:16px;padding:20px;color:white}.form-title{font-size:16px;font-weight:800;margin-bottom:4px}.form-subtitle{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px}.form-tabs{display:flex;gap:8px;margin-bottom:16px}.form-tab{flex:1;padding:8px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.6);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}.form-tab.active{background:var(--orange);border-color:var(--orange);color:white}.form-group{margin-bottom:12px}.form-group label{display:block;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:6px;letter-spacing:1px}.form-group input,.form-group textarea,.form-group select{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 14px;color:white;font-size:14px;outline:none}.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.4)}.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--orange)}.form-group textarea{resize:vertical;min-height:80px}.form-group select option{background:var(--navy);color:white}.submit-btn{width:100%;background:var(--orange);color:white;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:opacity .2s}.submit-btn:hover{opacity:.9}.submit-btn:disabled{opacity:.5;cursor:not-allowed}.success-msg{text-align:center;padding:20px;color:#4CAF50;font-weight:700;font-size:15px;display:none}.modal-close{position:fixed;top:16px;right:16px;background:rgba(0,0,0,.5);color:white;border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;z-index:1001;display:none;align-items:center;justify-content:center}.modal-close.show{display:flex}.org-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center;padding:16px}.org-modal-overlay.show{display:flex}.org-modal{background:white;border-radius:20px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto}.org-modal-header{background:var(--navy);color:white;padding:20px 24px;border-radius:20px 20px 0 0;position:sticky;top:0;z-index:10}.org-modal-title{font-size:18px;font-weight:900;margin-bottom:4px}.org-modal-subtitle{font-size:12px;color:rgba(255,255,255,.6)}.org-modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);color:white;border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}.step-indicator{display:flex;align-items:center;padding:16px 24px;background:#F8F9FA;border-bottom:1px solid #eee}.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;transition:all .3s}.step-dot.active{background:var(--orange);color:white}.step-dot.done{background:var(--green);color:white}.step-dot.pending{background:#e0e0e0;color:#999}.step-label{font-size:10px;color:#999;margin-top:2px;white-space:nowrap}.step-active-label{color:var(--orange);font-weight:700}.step-line{flex:1;height:2px;background:#e0e0e0;margin:0 6px}.step-line.done{background:var(--green)}.step-item{display:flex;flex-direction:column;align-items:center;gap:2px}.org-form-body{padding:24px}.org-step-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px}.org-step-desc{font-size:12px;color:var(--gray);margin-bottom:20px;line-height:1.6}.org-form-group{margin-bottom:16px}.org-form-group label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px}.org-form-group label .required{color:var(--orange);margin-left:4px}.org-form-group input,.org-form-group textarea,.org-form-group select{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 14px;font-size:14px;outline:none;color:var(--navy);background:white;transition:border-color .2s}.org-form-group input:focus,.org-form-group textarea:focus,.org-form-group select:focus{border-color:var(--orange)}.org-form-group textarea{resize:vertical;min-height:100px;line-height:1.6}.org-form-group .hint{font-size:11px;color:var(--gray);margin-top:4px;line-height:1.5}.org-form-group .radio-group{display:flex;gap:8px;flex-wrap:wrap}.org-form-group .radio-btn{padding:8px 14px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;font-weight:600}.org-form-group .radio-btn.selected{background:var(--orange);border-color:var(--orange);color:white}.org-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.terms-box{background:var(--light);border-radius:12px;padding:16px;margin-bottom:16px;max-height:200px;overflow-y:auto;font-size:12px;line-height:1.8;color:#555}.terms-box h4{font-size:13px;color:var(--navy);margin-bottom:8px}.checkbox-group{display:flex;gap:10px;align-items:flex-start;cursor:pointer}.checkbox-group input[type=checkbox]{width:18px;height:18px;margin-top:2px;accent-color:var(--orange);flex-shrink:0}.checkbox-group span{font-size:13px;line-height:1.6;color:var(--navy);font-weight:600}.review-pending{text-align:center;padding:40px 24px}.review-icon{font-size:64px;margin-bottom:16px}.review-title{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:8px}.review-desc{font-size:14px;color:var(--gray);line-height:1.8;margin-bottom:24px}.review-steps{text-align:left;background:var(--light);border-radius:12px;padding:16px;margin-bottom:24px}.review-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #eee}.review-step:last-child{border-bottom:none}.review-step-icon{font-size:20px;flex-shrink:0}.review-step-text{font-size:13px;color:#555;line-height:1.6}.review-step-text strong{color:var(--navy)}.step-nav{display:flex;gap:10px;padding:16px 24px;border-top:1px solid #eee;background:white;border-radius:0 0 20px 20px;position:sticky;bottom:0}.btn-prev{flex:1;background:#f0f0f0;color:var(--navy);border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer}.btn-next{flex:2;background:var(--orange);color:white;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer}.btn-next:disabled{opacity:.5;cursor:not-allowed}.loading{text-align:center;padding:60px 20px;color:var(--gray)}.spinner{width:40px;height:40px;border:3px solid #eee;border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}@keyframes spin{to{transform:rotate(360deg)}}.empty{text-align:center;padding:60px 20px;color:var(--gray)}.empty-emoji{font-size:48px;margin-bottom:12px}.cat-1{background:#E8F5E9;color:#2D9E6B}.cat-2{background:#E3F2FD;color:#1565C0}.cat-3{background:#F3E5F5;color:#7B1FA2}.cat-4{background:#FFF3E0;color:#E65100}.cat-5{background:#FCE4EC;color:#C62828}.cat-6{background:#F9FBE7;color:#827717}.cat-7{background:#E8EAF6;color:#283593}.cat-8{background:#EFEBE9;color:#4E342E}footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:32px 24px;font-size:12px;line-height:1.8}footer strong{color:white}.footer-inner{max-width:1280px;margin:0 auto}.footer-tagline{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:12px}@media(max-width:980px){.hero-content{grid-template-columns:1fr}.hero-visual{min-height:320px}.trust-grid{grid-template-columns:1fr 1fr}.steps-box{grid-template-columns:1fr}.step-item-home{border-right:0;border-bottom:1px dashed #ddd}.step-item-home:last-child{border-bottom:0}}@media(max-width:768px){.hero-content{padding:34px 20px 24px}.hero-title{font-size:31px}.hero-visual{display:none}.action-cards{grid-template-columns:1fr}.content-grid{grid-template-columns:1fr}.site-nav{display:none}.header-actions .btn-login{display:none}.org-form-row{grid-template-columns:1fr}.action-card{padding:22px}.hero-actions{flex-direction:column}.hero-btn{justify-content:center}.trust-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){.header-inner{padding:10px 16px}.logo-main{font-size:15px}.logo-sub{display:none}.btn-register-event{padding:9px 12px;font-size:12px}.hero-title{font-size:27px}.hero-desc{font-size:14px}.trust-grid{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr}.action-card{flex-direction:column}.events-scroll{padding-left:16px}.section-header-row,.filter-section{padding-left:16px;padding-right:16px}}
+:root {
+--orange: #FF6B35;
+--green: #2D9E6B;
+--green-light: #4CAF78;
+--navy: #1A1A2E;
+--light: #F8F9FA;
+--gray: #6C757D;
+--card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', sans-serif; background: #FAFAF8; color: var(--navy); }
+.site-header { background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; gap: 16px; max-width: 1200px; margin: 0 auto; }
+.logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; text-decoration: none; }
+.logo-icon { font-size: 26px; line-height: 1; }
+.logo-text { display: flex; flex-direction: column; line-height: 1; }
+.logo-main { font-size: 16px; font-weight: 900; letter-spacing: 1px; color: var(--navy); }
+.logo-main span { color: var(--orange); }
+.logo-sub { font-size: 9px; color: var(--gray); margin-top: 2px; letter-spacing: 0.5px; }
+.site-nav { display: flex; gap: 4px; align-items: center; }
+.nav-link { color: var(--navy); text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 6px; transition: background 0.2s; white-space: nowrap; }
+.nav-link:hover { background: #f0f0f0; }
+.header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.btn-login { background: transparent; color: var(--navy); border: 1.5px solid #ddd; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.btn-register-event { background: var(--green); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+.btn-register-event:hover { opacity: 0.9; }
+.hero-section { background: linear-gradient(160deg, #E8F5E9 0%, #F1F8E9 40%, #FFF8E1 100%); overflow: hidden; position: relative; min-height: 380px; display: flex; align-items: stretch; }
+.hero-content { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; padding: 48px 28px 40px; gap: 32px; }
+.hero-text { flex: 1; z-index: 2; }
+.hero-title { font-size: 42px; font-weight: 900; color: #2a6e3f; line-height: 1.25; margin-bottom: 16px; letter-spacing: -1px; }
+.hero-desc { font-size: 14px; line-height: 1.9; color: #555; margin-bottom: 0; max-width: 380px; }
+.hero-illustration { flex: 1; position: relative; min-height: 280px; display: flex; align-items: center; justify-content: center; }
+.hero-art { width: 100%; max-width: 480px; height: 280px; background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 30%, #fff9c4 60%, #b3e5fc 100%); border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+.hero-art-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 80px; letter-spacing: -4px; opacity: 0.85; }
+.hero-art-banner { position: absolute; top: 12px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #2a6e3f; }
+.hero-art-flags { position: absolute; top: 0; left: 0; right: 0; height: 32px; display: flex; gap: 0; }
+.hero-flag { flex: 1; height: 32px; }
+.action-section { background: white; padding: 32px 28px 0; }
+.action-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+.action-card { border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start; }
+.action-card-plan { background: #F8FFF8; border: 2px solid #C8E6C9; }
+.action-card-experience { background: #FFFAF7; border: 2px solid #FFD5B8; }
+.action-card-icon-box { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+.action-card-plan .action-card-icon-box { background: #E8F5E9; }
+.action-card-experience .action-card-icon-box { background: #FFF3E0; }
+.action-card-body { flex: 1; }
+.action-card-tag { font-size: 10px; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+.action-card-plan .action-card-tag { color: var(--green); }
+.action-card-experience .action-card-tag { color: var(--orange); }
+.action-card-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; color: var(--navy); }
+.action-card-sub { font-size: 12px; font-weight: 700; color: var(--gray); margin-bottom: 10px; }
+.action-card-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 16px; }
+.action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-outline-green { background: white; color: var(--green); border: 2px solid var(--green); padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.btn-outline-green:hover { background: var(--green); color: white; }
+.btn-solid-green { background: var(--green); color: white; border: none; padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+.btn-solid-green:hover { opacity: 0.9; }
+.btn-solid-orange { background: var(--orange); color: white; border: none; padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+.btn-solid-orange:hover { opacity: 0.9; }
+.btn-outline-orange { background: white; color: var(--orange); border: 2px solid var(--orange); padding: 9px 16px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.btn-outline-orange:hover { background: var(--orange); color: white; }
+.action-note { max-width: 1200px; margin: 16px auto 0; padding: 12px 0 0; border-top: 1px solid #eee; display: flex; gap: 24px; flex-wrap: wrap; }
+.action-note span { font-size: 12px; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+.trust-section { background: white; padding: 20px 28px 28px; }
+.trust-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.trust-item { display: flex; gap: 12px; align-items: flex-start; padding: 16px; background: #F8F9FA; border-radius: 12px; }
+.trust-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.trust-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.trust-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+.events-section { padding: 36px 0 0; background: #FAFAF8; }
+.section-header-row { display: flex; align-items: center; justify-content: space-between; padding: 0 28px; margin-bottom: 16px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+.section-title-lg { font-size: 18px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+.section-link { font-size: 13px; color: var(--orange); font-weight: 700; text-decoration: none; cursor: pointer; }
+.filter-section { background: #FAFAF8; padding: 0 28px 16px; }
+.filter-inner { max-width: 1200px; margin: 0 auto; }
+.filter-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--gray); margin-bottom: 8px; }
+.filter-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-tag { background: white; border: 1.5px solid #e0e0e0; color: var(--navy); padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-weight: 600; white-space: nowrap; }
+.filter-tag:hover { border-color: var(--orange); color: var(--orange); }
+.filter-tag.active { background: var(--orange); border-color: var(--orange); color: white; }
+.events-scroll { overflow-x: auto; padding: 8px 28px 24px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.events-scroll::-webkit-scrollbar { display: none; }
+.events-row { display: flex; gap: 16px; width: max-content; }
+.event-card { width: 240px; background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0; }
+.event-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.14); }
+.card-thumb { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; }
+.card-cat-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 8px; }
+.card-body { padding: 14px; }
+.card-title { font-size: 14px; font-weight: 800; line-height: 1.4; margin-bottom: 8px; color: var(--navy); }
+.card-meta-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.card-meta { font-size: 11px; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+.card-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+.badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+.badge-participate { background: #E8F5E9; color: #2D9E6B; }
+.badge-help { background: #FFF3E0; color: #FF6B35; }
+.events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding: 0 28px; }
+.content-section { padding: 36px 28px 40px; background: #FAFAF8; }
+.content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+.content-box { border-radius: 20px; padding: 28px; display: flex; gap: 20px; align-items: flex-start; }
+.content-box-idea { background: linear-gradient(135deg, #FFF9C4, #FFF3E0); }
+.content-box-about { background: linear-gradient(135deg, #E8F5E9, #F1F8E9); }
+.content-box-icon { font-size: 48px; flex-shrink: 0; }
+.content-box-body { flex: 1; }
+.content-box-title { font-size: 16px; font-weight: 900; color: var(--navy); margin-bottom: 8px; line-height: 1.4; }
+.content-box-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 16px; }
+.btn-content { display: inline-flex; align-items: center; gap: 6px; background: var(--green); color: white; border: none; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
+.btn-content:hover { opacity: 0.9; }
+.btn-content-outline { display: inline-flex; align-items: center; gap: 6px; background: white; color: var(--navy); border: 2px solid #ddd; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 800; cursor: pointer; transition: border-color 0.2s; }
+.btn-content-outline:hover { border-color: var(--green); color: var(--green); }
+.org-section { padding: 36px 28px; background: white; }
+.org-section-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; max-width: 1200px; margin-left: auto; margin-right: auto; margin-bottom: 16px; }
+.org-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; max-width: 1200px; margin: 0 auto; }
+.org-card { background: #F8F9FA; border-radius: 12px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: flex; gap: 12px; align-items: flex-start; }
+.org-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--orange), #ff9a6c); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.org-info { flex: 1; min-width: 0; }
+.org-name { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+.org-type-badge { font-size: 10px; font-weight: 700; color: var(--orange); margin-bottom: 4px; }
+.org-desc-short { font-size: 12px; color: #555; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: white; border-radius: 24px 24px 0 0; width: 100%; max-width: 640px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 14px auto 0; }
+.modal-header { padding: 20px 24px 16px; }
+.modal-category { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 12px; margin-bottom: 12px; }
+.modal-title { font-size: 22px; font-weight: 900; line-height: 1.4; margin-bottom: 6px; }
+.modal-organizer { font-size: 13px; color: var(--gray); font-weight: 600; }
+.modal-body { padding: 0 24px 24px; }
+.modal-desc { font-size: 14px; line-height: 1.8; color: #333; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.info-item { background: var(--light); border-radius: 12px; padding: 12px; }
+.info-item-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--gray); margin-bottom: 4px; }
+.info-item-value { font-size: 13px; font-weight: 700; color: var(--navy); }
+.knowhow-section { background: #FFFDF0; border: 1px solid #FFE082; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.knowhow-title { font-size: 12px; font-weight: 700; color: #F57F17; letter-spacing: 1px; margin-bottom: 8px; }
+.knowhow-text { font-size: 13px; line-height: 1.7; color: #555; }
+.tools-section { background: #F3E5F5; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.tools-title { font-size: 12px; font-weight: 700; color: #7B1FA2; letter-spacing: 1px; margin-bottom: 8px; }
+.tools-text { font-size: 13px; line-height: 1.7; color: #555; }
+.org-profile-box { background: #F0F7FF; border: 1px solid #BBDEFB; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.org-profile-label { font-size: 11px; font-weight: 700; color: #1565C0; letter-spacing: 1px; margin-bottom: 10px; }
+.org-profile-inner { display: flex; gap: 12px; align-items: flex-start; }
+.org-profile-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--orange), #ff9a6c); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.org-profile-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+.org-profile-type { font-size: 11px; color: var(--orange); font-weight: 700; margin-bottom: 6px; }
+.org-profile-desc { font-size: 12px; line-height: 1.6; color: #555; }
+.org-profile-links { display: flex; gap: 8px; margin-top: 8px; }
+.org-profile-link { font-size: 11px; color: #1565C0; text-decoration: none; font-weight: 600; }
+.form-section { background: var(--navy); border-radius: 16px; padding: 20px; color: white; }
+.form-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.form-subtitle { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+.form-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.form-tab { flex: 1; padding: 8px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
+.form-tab.active { background: var(--orange); border-color: var(--orange); color: white; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); margin-bottom: 6px; letter-spacing: 1px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px 14px; color: white; font-size: 14px; outline: none; }
+.form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--orange); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-group select option { background: var(--navy); color: white; }
+.submit-btn { width: 100%; background: var(--orange); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s; }
+.submit-btn:hover { opacity: 0.9; }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.success-msg { text-align: center; padding: 20px; color: #4CAF50; font-weight: 700; font-size: 15px; display: none; }
+.modal-close { position: fixed; top: 16px; right: 16px; background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1001; display: none; align-items: center; justify-content: center; }
+.modal-close.show { display: flex; }
+.org-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+.org-modal-overlay.show { display: flex; }
+.org-modal { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 92vh; overflow-y: auto; }
+.org-modal-header { background: var(--navy); color: white; padding: 20px 24px; border-radius: 20px 20px 0 0; position: sticky; top: 0; z-index: 10; }
+.org-modal-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+.org-modal-subtitle { font-size: 12px; color: rgba(255,255,255,0.6); }
+.org-modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.step-indicator { display: flex; align-items: center; padding: 16px 24px; background: #F8F9FA; border-bottom: 1px solid #eee; }
+.step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.3s; }
+.step-dot.active { background: var(--orange); color: white; }
+.step-dot.done { background: var(--green); color: white; }
+.step-dot.pending { background: #e0e0e0; color: #999; }
+.step-label { font-size: 10px; color: #999; margin-top: 2px; white-space: nowrap; }
+.step-active-label { color: var(--orange); font-weight: 700; }
+.step-line { flex: 1; height: 2px; background: #e0e0e0; margin: 0 6px; }
+.step-line.done { background: var(--green); }
+.step-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.org-form-body { padding: 24px; }
+.org-step-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.org-step-desc { font-size: 12px; color: var(--gray); margin-bottom: 20px; line-height: 1.6; }
+.org-form-group { margin-bottom: 16px; }
+.org-form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.org-form-group label .required { color: var(--orange); margin-left: 4px; }
+.org-form-group input, .org-form-group textarea, .org-form-group select { width: 100%; border: 1.5px solid #e0e0e0; border-radius: 10px; padding: 10px 14px; font-size: 14px; outline: none; color: var(--navy); background: white; transition: border-color 0.2s; }
+.org-form-group input:focus, .org-form-group textarea:focus, .org-form-group select:focus { border-color: var(--orange); }
+.org-form-group textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.org-form-group .hint { font-size: 11px; color: var(--gray); margin-top: 4px; line-height: 1.5; }
+.org-form-group .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.org-form-group .radio-btn { padding: 8px 14px; border: 1.5px solid #e0e0e0; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+.org-form-group .radio-btn.selected { background: var(--orange); border-color: var(--orange); color: white; }
+.org-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.terms-box { background: var(--light); border-radius: 12px; padding: 16px; margin-bottom: 16px; max-height: 200px; overflow-y: auto; font-size: 12px; line-height: 1.8; color: #555; }
+.terms-box h4 { font-size: 13px; color: var(--navy); margin-bottom: 8px; }
+.checkbox-group { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.checkbox-group input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--orange); flex-shrink: 0; }
+.checkbox-group span { font-size: 13px; line-height: 1.6; color: var(--navy); font-weight: 600; }
+.review-pending { text-align: center; padding: 40px 24px; }
+.review-icon { font-size: 64px; margin-bottom: 16px; }
+.review-title { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+.review-desc { font-size: 14px; color: var(--gray); line-height: 1.8; margin-bottom: 24px; }
+.review-steps { text-align: left; background: var(--light); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+.review-step { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #eee; }
+.review-step:last-child { border-bottom: none; }
+.review-step-icon { font-size: 20px; flex-shrink: 0; }
+.review-step-text { font-size: 13px; color: #555; line-height: 1.6; }
+.review-step-text strong { color: var(--navy); }
+.step-nav { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid #eee; background: white; border-radius: 0 0 20px 20px; position: sticky; bottom: 0; }
+.btn-prev { flex: 1; background: #f0f0f0; color: var(--navy); border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-next { flex: 2; background: var(--orange); color: white; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; }
+.btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+.loading { text-align: center; padding: 60px 20px; color: var(--gray); }
+.spinner { width: 40px; height: 40px; border: 3px solid #eee; border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 60px 20px; color: var(--gray); }
+.empty-emoji { font-size: 48px; margin-bottom: 12px; }
+.cat-1 { background: #E8F5E9; color: #2D9E6B; }
+.cat-2 { background: #E3F2FD; color: #1565C0; }
+.cat-3 { background: #F3E5F5; color: #7B1FA2; }
+.cat-4 { background: #FFF3E0; color: #E65100; }
+.cat-5 { background: #FCE4EC; color: #C62828; }
+.cat-6 { background: #F9FBE7; color: #827717; }
+.cat-7 { background: #E8EAF6; color: #283593; }
+.cat-8 { background: #EFEBE9; color: #4E342E; }
+footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 32px 24px; font-size: 12px; line-height: 1.8; }
+footer strong { color: white; }
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-tagline { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+@media (max-width: 768px) {
+.hero-title { font-size: 28px; }
+.hero-illustration { display: none; }
+.action-cards { grid-template-columns: 1fr; }
+.trust-grid { grid-template-columns: 1fr 1fr; }
+.content-grid { grid-template-columns: 1fr; }
+.site-nav { display: none; }
+.header-actions .btn-login { display: none; }
+.org-form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+.trust-grid { grid-template-columns: 1fr; }
+.header-inner { padding: 10px 16px; }
+.hero h1 { font-size: 22px; }
+.events-grid { grid-template-columns: 1fr; }
+.org-form-row { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
-<header class="site-header"><div class="header-inner"><a class="logo" href="#"><div class="logo-icon">🌱</div><div class="logo-text"><div class="logo-main">ASOBI CREATE <span>PARK</span></div><div class="logo-sub">やってみたいを、みんなでカタチに。</div></div></a><nav class="site-nav"><a href="cases.html" class="nav-link">事例・ヒント</a><a href="events.html?tab=staff" class="nav-link">支援を探す</a><a href="events.html" class="nav-link">公開中のあそび</a><a href="concept.html" class="nav-link">コンセプト</a></nav><div class="header-actions"><a href="login.html" class="btn-login">👤 登録団体ログイン</a><button class="btn-register-event" onclick="openOrgRegister()">＋ あそびを登録する</button></div></div></header>
-<section class="hero-section"><div class="hero-content"><div class="hero-text"><div class="hero-kicker">🌿 事例・支援・公開で、あそびを育てる場所</div><h1 class="hero-title">誰かの<span class="orange">「やってみた」</span>が、<br>次の誰かの<span class="green">「やってみたい」</span>になる。</h1><p class="hero-desc">地域のあそびの事例やノウハウを共有し、<br><strong>あそびを企画したい人</strong>と<strong>支援したい人</strong>をつなぐプラットフォーム。<br>小さなアイデアが、誰かの支えでカタチになり、やがて地域へひらかれていきます。</p><div class="hero-actions"><button class="hero-btn plan" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">💡 あそびを企画する</button><button class="hero-btn support" onclick="document.getElementById('support-section').scrollIntoView({behavior:'smooth'})">🤝 あそびを支援する</button></div><div class="hero-note">👁 見る・探すだけなら登録不要です</div></div><div class="hero-visual" aria-hidden="true"><div class="skyline">▁▂▃▅▆</div><div class="sun"></div><div class="flag-line"><span></span><span></span><span></span><span></span></div><div class="cycle-arrow"></div><div class="bubble plan">企画する<small>アイデアを考える</small></div><div class="bubble support">支援する<small>想いに共感する</small></div><div class="bubble open">公開する<small>地域へひらく</small></div><div class="person creator"><div class="face"></div><div class="body"></div></div><div class="table"></div><div class="person supporter"><div class="face"></div><div class="body"></div></div><div class="person kids"><div class="kid"><div class="face"></div><div class="body"></div></div><div class="kid"><div class="face"></div><div class="body"></div></div><div class="kid"><div class="face"></div><div class="body"></div></div></div></div></div><div class="step-strip"><div class="steps-box"><div class="step-item-home"><div class="step-icon">💡</div><div><div class="step-title">1. 企画する</div><div class="step-desc">事例やヒントを見て、やってみたいあそびの計画をつくる。</div></div></div><div class="step-item-home"><div class="step-icon">🤝</div><div><div class="step-title">2. 支援する</div><div class="step-desc">共感した企画に、人手・備品・知見・広報で関わる。</div></div></div><div class="step-item-home"><div class="step-icon">🌐</div><div><div class="step-title">3. 公開する</div><div class="step-desc">企画と支援が整ったあそびを、一般ユーザーへ届ける。</div></div></div></div></div></section>
-<section class="action-section"><div class="action-cards"><div class="action-card action-card-plan"><div class="action-card-icon-box">💡</div><div class="action-card-body"><div class="action-card-tag">PLAN</div><div class="action-card-title">あそびを企画する</div><div class="action-card-sub">事例から学び、あなたのやりたいをカタチに</div><div class="action-card-desc">他団体の「やってみた」から、準備・人数・費用感・安全管理のヒントを得て、地域のあそびづくりに活かせます。</div><div class="action-btns"><button class="btn-outline-green" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">📖 事例・ヒントを見る</button><button class="btn-solid-green" onclick="openOrgRegister()">✏️ あそびを登録する</button></div></div></div><div class="action-card action-card-experience" id="support-section"><div class="action-card-icon-box">🤝</div><div class="action-card-body"><div class="action-card-tag">SUPPORT</div><div class="action-card-title">あそびを支援する</div><div class="action-card-sub">誰かの企画を支え、次の自分のやりたいへ</div><div class="action-card-desc">共感した企画に、当日スタッフ・備品・場所・経験・広報などで関われます。支援することが、次の企画の学びにもなります。</div><div class="action-btns"><button class="btn-outline-orange" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">🔍 支援できるあそびを探す</button><button class="btn-solid-orange" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">👥 支援募集を見る</button></div></div></div></div><div class="action-note"><span>👁 見る・探すだけなら登録は不要です。</span><span>✅ あそびの掲載・編集は、確認済みの登録団体のみ可能です。</span></div></section>
-<section class="trust-section"><div class="trust-grid"><div class="trust-item"><div class="trust-icon">📚</div><div><div class="trust-title">事例・ノウハウDB</div><div class="trust-desc">実際の事例や準備ノウハウを集め、次の企画に活かせる形で共有します。</div></div></div><div class="trust-item"><div class="trust-icon">🤝</div><div><div class="trust-title">支援者とつながる</div><div class="trust-desc">人手・備品・経験・場所など、企画を支える仲間や団体と出会えます。</div></div></div><div class="trust-item"><div class="trust-icon">🛡️</div><div><div class="trust-title">登録団体のみ掲載・編集</div><div class="trust-desc">掲載や編集は確認済み団体のみ。安心して運用できる仕組みです。</div></div></div><div class="trust-item"><div class="trust-icon">🌐</div><div><div class="trust-title">地域を越えて広がる</div><div class="trust-desc">身近な地域から始め、全国・世界のあそびの知恵へ広げていきます。</div></div></div></div></section>
-<section class="events-section" id="events-section"><div class="section-header-row" style="margin-bottom:12px"><div class="section-title-lg">🌱 新着の事例・ヒント</div><span class="section-link" id="eventCount">読み込み中...</span></div><div class="filter-section"><div class="filter-inner"><div class="filter-tags" id="filterTags"><button class="filter-tag active" data-cat="all" onclick="filterBy('all', this)">すべて</button></div></div></div><div class="events-scroll"><div class="events-row" id="eventsGrid"><div class="loading"><div class="spinner"></div><div>読み込み中...</div></div></div></div></section>
-<section class="content-section" id="about-section"><div class="content-grid"><div class="content-box content-box-idea"><div class="content-box-icon">💡</div><div class="content-box-body"><div class="content-box-title">やってみたいを<br>企画に変えるヒント</div><div class="content-box-desc">対象年齢、場所、必要人数、費用感、準備物など、実際に使えるノウハウを探せます。</div><button class="btn-content" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">事例・ヒントを見る →</button></div></div><div class="content-box content-box-about"><div class="content-box-icon">🌿</div><div class="content-box-body"><div class="content-box-title">ASOBI CREATE PARKについて</div><div class="content-box-desc">誰かの「やってみた」を次の誰かの「やってみたい」へつなぎ、企画・支援・公開の流れで地域のあそびを育てます。</div><a href="concept.html" class="btn-content-outline" style="display:inline-block;text-decoration:none;text-align:center">コンセプトを見る →</a></div></div></div></section>
-<section class="org-section"><div class="org-section-title">🏅 登録団体</div><div class="org-grid" id="orgGrid"><div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div></div></section>
-<footer><div class="footer-inner"><div class="footer-tagline">誰かの「やってみた」が、次の誰かの「やってみたい」になる。</div><strong>ASOBI CREATE PARK</strong> — やってみたいを、みんなでカタチに。<br>© 2025 ASOBI CREATE PARK</div></footer>
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)"><button class="modal-close" id="modalClose" onclick="closeModal()">✕</button><div class="modal" id="modal"><div class="modal-handle"></div><div class="modal-header" id="modalHeader"></div><div class="modal-body" id="modalBody"></div></div></div>
-<div class="org-modal-overlay" id="orgModalOverlay"><div class="org-modal" id="orgModal"><div class="org-modal-header"><div class="org-modal-title">🏘️ 団体登録申請</div><div class="org-modal-subtitle">ASOBI CREATE PARKへの掲載申請フォーム</div><button class="org-modal-close" onclick="closeOrgRegister()">✕</button></div><div class="step-indicator" id="stepIndicator"><div class="step-item"><div class="step-dot active" id="dot1">1</div><div class="step-label step-active-label" id="label1">基本情報</div></div><div class="step-line" id="line1"></div><div class="step-item"><div class="step-dot pending" id="dot2">2</div><div class="step-label" id="label2">活動内容</div></div><div class="step-line" id="line2"></div><div class="step-item"><div class="step-dot pending" id="dot3">3</div><div class="step-label" id="label3">連絡先</div></div><div class="step-line" id="line3"></div><div class="step-item"><div class="step-dot pending" id="dot4">4</div><div class="step-label" id="label4">確認・同意</div></div></div><div id="orgStep1" class="org-form-body"><div class="org-step-title">団体の基本情報</div><div class="org-step-desc">まず、団体の基本的な情報を教えてください。</div><div class="org-form-group"><label>団体名<span class="required">*</span></label><input type="text" id="s1_org_name" placeholder="例：桜丘おやじの会" required></div><div class="org-form-group"><label>団体の種類<span class="required">*</span></label><div class="radio-group" id="s1_org_type_group"><div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, 'おやじの会')">おやじの会</div><div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, 'NPO法人')">NPO法人</div><div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, '任意団体')">任意団体</div><div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, '自治会・町内会')">自治会・町内会</div><div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, '企業・店舗')">企業・店舗</div><div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, 'その他')">その他</div></div><input type="hidden" id="s1_org_type" value=""></div><div class="org-form-group"><label>主な活動エリア<span class="required">*</span></label><input type="text" id="s1_area" placeholder="例：東京都 世田谷区" value=""></div><div class="org-form-group"><label>会員数・規模の目安</label><div class="radio-group" id="s1_member_count_group"><div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '〜10名')">〜10名</div><div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '11〜30名')">11〜30名</div><div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '31〜100名')">31〜100名</div><div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '100名以上')">100名以上</div></div><input type="hidden" id="s1_member_count" value=""></div></div><div id="orgStep2" class="org-form-body" style="display:none"><div class="org-step-title">活動内容・団体紹介</div><div class="org-step-desc">参加者やイベントを探している人に、団体の魅力を伝えましょう。</div><div class="org-form-group"><label>団体の紹介・活動内容<span class="required">*</span></label><textarea id="s2_description" placeholder="例：桜丘小学校の保護者OBを中心とした任意団体です。"></textarea><div class="hint">※ 200〜500文字程度が目安です。</div></div><div class="org-form-group"><label>過去に開催したイベント例</label><textarea id="s2_past_events" placeholder="例：どじょうつかみ大会（年1回）、夏祭り出店（年1回）" style="min-height:70px"></textarea></div><div class="org-form-group"><label>参加したいきっかけ・動機<span class="required">*</span></label><textarea id="s2_motivation" placeholder="例：地域の子どもたちに川あそびの楽しさを伝えたい。" style="min-height:80px"></textarea></div><div class="org-form-group"><label>活動頻度</label><div class="radio-group" id="s2_frequency_group"><div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '週1回以上')">週1回以上</div><div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '月1〜3回')">月1〜3回</div><div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '年数回')">年数回</div><div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '不定期')">不定期</div></div><input type="hidden" id="s2_frequency" value=""></div></div><div id="orgStep3" class="org-form-body" style="display:none"><div class="org-step-title">代表者・連絡先情報</div><div class="org-step-desc">審査結果はこちらのメールアドレスにご連絡します。</div><div class="org-form-row"><div class="org-form-group"><label>代表者名<span class="required">*</span></label><input type="text" id="s3_rep_name" placeholder="山田 太郎"></div><div class="org-form-group"><label>電話番号</label><input type="tel" id="s3_phone" placeholder="090-0000-0000"></div></div><div class="org-form-group"><label>メールアドレス<span class="required">*</span></label><div style="display:flex;gap:8px;align-items:stretch"><input type="email" id="s3_email" placeholder="example@mail.com" style="flex:1"><button type="button" id="btnSendOtp" onclick="sendOtp()" style="background:var(--navy);color:white;border:none;padding:0 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">認証リンクを送る</button></div><div class="hint">※ 入力したメアドに認証リンクを送ります。</div></div><div id="otpBox" style="display:none"><div style="background:#EEF7FF;border:1.5px solid #90CAF9;border-radius:12px;padding:16px;margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#1565C0;margin-bottom:6px">📧 メールを確認してください</div><div id="otpStatus" style="font-size:13px;color:#555;line-height:1.7"></div><div style="font-size:12px;color:#888;margin-top:8px">メール内の「Sign in」リンクをクリックすると、このページで自動的に認証が完了します。</div></div><div id="otpVerifiedBox" style="display:none;background:#E8F5E9;border:1.5px solid #A5D6A7;border-radius:12px;padding:14px"><div style="font-size:14px;font-weight:800;color:#2D9E6B">✅ メールアドレスの確認が完了しました！</div></div></div><div class="org-form-group"><label>ウェブサイト・SNS（任意）</label><input type="url" id="s3_website" placeholder="https://" style="margin-bottom:8px"><input type="url" id="s3_sns" placeholder="Instagram / X / Facebook など"></div></div><div id="orgStep4" class="org-form-body" style="display:none"><div class="org-step-title">利用規約への同意・確認</div><div class="org-step-desc">掲載に際して、以下の利用規約をご確認の上、同意してください。</div><div class="terms-box"><h4>ASOBI CREATE PARK 掲載団体利用規約（抜粋）</h4>第1条（目的）本規約は、ASOBI CREATE PARKに団体として掲載・活動するにあたって守るべきルールを定めます。<br><br>第2条（掲載の基準）掲載できる団体は、全国各地で地域に根ざした活動を行っている団体とします。<br><br>第3条（情報の正確性）登録する団体情報・イベント情報は正確な内容を入力してください。<br><br>第4条（コミュニティへの貢献）掲載団体は、地域の子どもたちや住民が安心して参加できる環境づくりに協力してください。<br><br>第5条（個人情報の取扱い）参加申込者から受け取った個人情報は、イベント運営の目的のみに使用します。<br><br>第6条（審査・掲載取消）事務局は申請内容を確認し、掲載の可否を判断する権限を持ちます。</div><div class="org-form-group" style="margin-bottom:12px"><label class="checkbox-group"><input type="checkbox" id="agree1"><span>上記の利用規約を読み、内容に同意します</span></label></div><div class="org-form-group"><label class="checkbox-group"><input type="checkbox" id="agree2"><span>掲載する情報に虚偽がないことを確認しました</span></label></div><div style="background:#FFF3E0;border-radius:10px;padding:12px;margin-top:16px;font-size:12px;color:#E65100;line-height:1.7">📋 <strong>審査について</strong><br>申請後、通常3〜7営業日以内にご登録のメールアドレスへ審査結果をお送りします。</div></div><div id="orgStepDone" class="org-form-body" style="display:none"><div class="review-pending"><div class="review-icon">🎉</div><div class="review-title">申請を受け付けました！</div><div class="review-desc">ご登録いただきありがとうございます。<br>事務局にて内容を確認し、審査結果をメールでお知らせします。</div><div class="review-steps"><div class="review-step"><div class="review-step-icon">📧</div><div class="review-step-text"><strong>STEP 1</strong>：受付完了メールをお送りします（自動送信・24時間以内）</div></div><div class="review-step"><div class="review-step-icon">🔍</div><div class="review-step-text"><strong>STEP 2</strong>：事務局が申請内容を審査します（通常3〜7営業日）</div></div><div class="review-step"><div class="review-step-icon">✅</div><div class="review-step-text"><strong>STEP 3</strong>：承認後、イベント掲載用のアカウントをお渡しします</div></div></div><button class="btn-apply" onclick="closeOrgRegister()" style="width:100%">閉じる</button></div></div><div class="step-nav" id="stepNav"><button class="btn-prev" id="btnPrev" onclick="prevStep()" style="display:none">← 戻る</button><button class="btn-next" id="btnNext" onclick="nextStep()">次へ →</button></div></div></div>
+<header class="site-header">
+<div class="header-inner">
+<a class="logo" href="#">
+<div class="logo-icon">🌿</div>
+<div class="logo-text">
+<div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+<div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+</div>
+</a>
+<nav class="site-nav">
+<a href="cases.html" class="nav-link">事例を見る</a>
+<a href="events.html" class="nav-link">あそびを探す</a>
+<a href="events.html?tab=staff" class="nav-link">手伝いを探す</a>
+<a href="about.html" class="nav-link">このサイトについて</a>
+</nav>
+<div class="header-actions">
+<a href="login.html" class="btn-login">登録団体ログイン</a>
+<button class="btn-register-event" onclick="openOrgRegister()">✏️ あそびを登録する</button>
+</div>
+</div>
+</header>
+<section class="hero-section">
+<div class="hero-content">
+<div class="hero-text">
+<h1 class="hero-title">やってみたい！<br>を、カタチにしよう。</h1>
+<p class="hero-desc">地域のあそびやイベント、体験活動。<br>あなたの「やってみたい」が、<br>誰かの「参加したい」「手伝いたい」につながります。<br>さあ、一緒にあそびを広げていこう！</p>
+</div>
+<div class="hero-illustration">
+<div class="hero-art">
+<div class="hero-art-flags">
+<div class="hero-flag" style="background:#FF6B35"></div>
+<div class="hero-flag" style="background:#FFD600"></div>
+<div class="hero-flag" style="background:#2D9E6B"></div>
+<div class="hero-flag" style="background:#42A5F5"></div>
+<div class="hero-flag" style="background:#AB47BC"></div>
+<div class="hero-flag" style="background:#FF6B35"></div>
+<div class="hero-flag" style="background:#FFD600"></div>
+<div class="hero-flag" style="background:#2D9E6B"></div>
+</div>
+<div class="hero-art-content">🌳🧒🎨👨🛶🌊🎪</div>
+<div style="position:absolute;bottom:12px;right:16px;font-size:11px;font-weight:800;color:#2a6e3f;letter-spacing:1px">TODAY! ASOBI PARK</div>
+</div>
+</div>
+</div>
+</section>
+<section class="action-section">
+<div class="action-cards">
+<div class="action-card action-card-plan">
+<div class="action-card-icon-box">💡</div>
+<div class="action-card-body">
+<div class="action-card-tag">PLAN</div>
+<div class="action-card-title">あそびを企画する</div>
+<div class="action-card-sub">あそびを生み出し、地域にひらく</div>
+<div class="action-card-desc">企画のヒントや事例を見つけて、<br>イベントや体験活動を登録しましょう。</div>
+<div class="action-btns">
+<button class="btn-outline-green" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">📖 事例・ヒントを見る</button>
+<button class="btn-solid-green" onclick="openOrgRegister()">✏️ あそびを登録する</button>
+</div>
+</div>
+</div>
+<div class="action-card action-card-experience">
+<div class="action-card-icon-box">📍</div>
+<div class="action-card-body">
+<div class="action-card-tag">EXPERIENCE</div>
+<div class="action-card-title">あそびを体験する</div>
+<div class="action-card-sub">参加したり、手伝ったりして楽しむ</div>
+<div class="action-card-desc">地域のあそびやイベントを探して、<br>参加したり、サポートしたりしてみましょう。</div>
+<div class="action-btns">
+<button class="btn-solid-orange" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">🗓️ あそびを探す（参加する）</button>
+<button class="btn-outline-orange" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">🤝 手伝えるあそびを探す</button>
+</div>
+</div>
+</div>
+</div>
+<div class="action-note">
+<span>👁 見る・探すだけなら登録は不要です。</span>
+<span>✅ あそびの登録・編集は、認証済みの団体のみ可能です。 →</span>
+</div>
+</section>
+<section class="trust-section">
+<div class="trust-grid">
+<div class="trust-item"><div class="trust-icon">🛡️</div><div><div class="trust-title">認証済み団体のみ掲載</div><div class="trust-desc">運営が審査・確認した団体のあそびやイベントだけを掲載。安心してご利用いただけます。</div></div></div>
+<div class="trust-item"><div class="trust-icon">✉️</div><div><div class="trust-title">公開問い合わせ対応</div><div class="trust-desc">主催団体の連絡先が公開されているので、気になるあそびに直接問い合わせできます。</div></div></div>
+<div class="trust-item"><div class="trust-icon">🔒</div><div><div class="trust-title">安心・安全な仕組み</div><div class="trust-desc">ガイドラインに基づく運営で、個人情報の保護や安全対策を徹底しています。</div></div></div>
+<div class="trust-item"><div class="trust-icon">🌐</div><div><div class="trust-title">全国・世界へひろがる</div><div class="trust-desc">日本全国の地域から、グローバルな活動まで、あそびの輪を広げていきます。</div></div></div>
+</div>
+</section>
+<section class="events-section" id="events-section">
+<div class="section-header-row" style="margin-bottom:12px">
+<div class="section-title-lg">🏳️ 新着のあそび</div>
+<span class="section-link" id="eventCount">読み込み中...</span>
+</div>
+<div class="filter-section"><div class="filter-inner"><div class="filter-tags" id="filterTags"><button class="filter-tag active" data-cat="all" onclick="filterBy('all', this)">すべて</button></div></div></div>
+<div class="events-scroll"><div class="events-row" id="eventsGrid"><div class="loading"><div class="spinner"></div><div>読み込み中...</div></div></div></div>
+</section>
+<section class="content-section" id="about-section">
+<div class="content-grid">
+<div class="content-box content-box-idea">
+<div class="content-box-icon">💡</div>
+<div class="content-box-body">
+<div class="content-box-title">あそびのアイデアや<br>ヒントが見つかる！</div>
+<div class="content-box-desc">年齢や目的、場所、季節などから、いろいろなあそびや事例を探せます。</div>
+<button class="btn-content" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'})">事例・ヒントをもっと見る →</button>
+</div>
+</div>
+<div class="content-box content-box-about">
+<div class="content-box-icon">🌿</div>
+<div class="content-box-body">
+<div class="content-box-title">ASOBI CREATE PARKについて</div>
+<div class="content-box-desc">このサイトは、地域のあそびや体験活動を通して、人と人がつながり、笑顔が広がる社会を目指すプロジェクトです。</div>
+<a href="concept.html" class="btn-content-outline" style="display:inline-block;text-decoration:none;text-align:center">コンセプト・想いを見る →</a>
+</div>
+</div>
+</div>
+</section>
+<section class="org-section">
+<div class="org-section-title">🏅 登録団体</div>
+<div class="org-grid" id="orgGrid"><div class="loading" style="grid-column:1/-1"><div class="spinner"></div></div></div>
+</section>
+<footer>
+<div class="footer-inner">
+<div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
+<strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
+© 2025 ASOBI CREATE Park
+</div>
+</footer>
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+<button class="modal-close" id="modalClose" onclick="closeModal()">✕</button>
+<div class="modal" id="modal">
+<div class="modal-handle"></div>
+<div class="modal-header" id="modalHeader"></div>
+<div class="modal-body" id="modalBody"></div>
+</div>
+</div>
+<div class="org-modal-overlay" id="orgModalOverlay">
+<div class="org-modal" id="orgModal">
+<div class="org-modal-header">
+<div class="org-modal-title">🏘️ 団体登録申請</div>
+<div class="org-modal-subtitle">ASOBI CREATE PARKへの掲載申請フォーム</div>
+<button class="org-modal-close" onclick="closeOrgRegister()">✕</button>
+</div>
+<div class="step-indicator" id="stepIndicator">
+<div class="step-item"><div class="step-dot active" id="dot1">1</div><div class="step-label step-active-label" id="label1">基本情報</div></div>
+<div class="step-line" id="line1"></div>
+<div class="step-item"><div class="step-dot pending" id="dot2">2</div><div class="step-label" id="label2">活動内容</div></div>
+<div class="step-line" id="line2"></div>
+<div class="step-item"><div class="step-dot pending" id="dot3">3</div><div class="step-label" id="label3">連絡先</div></div>
+<div class="step-line" id="line3"></div>
+<div class="step-item"><div class="step-dot pending" id="dot4">4</div><div class="step-label" id="label4">確認・同意</div></div>
+</div>
+<div id="orgStep1" class="org-form-body">
+<div class="org-step-title">団体の基本情報</div>
+<div class="org-step-desc">まず、団体の基本的な情報を教えてください。</div>
+<div class="org-form-group"><label>団体名<span class="required">*</span></label><input type="text" id="s1_org_name" placeholder="例：桜丘おやじの会" required></div>
+<div class="org-form-group"><label>団体の種類<span class="required">*</span></label>
+<div class="radio-group" id="s1_org_type_group">
+<div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, 'おやじの会')">おやじの会</div>
+<div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, 'NPO法人')">NPO法人</div>
+<div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, '任意団体')">任意団体</div>
+<div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, '自治会・町内会')">自治会・町内会</div>
+<div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, '企業・店舗')">企業・店舗</div>
+<div class="radio-btn" onclick="selectRadio('s1_org_type_group', this, 'その他')">その他</div>
+</div>
+<input type="hidden" id="s1_org_type" value=""></div>
+<div class="org-form-group"><label>主な活動エリア<span class="required">*</span></label><input type="text" id="s1_area" placeholder="例：東京都 世田谷区" value=""></div>
+<div class="org-form-group"><label>会員数・規模の目安</label>
+<div class="radio-group" id="s1_member_count_group">
+<div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '〜10名')">〜10名</div>
+<div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '11〜30名')">11〜30名</div>
+<div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '31〜100名')">31〜100名</div>
+<div class="radio-btn" onclick="selectRadio('s1_member_count_group', this, '100名以上')">100名以上</div>
+</div>
+<input type="hidden" id="s1_member_count" value=""></div>
+</div>
+<div id="orgStep2" class="org-form-body" style="display:none">
+<div class="org-step-title">活動内容・団体紹介</div>
+<div class="org-step-desc">参加者やイベントを探している人に、団体の魅力を伝えましょう。</div>
+<div class="org-form-group"><label>団体の紹介・活動内容<span class="required">*</span></label><textarea id="s2_description" placeholder="例：桜丘小学校の保護者OBを中心とした任意団体です。"></textarea><div class="hint">※ 200〜500文字程度が目安です。</div></div>
+<div class="org-form-group"><label>過去に開催したイベント例</label><textarea id="s2_past_events" placeholder="例：どじょうつかみ大会（年1回）、夏祭り出店（年1回）" style="min-height:70px"></textarea></div>
+<div class="org-form-group"><label>参加したいきっかけ・動機<span class="required">*</span></label><textarea id="s2_motivation" placeholder="例：地域の子どもたちに川あそびの楽しさを伝えたい。" style="min-height:80px"></textarea></div>
+<div class="org-form-group"><label>活動頻度</label>
+<div class="radio-group" id="s2_frequency_group">
+<div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '週1回以上')">週1回以上</div>
+<div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '月1〜3回')">月1〜3回</div>
+<div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '年数回')">年数回</div>
+<div class="radio-btn" onclick="selectRadio('s2_frequency_group', this, '不定期')">不定期</div>
+</div>
+<input type="hidden" id="s2_frequency" value=""></div>
+</div>
+<div id="orgStep3" class="org-form-body" style="display:none">
+<div class="org-step-title">代表者・連絡先情報</div>
+<div class="org-step-desc">審査結果はこちらのメールアドレスにご連絡します。</div>
+<div class="org-form-row">
+<div class="org-form-group"><label>代表者名<span class="required">*</span></label><input type="text" id="s3_rep_name" placeholder="山田 太郎"></div>
+<div class="org-form-group"><label>電話番号</label><input type="tel" id="s3_phone" placeholder="090-0000-0000"></div>
+</div>
+<div class="org-form-group"><label>メールアドレス<span class="required">*</span></label>
+<div style="display:flex;gap:8px;align-items:stretch">
+<input type="email" id="s3_email" placeholder="example@mail.com" style="flex:1">
+<button type="button" id="btnSendOtp" onclick="sendOtp()" style="background:var(--navy);color:white;border:none;padding:0 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">認証リンクを送る</button>
+</div>
+<div class="hint">※ 入力したメアドに認証リンクを送ります。</div>
+</div>
+<div id="otpBox" style="display:none">
+<div style="background:#EEF7FF;border:1.5px solid #90CAF9;border-radius:12px;padding:16px;margin-bottom:8px">
+<div style="font-size:13px;font-weight:700;color:#1565C0;margin-bottom:6px">📧 メールを確認してください</div>
+<div id="otpStatus" style="font-size:13px;color:#555;line-height:1.7"></div>
+<div style="font-size:12px;color:#888;margin-top:8px">メール内の「Sign in」リンクをクリックすると、このページで自動的に認証が完了します。</div>
+</div>
+<div id="otpVerifiedBox" style="display:none;background:#E8F5E9;border:1.5px solid #A5D6A7;border-radius:12px;padding:14px">
+<div style="font-size:14px;font-weight:800;color:#2D9E6B">✅ メールアドレスの確認が完了しました！</div>
+</div>
+</div>
+<div class="org-form-group"><label>ウェブサイト・SNS（任意）</label><input type="url" id="s3_website" placeholder="https://" style="margin-bottom:8px"><input type="url" id="s3_sns" placeholder="Instagram / X / Facebook など"></div>
+</div>
+<div id="orgStep4" class="org-form-body" style="display:none">
+<div class="org-step-title">利用規約への同意・確認</div>
+<div class="org-step-desc">掲載に際して、以下の利用規約をご確認の上、同意してください。</div>
+<div class="terms-box">
+<h4>ASOBI CREATE PARK 掲載団体利用規約（抜粋）</h4>
+第1条（目的）本規約は、ASOBI CREATE PARKに団体として掲載・活動するにあたって守るべきルールを定めます。<br><br>
+第2条（掲載の基準）掲載できる団体は、全国各地で地域に根ざした活動を行っている団体とします。<br><br>
+第3条（情報の正確性）登録する団体情報・イベント情報は正確な内容を入力してください。<br><br>
+第4条（コミュニティへの貢献）掲載団体は、地域の子どもたちや住民が安心して参加できる環境づくりに協力してください。<br><br>
+第5条（個人情報の取扱い）参加申込者から受け取った個人情報は、イベント運営の目的のみに使用します。<br><br>
+第6条（審査・掲載取消）事務局は申請内容を確認し、掲載の可否を判断する権限を持ちます。
+</div>
+<div class="org-form-group" style="margin-bottom:12px"><label class="checkbox-group"><input type="checkbox" id="agree1"><span>上記の利用規約を読み、内容に同意します</span></label></div>
+<div class="org-form-group"><label class="checkbox-group"><input type="checkbox" id="agree2"><span>掲載する情報に虚偽がないことを確認しました</span></label></div>
+<div style="background:#FFF3E0;border-radius:10px;padding:12px;margin-top:16px;font-size:12px;color:#E65100;line-height:1.7">📋 <strong>審査について</strong><br>申請後、通常3〜7営業日以内にご登録のメールアドレスへ審査結果をお送りします。</div>
+</div>
+<div id="orgStepDone" class="org-form-body" style="display:none">
+<div class="review-pending">
+<div class="review-icon">🎉</div>
+<div class="review-title">申請を受け付けました！</div>
+<div class="review-desc">ご登録いただきありがとうございます。<br>事務局にて内容を確認し、審査結果をメールでお知らせします。</div>
+<div class="review-steps">
+<div class="review-step"><div class="review-step-icon">📧</div><div class="review-step-text"><strong>STEP 1</strong>：受付完了メールをお送りします（自動送信・24時間以内）</div></div>
+<div class="review-step"><div class="review-step-icon">🔍</div><div class="review-step-text"><strong>STEP 2</strong>：事務局が申請内容を審査します（通常3〜7営業日）</div></div>
+<div class="review-step"><div class="review-step-icon">✅</div><div class="review-step-text"><strong>STEP 3</strong>：承認後、イベント掲載用のアウントをお渡しします</div></div>
+</div>
+<button class="btn-apply" onclick="closeOrgRegister()" style="width:100%">閉じる</button>
+</div>
+</div>
+<div class="step-nav" id="stepNav">
+<button class="btn-prev" id="btnPrev" onclick="prevStep()" style="display:none">← 戻る</button>
+<button class="btn-next" id="btnNext" onclick="nextStep()">次へ →</button>
+</div>
+</div>
+</div>
+<footer><strong>ASOBI CREATE PARK</strong> — あつまる・つくる・あそぶ<br>地域の仕掛け人たちが集まる場所</footer>
 <script>
-const SUPABASE_URL='https://hlgbazcqekvjukbjtskt.supabase.co';
-const SUPABASE_KEY=['eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.','eyJpc3MiOiJIUzI1NiIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.','QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8'].join('');
-const CAT_COLORS=['','cat-1','cat-2','cat-3','cat-4','cat-5','cat-6','cat-7','cat-8'];
-const ORG_EMOJIS={'おやじの会':'👨','NPO法人':'🤝','任意団体':'👥','自治会・町内会':'🏘️','企業・店舗':'🏪','その他':'✨'};
-let allEvents=[],allCategories=[],allOrgs=[],currentCat='all',currentRequestType='参加したい';let client;
-function showError(msg){document.getElementById('eventsGrid').innerHTML=`<div class="empty"><div class="empty-emoji">⚠️</div><div style="font-size:12px;word-break:break-all;padding:0 16px">${msg}</div></div>`;document.getElementById('eventCount').textContent='エラー'}
-async function loadData(){try{if(typeof window.supabase==='undefined'){showError('Supabase SDKが読み込めませんでした。');return}client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const[catsResult,eventsResult,orgsResult]=await Promise.all([client.from('event_categories').select('*').order('id'),client.from('events').select('*, event_categories(name, emoji)').eq('status','published').order('id'),client.from('organizations').select('*').order('id')]);if(catsResult.error){showError('カテゴリ取得エラー: '+JSON.stringify(catsResult.error));return}if(eventsResult.error){showError('イベント取得エラー: '+JSON.stringify(eventsResult.error));return}allCategories=catsResult.data||[];allEvents=eventsResult.data||[];allOrgs=orgsResult.data||[];renderFilters();renderEvents();renderOrgs()}catch(e){showError('エラー: '+e.message)}}
-function renderFilters(){const container=document.getElementById('filterTags');container.innerHTML='<button class="filter-tag active" data-cat="all" onclick="filterBy(\'all\', this)">すべて</button>';allCategories.forEach(cat=>{const btn=document.createElement('button');btn.className='filter-tag';btn.dataset.cat=cat.id;btn.innerHTML=`${cat.emoji} ${cat.name}`;btn.onclick=()=>filterBy(cat.id,btn);container.appendChild(btn)})}
-function filterBy(catId,btn){currentCat=catId;document.querySelectorAll('.filter-tag').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderEvents()}
-const THUMB_GRADIENTS=['linear-gradient(135deg,#a5d6a7,#81c784)','linear-gradient(135deg,#90caf9,#64b5f6)','linear-gradient(135deg,#ce93d8,#ba68c8)','linear-gradient(135deg,#ffcc80,#ffa726)','linear-gradient(135deg,#f48fb1,#e91e63)','linear-gradient(135deg,#e6ee9c,#cddc39)','linear-gradient(135deg,#80cbc4,#26a69a)','linear-gradient(135deg,#bcaaa4,#8d6e63)'];
-function renderEvents(){const filtered=currentCat==='all'?allEvents:allEvents.filter(e=>e.category_id==currentCat);document.getElementById('eventCount').textContent=`すべてを見る（${filtered.length}件）→`;const grid=document.getElementById('eventsGrid');if(filtered.length===0){grid.innerHTML='<div class="empty" style="min-width:200px"><div class="empty-emoji">🔍</div><div>該当するイベントが見つかりません</div></div>';return}grid.innerHTML=filtered.map((ev,idx)=>{const cat=ev.event_categories;const catClass=CAT_COLORS[ev.category_id]||'cat-1';const grad=THUMB_GRADIENTS[(ev.category_id-1)%THUMB_GRADIENTS.length]||THUMB_GRADIENTS[0];const emoji=cat?cat.emoji:'🎪';return `<div class="event-card" onclick="openModal(${ev.id})"><div class="card-thumb" style="background:${grad}"><span style="font-size:52px">${emoji}</span><div class="card-cat-badge ${catClass}">${cat?cat.name:''}</div></div><div class="card-body"><div class="card-title">${ev.title}</div><div class="card-meta-row"><div class="card-meta">🗓️ ${ev.event_date||'時期未定'}</div><div class="card-meta">📍 ${ev.location||ev.organizer_name}</div><div class="card-meta">👥 ${ev.target_audience||'全年齢'}</div></div><div class="card-badges">${ev.can_participate?'<span class="badge badge-participate">✋ 参加できる</span>':''}${ev.can_help?'<span class="badge badge-help">🙌 お手伝い</span>':''}</div></div></div>`}).join('')}
-function renderOrgs(){const grid=document.getElementById('orgGrid');if(allOrgs.length===0){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:32px;color:var(--gray);font-size:14px">まだ登録団体はありません。</div>';return}grid.innerHTML=allOrgs.map(org=>{const emoji=ORG_EMOJIS[org.org_type]||'✨';return `<div class="org-card"><div class="org-icon">${emoji}</div><div class="org-info"><div class="org-type-badge">${org.org_type||'団体'}</div><div class="org-name">${org.org_name}</div><div class="org-desc-short">${org.description||''}</div></div></div>`}).join('')}
-function openModal(id){const ev=allEvents.find(e=>e.id===id);if(!ev)return;const cat=ev.event_categories;const catClass=CAT_COLORS[ev.category_id]||'cat-1';const org=allOrgs.find(o=>o.org_name===ev.organizer_name);const orgEmoji=org?(ORG_EMOJIS[org.org_type]||'✨'):'📍';document.getElementById('modalHeader').innerHTML=`<div class="modal-category ${catClass}">${cat?cat.emoji+' '+cat.name:''}</div><div class="modal-title">${ev.title}</div><div class="modal-organizer">📍 ${ev.organizer_name}　｜　${ev.organizer_type||''}</div>`;const orgProfileHtml=org?`<div class="org-profile-box"><div class="org-profile-label">🏅 主催団体プロフィール</div><div class="org-profile-inner"><div class="org-profile-icon">${orgEmoji}</div><div><div class="org-profile-name">${org.org_name}</div><div class="org-profile-type">${org.org_type}</div><div class="org-profile-desc">${org.description||''}</div><div class="org-profile-links">${org.website?`<a href="${org.website}" target="_blank" class="org-profile-link">🌐 ウェブサイト</a>`:''}${org.sns_url?`<a href="${org.sns_url}" target="_blank" class="org-profile-link">📱 SNS</a>`:''}</div></div></div></div>`:'';document.getElementById('modalBody').innerHTML=`<p class="modal-desc">${ev.description||''}</p><div class="info-grid"><div class="info-item"><div class="info-item-label">🗓️ 開催時期</div><div class="info-item-value">${ev.event_date||'時期未定'}</div></div><div class="info-item"><div class="info-item-label">📍 場所</div><div class="info-item-value">${ev.location?`${ev.location}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--green);font-weight:700;">🗺️ Googleマップで見る</a>`:'未定'}</div></div><div class="info-item"><div class="info-item-label">👥 対象</div><div class="info-item-value">${ev.target_audience||'全年齢'}</div></div><div class="info-item"><div class="info-item-label">💴 参加費</div><div class="info-item-value">${ev.fee||'無料'}</div></div>${ev.max_participants?`<div class="info-item"><div class="info-item-label">🙋 定員</div><div class="info-item-value">${ev.max_participants}名</div></div>`:''}</div>${orgProfileHtml}${ev.knowhow_summary?`<div class="knowhow-section"><div class="knowhow-title">💡 ノウハウ・ポイント</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>`:''}${ev.tools_needed?`<div class="tools-section"><div class="tools-title">🛠️ 必要な道具・準備物</div><div class="tools-text">${ev.tools_needed}</div></div>`:''}${(ev.can_participate||ev.can_help)?`<div class="form-section"><div class="form-title">このイベントに関わる</div><div class="form-subtitle">仕掛け人になろう！</div>${ev.can_participate&&ev.can_help?`<div class="form-tabs"><button class="form-tab active" onclick="setTab(this,'参加したい',${ev.id})">✋ 参加したい</button><button class="form-tab" onclick="setTab(this,'お手伝いしたい',${ev.id})">🙌 お手伝いしたい</button></div>`:''}<form id="requestForm-${ev.id}" onsubmit="submitRequest(event,${ev.id})"><div class="form-group"><label>お名前</label><input type="text" name="name" placeholder="山田 太郎" required></div><div class="form-group"><label>メールアドレス</label><input type="email" name="email" placeholder="example@mail.com" required></div><div class="form-group"><label>所属（学校・団体名）</label><input type="text" name="school_name" placeholder="○○小おやじの会"></div><div class="form-group"><label>メッセージ・質問</label><textarea name="message" placeholder="気になることや質問があれば書いてください"></textarea></div><button type="submit" class="submit-btn" id="submitBtn-${ev.id}">送信する →</button><div class="success-msg" id="successMsg-${ev.id}">🎉 送信しました！<br>後ほどご連絡します。</div></form></div>`:''}`;document.getElementById('modalOverlay').classList.add('show');document.getElementById('modalClose').classList.add('show');document.body.style.overflow='hidden'}
-function setTab(btn,type,eventId){currentRequestType=type;document.querySelectorAll('.form-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
-async function submitRequest(e,eventId){e.preventDefault();const form=e.target;const btn=document.getElementById(`submitBtn-${eventId}`);const msg=document.getElementById(`successMsg-${eventId}`);btn.disabled=true;btn.textContent='送信中...';const{error}=await client.from('participation_requests').insert({event_id:eventId,name:form.name.value,email:form.email.value,school_name:form.school_name.value,request_type:currentRequestType,message:form.message.value});if(!error){form.style.display='none';msg.style.display='block'}else{btn.disabled=false;btn.textContent='送信する →';alert('送信に失敗しました。')}}
-function closeModal(){document.getElementById('modalOverlay').classList.remove('show');document.getElementById('modalClose').classList.remove('show');document.body.style.overflow=''}function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}let currentStep=1;let emailVerified=false;let otpPollInterval=null;
-async function sendOtp(){const email=document.getElementById('s3_email').value.trim();if(!email||!email.includes('@')){alert('正しいメールアドレスを入力してください');return}const btn=document.getElementById('btnSendOtp');btn.disabled=true;btn.textContent='送信中...';const redirectTo=window.location.origin+window.location.pathname;const{error}=await client.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:redirectTo}});if(error){alert('送信に失敗しました: '+error.message);btn.disabled=false;btn.textContent='認証リンクを送る'}else{document.getElementById('otpBox').style.display='block';btn.textContent='再送信';btn.disabled=false;document.getElementById('s3_email').readOnly=true;document.getElementById('otpStatus').textContent=`${email} に認証リンクを送りました。メールを開いて「Sign in」をクリックしてください。`;startOtpPoll(email)}}
-function startOtpPoll(email){if(otpPollInterval)clearInterval(otpPollInterval);otpPollInterval=setInterval(async()=>{const{data:{session}}=await client.auth.getSession();if(session&&session.user&&session.user.email===email){clearInterval(otpPollInterval);otpPollInterval=null;emailVerified=true;document.getElementById('otpBox').style.display='block';document.getElementById('otpVerifiedBox').style.display='block';document.getElementById('otpStatus').textContent='';document.getElementById('btnSendOtp').textContent='✓ 認証済み';document.getElementById('btnSendOtp').disabled=true;document.getElementById('btnSendOtp').style.background='#bdbdbd'}},2000);setTimeout(()=>{if(otpPollInterval){clearInterval(otpPollInterval);otpPollInterval=null}},600000)}
-function openOrgRegister(){currentStep=1;showStep(1);document.getElementById('orgModalOverlay').classList.add('show');document.body.style.overflow='hidden'}
-function closeOrgRegister(){document.getElementById('orgModalOverlay').classList.remove('show');document.body.style.overflow='';currentStep=1;emailVerified=false;showStep(1);if(otpPollInterval){clearInterval(otpPollInterval);otpPollInterval=null}document.getElementById('otpBox').style.display='none';document.getElementById('otpVerifiedBox').style.display='none';document.getElementById('s3_email').readOnly=false;document.getElementById('s3_email').value='';document.getElementById('otpStatus').textContent='';document.getElementById('btnSendOtp').disabled=false;document.getElementById('btnSendOtp').textContent='認証リンクを送る';document.getElementById('btnSendOtp').style.background='var(--navy)'}
-function showStep(n){[1,2,3,4].forEach(i=>{document.getElementById(`orgStep${i}`).style.display=i===n?'block':'none'});document.getElementById('orgStepDone').style.display='none';[1,2,3,4].forEach(i=>{const dot=document.getElementById(`dot${i}`);const label=document.getElementById(`label${i}`);if(i<n){dot.className='step-dot done';dot.innerHTML='✓'}else if(i===n){dot.className='step-dot active';dot.innerHTML=i}else{dot.className='step-dot pending';dot.innerHTML=i}label.className='step-label'+(i===n?' step-active-label':'')});[1,2,3].forEach(i=>{document.getElementById(`line${i}`).className='step-line'+(i<n?' done':'')});document.getElementById('btnPrev').style.display=n>1?'block':'none';document.getElementById('btnNext').textContent=n===4?'申請する ✓':'次へ →';document.getElementById('stepNav').style.display='flex';document.getElementById('stepIndicator').style.display='flex'}
-function selectRadio(groupId,el,value){document.querySelectorAll(`#${groupId} .radio-btn`).forEach(b=>b.classList.remove('selected'));el.classList.add('selected');const hiddenId=groupId.replace('_group','');document.getElementById(hiddenId).value=value}
-function validateStep(n){if(n===1){if(!document.getElementById('s1_org_name').value.trim()){alert('団体名を入力してください');return false}if(!document.getElementById('s1_org_type').value){alert('団体の種類を選択してください');return false}if(!document.getElementById('s1_area').value){alert('活動エリアを選択してください');return false}}if(n===2){if(!document.getElementById('s2_description').value.trim()){alert('団体の紹介を入力してください');return false}if(!document.getElementById('s2_motivation').value.trim()){alert('参加したいきっかけを入力してください');return false}}if(n===3){if(!document.getElementById('s3_rep_name').value.trim()){alert('代表者名を入力してください');return false}if(!document.getElementById('s3_email').value.trim()){alert('メールアドレスを入力してください');return false}}if(n===4){if(!document.getElementById('agree1').checked||!document.getElementById('agree2').checked){alert('利用規約への同意が必要です');return false}}return true}
-function nextStep(){if(!validateStep(currentStep))return;if(currentStep===4){submitOrgApplication();return}currentStep++;showStep(currentStep);document.getElementById('orgModal').scrollTop=0}function prevStep(){if(currentStep>1){currentStep--;showStep(currentStep);document.getElementById('orgModal').scrollTop=0}}
-async function submitOrgApplication(){const btn=document.getElementById('btnNext');btn.disabled=true;btn.textContent='送信中...';try{const{error}=await client.from('organization_applications').insert({org_name:document.getElementById('s1_org_name').value.trim(),org_type:document.getElementById('s1_org_type').value,area:document.getElementById('s1_area').value,member_count:document.getElementById('s1_member_count').value,description:document.getElementById('s2_description').value.trim(),past_events:document.getElementById('s2_past_events').value.trim(),motivation:document.getElementById('s2_motivation').value.trim(),activity_frequency:document.getElementById('s2_frequency').value,rep_name:document.getElementById('s3_rep_name').value.trim(),email:document.getElementById('s3_email').value.trim(),phone:document.getElementById('s3_phone').value.trim(),website:document.getElementById('s3_website').value.trim(),sns_url:document.getElementById('s3_sns').value.trim(),agreed_to_terms:true});if(error){alert('送信に失敗しました: '+error.message);btn.disabled=false;btn.textContent='申請する ✓';return}[1,2,3,4].forEach(i=>document.getElementById(`orgStep${i}`).style.display='none');document.getElementById('orgStepDone').style.display='block';document.getElementById('stepNav').style.display='none';document.getElementById('stepIndicator').style.display='none';document.getElementById('orgModal').scrollTop=0}catch(e){alert('エラー: '+e.message);btn.disabled=false;btn.textContent='申請する ✓'}}
-function openEventRegisterInfo(){alert('イベント掲載は団体登録・審査後に利用できます。\nまずは「団体登録する」からご申請ください！')}
+const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+const CAT_COLORS = ['','cat-1','cat-2','cat-3','cat-4','cat-5','cat-6','cat-7','cat-8'];
+const ORG_EMOJIS = {'おやじの会':'👨','NPO法人':'🤝','任意団体':'👥','自治会・町内会':'🏘️','企業・店舗':'🏪','その他':'✨'};
+let allEvents = [], allCategories = [], allOrgs = [], currentCat = 'all', currentRequestType = '参加したい';
+let client;
+function showError(msg) {
+document.getElementById('eventsGrid').innerHTML = `<div class="empty"><div class="empty-emoji">⚠️</div><div style="font-size:12px;word-break:break-all;padding:0 16px">${msg}</div></div>`;
+document.getElementById('eventCount').textContent = 'エラー';
+}
+async function loadData() {
+try {
+if (typeof window.supabase === 'undefined') { showError('Supabase SDKが読み込めませんでした。'); return; }
+client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const [catsResult, eventsResult, orgsResult] = await Promise.all([
+client.from('event_categories').select('*').order('id'),
+client.from('events').select('*, event_categories(name, emoji)').eq('status', 'active').order('id'),
+client.from('organizations').select('*').order('id')
+]);
+if (catsResult.error) { showError('カテゴリ取得エラー: ' + JSON.stringify(catsResult.error)); return; }
+if (eventsResult.error) { showError('イベント取得エラー: ' + JSON.stringify(eventsResult.error)); return; }
+allCategories = catsResult.data || [];
+allEvents = eventsResult.data || [];
+allOrgs = orgsResult.data || [];
+renderFilters();
+renderEvents();
+renderOrgs();
+} catch (e) { showError('エラー: ' + e.message); }
+}
+function renderFilters() {
+const container = document.getElementById('filterTags');
+container.innerHTML = '<button class="filter-tag active" data-cat="all" onclick="filterBy(\'all\', this)">すべて</button>';
+allCategories.forEach(cat => {
+const btn = document.createElement('button');
+btn.className = 'filter-tag';
+btn.dataset.cat = cat.id;
+btn.innerHTML = `${cat.emoji} ${cat.name}`;
+btn.onclick = () => filterBy(cat.id, btn);
+container.appendChild(btn);
+});
+}
+function filterBy(catId, btn) {
+currentCat = catId;
+document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+renderEvents();
+}
+const THUMB_GRADIENTS = [
+'linear-gradient(135deg,#a5d6a7,#81c784)',
+'linear-gradient(135deg,#90caf9,#64b5f6)',
+'linear-gradient(135deg,#ce93d8,#ba68c8)',
+'linear-gradient(135deg,#ffcc80,#ffa726)',
+'linear-gradient(135deg,#f48fb1,#e91e63)',
+'linear-gradient(135deg,#e6ee9c,#cddc39)',
+'linear-gradient(135deg,#80cbc4,#26a69a)',
+'linear-gradient(135deg,#bcaaa4,#8d6e63)',
+];
+function renderEvents() {
+const filtered = currentCat === 'all' ? allEvents : allEvents.filter(e => e.category_id == currentCat);
+document.getElementById('eventCount').textContent = `すべてを見る（${filtered.length}件）→`;
+const grid = document.getElementById('eventsGrid');
+if (filtered.length === 0) { grid.innerHTML = '<div class="empty" style="min-width:200px"><div class="empty-emoji">🔍</div><div>該当するイベントが見つかりません</div></div>'; return; }
+grid.innerHTML = filtered.map((ev, idx) => {
+const cat = ev.event_categories;
+const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
+const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
+const emoji = cat ? cat.emoji : '🎪';
+return `<div class="event-card" onclick="openModal(${ev.id})"><div class="card-thumb" style="background:${grad}"><span style="font-size:52px">${emoji}</span><div class="card-cat-badge ${catClass}">${cat ? cat.name : ''}</div></div><div class="card-body"><div class="card-title">${ev.title}</div><div class="card-meta-row"><div class="card-meta">🗓️ ${ev.event_date || '時期未定'}</div><div class="card-meta">📍 ${ev.location || ev.organizer_name}</div><div class="card-meta">👥 ${ev.target_audience || '全年齢'}</div></div><div class="card-badges">${ev.can_participate ? '<span class="badge badge-participate">✋ 参加できる</span>' : ''}${ev.can_help ? '<span class="badge badge-help">🙌 お手伝い</span>' : ''}</div></div></div>`;
+}).join('');
+}
+function renderOrgs() {
+const grid = document.getElementById('orgGrid');
+if (allOrgs.length === 0) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:32px;color:var(--gray);font-size:14px">まだ登録団体はありません。</div>'; return; }
+grid.innerHTML = allOrgs.map(org => {
+const emoji = ORG_EMOJIS[org.org_type] || '✨';
+return `<div class="org-card"><div class="org-icon">${emoji}</div><div class="org-info"><div class="org-type-badge">${org.org_type || '団体'}</div><div class="org-name">${org.org_name}</div><div class="org-desc-short">${org.description || ''}</div></div></div>`;
+}).join('');
+}
+function openModal(id) {
+const ev = allEvents.find(e => e.id === id);
+if (!ev) return;
+const cat = ev.event_categories;
+const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
+const org = allOrgs.find(o => o.org_name === ev.organizer_name);
+const orgEmoji = org ? (ORG_EMOJIS[org.org_type] || '✨') : '📍';
+document.getElementById('modalHeader').innerHTML = `<div class="modal-category ${catClass}">${cat ? cat.emoji + ' ' + cat.name : ''}</div><div class="modal-title">${ev.title}</div><div class="modal-organizer">📍 ${ev.organizer_name}　｜　${ev.organizer_type || ''}</div>`;
+const orgProfileHtml = org ? `<div class="org-profile-box"><div class="org-profile-label">🏅 主催団体プロフィール</div><div class="org-profile-inner"><div class="org-profile-icon">${orgEmoji}</div><div><div class="org-profile-name">${org.org_name}</div><div class="org-profile-type">${org.org_type}</div><div class="org-profile-desc">${org.description || ''}</div><div class="org-profile-links">${org.website ? `<a href="${org.website}" target="_blank" class="org-profile-link">🌐 ウェブサイト</a>` : ''}${org.sns_url ? `<a href="${org.sns_url}" target="_blank" class="org-profile-link">📱 SNS</a>` : ''}</div></div></div></div>` : '';
+document.getElementById('modalBody').innerHTML = `<p class="modal-desc">${ev.description || ''}</p><div class="info-grid"><div class="info-item"><div class="info-item-label">🗓️ 開催時期</div><div class="info-item-value">${ev.event_date || '時期未定'}</div></div><div class="info-item"><div class="info-item-label">📍 場所</div><div class="info-item-value">${ev.location ? `${ev.location}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--green);font-weight:700;">🗺️ Googleマップで見る</a>` : '未定'}</div></div><div class="info-item"><div class="info-item-label">👥 対象</div><div class="info-item-value">${ev.target_audience || '全年齢'}</div></div><div class="info-item"><div class="info-item-label">💴 参加費</div><div class="info-item-value">${ev.fee || '無料'}</div></div>${ev.max_participants ? `<div class="info-item"><div class="info-item-label">🙋 定員</div><div class="info-item-value">${ev.max_participants}名</div></div>` : ''}</div>${orgProfileHtml}${ev.knowhow_summary ? `<div class="knowhow-section"><div class="knowhow-title">💡 ノウハウ・ポイント</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>` : ''}${ev.tools_needed ? `<div class="tools-section"><div class="tools-title">🛠️ 必要な道具・準備物</div><div class="tools-text">${ev.tools_needed}</div></div>` : ''}${(ev.can_participate || ev.can_help) ? `<div class="form-section"><div class="form-title">このイベントに関わる</div><div class="form-subtitle">仕掛け人になろう！</div>${ev.can_participate && ev.can_help ? `<div class="form-tabs"><button class="form-tab active" onclick="setTab(this,'参加したい',${ev.id})">✋ 参加したい</button><button class="form-tab" onclick="setTab(this,'お手伝いしたい',${ev.id})">🙌 お手伝いしたい</button></div>` : ''}<form id="requestForm-${ev.id}" onsubmit="submitRequest(event,${ev.id})"><div class="form-group"><label>お名前</label><input type="text" name="name" placeholder="山田 太郎" required></div><div class="form-group"><label>メールアドレス</label><input type="email" name="email" placeholder="example@mail.com" required></div><div class="form-group"><label>所属（学校・団体名）</label><input type="text" name="school_name" placeholder="○○小おやじの会"></div><div class="form-group"><label>メッセージ・質問</label><textarea name="message" placeholder="気になることや質問があれば書いてください"></textarea></div><button type="submit" class="submit-btn" id="submitBtn-${ev.id}">送信する →</button><div class="success-msg" id="successMsg-${ev.id}">🎉 送信しました！<br>後ほどご連絡します。</div></form></div>` : ''}`;
+document.getElementById('modalOverlay').classList.add('show');
+document.getElementById('modalClose').classList.add('show');
+document.body.style.overflow = 'hidden';
+}
+function setTab(btn, type, eventId) {
+currentRequestType = type;
+document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+}
+async function submitRequest(e, eventId) {
+e.preventDefault();
+const form = e.target;
+const btn = document.getElementById(`submitBtn-${eventId}`);
+const msg = document.getElementById(`successMsg-${eventId}`);
+btn.disabled = true; btn.textContent = '送信中...';
+const { error } = await client.from('participation_requests').insert({
+event_id: eventId, name: form.name.value, email: form.email.value,
+school_name: form.school_name.value, request_type: currentRequestType, message: form.message.value
+});
+if (!error) { form.style.display = 'none'; msg.style.display = 'block'; }
+else { btn.disabled = false; btn.textContent = '送信する →'; alert('送信に失敗しました。'); }
+}
+function closeModal() {
+document.getElementById('modalOverlay').classList.remove('show');
+document.getElementById('modalClose').classList.remove('show');
+document.body.style.overflow = '';
+}
+function handleOverlayClick(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+let currentStep = 1;
+let emailVerified = false;
+let otpPollInterval = null;
+async function sendOtp() {
+const email = document.getElementById('s3_email').value.trim();
+if (!email || !email.includes('@')) { alert('正しいメールアドレスを入力してください'); return; }
+const btn = document.getElementById('btnSendOtp');
+btn.disabled = true; btn.textContent = '送信中...';
+const redirectTo = window.location.origin + window.location.pathname;
+const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: redirectTo } });
+if (error) {
+alert('送信に失敗しました: ' + error.message);
+btn.disabled = false; btn.textContent = '認証リンクを送る';
+} else {
+document.getElementById('otpBox').style.display = 'block';
+btn.textContent = '再送信'; btn.disabled = false;
+document.getElementById('s3_email').readOnly = true;
+document.getElementById('otpStatus').textContent = `${email} に認証リンクを送りました。メールを開いて「Sign in」をクリックしてください。`;
+startOtpPoll(email);
+}
+}
+function startOtpPoll(email) {
+if (otpPollInterval) clearInterval(otpPollInterval);
+otpPollInterval = setInterval(async () => {
+const { data: { session } } = await client.auth.getSession();
+if (session && session.user && session.user.email === email) {
+clearInterval(otpPollInterval); otpPollInterval = null; emailVerified = true;
+document.getElementById('otpBox').style.display = 'block';
+document.getElementById('otpVerifiedBox').style.display = 'block';
+document.getElementById('otpStatus').textContent = '';
+document.getElementById('btnSendOtp').textContent = '✓ 認証済み';
+document.getElementById('btnSendOtp').disabled = true;
+document.getElementById('btnSendOtp').style.background = '#bdbdbd';
+}
+}, 2000);
+setTimeout(() => { if (otpPollInterval) { clearInterval(otpPollInterval); otpPollInterval = null; } }, 600000);
+}
+function openOrgRegister() {
+currentStep = 1; showStep(1);
+document.getElementById('orgModalOverlay').classList.add('show');
+document.body.style.overflow = 'hidden';
+}
+function closeOrgRegister() {
+document.getElementById('orgModalOverlay').classList.remove('show');
+document.body.style.overflow = '';
+currentStep = 1; emailVerified = false; showStep(1);
+if (otpPollInterval) { clearInterval(otpPollInterval); otpPollInterval = null; }
+document.getElementById('otpBox').style.display = 'none';
+document.getElementById('otpVerifiedBox').style.display = 'none';
+document.getElementById('s3_email').readOnly = false;
+document.getElementById('s3_email').value = '';
+document.getElementById('otpStatus').textContent = '';
+document.getElementById('btnSendOtp').disabled = false;
+document.getElementById('btnSendOtp').textContent = '認証リンクを送る';
+document.getElementById('btnSendOtp').style.background = 'var(--navy)';
+}
+function showStep(n) {
+[1,2,3,4].forEach(i => { document.getElementById(`orgStep${i}`).style.display = i === n ? 'block' : 'none'; });
+document.getElementById('orgStepDone').style.display = 'none';
+[1,2,3,4].forEach(i => {
+const dot = document.getElementById(`dot${i}`);
+const label = document.getElementById(`label${i}`);
+if (i < n) { dot.className = 'step-dot done'; dot.innerHTML = '✓'; }
+else if (i === n) { dot.className = 'step-dot active'; dot.innerHTML = i; }
+else { dot.className = 'step-dot pending'; dot.innerHTML = i; }
+label.className = 'step-label' + (i === n ? ' step-active-label' : '');
+});
+[1,2,3].forEach(i => { document.getElementById(`line${i}`).className = 'step-line' + (i < n ? ' done' : ''); });
+document.getElementById('btnPrev').style.display = n > 1 ? 'block' : 'none';
+document.getElementById('btnNext').textContent = n === 4 ? '申請する ✓' : '次へ →';
+document.getElementById('stepNav').style.display = 'flex';
+document.getElementById('stepIndicator').style.display = 'flex';
+}
+function selectRadio(groupId, el, value) {
+document.querySelectorAll(`#${groupId} .radio-btn`).forEach(b => b.classList.remove('selected'));
+el.classList.add('selected');
+const hiddenId = groupId.replace('_group', '');
+document.getElementById(hiddenId).value = value;
+}
+function validateStep(n) {
+if (n === 1) {
+if (!document.getElementById('s1_org_name').value.trim()) { alert('団体名を入力してください'); return false; }
+if (!document.getElementById('s1_org_type').value) { alert('団体の種類を選択してください'); return false; }
+if (!document.getElementById('s1_area').value) { alert('活動エリアを選択してください'); return false; }
+}
+if (n === 2) {
+if (!document.getElementById('s2_description').value.trim()) { alert('団体の紹介を入力してください'); return false; }
+if (!document.getElementById('s2_motivation').value.trim()) { alert('参加したいきっかけを入力してください'); return false; }
+}
+if (n === 3) {
+if (!document.getElementById('s3_rep_name').value.trim()) { alert('代表者名を入力してください'); return false; }
+if (!document.getElementById('s3_email').value.trim()) { alert('メールアドレスを入力してください'); return false; }
+}
+if (n === 4) {
+if (!document.getElementById('agree1').checked || !document.getElementById('agree2').checked) { alert('利用規約への同意が必要です'); return false; }
+}
+return true;
+}
+function nextStep() {
+if (!validateStep(currentStep)) return;
+if (currentStep === 4) { submitOrgApplication(); return; }
+currentStep++; showStep(currentStep);
+document.getElementById('orgModal').scrollTop = 0;
+}
+function prevStep() {
+if (currentStep > 1) { currentStep--; showStep(currentStep); document.getElementById('orgModal').scrollTop = 0; }
+}
+async function submitOrgApplication() {
+const btn = document.getElementById('btnNext');
+btn.disabled = true; btn.textContent = '送信中...';
+try {
+const { error } = await client.from('organization_applications').insert({
+org_name: document.getElementById('s1_org_name').value.trim(),
+org_type: document.getElementById('s1_org_type').value,
+area: document.getElementById('s1_area').value,
+member_count: document.getElementById('s1_member_count').value,
+description: document.getElementById('s2_description').value.trim(),
+past_events: document.getElementById('s2_past_events').value.trim(),
+motivation: document.getElementById('s2_motivation').value.trim(),
+activity_frequency: document.getElementById('s2_frequency').value,
+rep_name: document.getElementById('s3_rep_name').value.trim(),
+email: document.getElementById('s3_email').value.trim(),
+phone: document.getElementById('s3_phone').value.trim(),
+website: document.getElementById('s3_website').value.trim(),
+sns_url: document.getElementById('s3_sns').value.trim(),
+agreed_to_terms: true
+});
+if (error) { alert('送信に失敗しました: ' + error.message); btn.disabled = false; btn.textContent = '申請する ✓'; return; }
+[1,2,3,4].forEach(i => document.getElementById(`orgStep${i}`).style.display = 'none');
+document.getElementById('orgStepDone').style.display = 'block';
+document.getElementById('stepNav').style.display = 'none';
+document.getElementById('stepIndicator').style.display = 'none';
+document.getElementById('orgModal').scrollTop = 0;
+} catch(e) { alert('エラー: ' + e.message); btn.disabled = false; btn.textContent = '申請する ✓'; }
+}
+function openEventRegisterInfo() {
+alert('イベント掲載は団体登録・審査後に利用できます。\nまずは「団体登録する」からご申請ください！');
+}
 loadData();
 </script>
 </body>
