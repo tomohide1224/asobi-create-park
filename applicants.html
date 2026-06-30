@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支援申込の管理 | ASOBI CREATE PARK</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; --orange: #FF6B35; }
+    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ヘッダー */
+    .page-header { background: var(--green); color: white; padding: 14px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1; padding: 0 6px 0 0; flex-shrink: 0; }
+    .page-header-info { flex: 1; min-width: 0; }
+    .page-header-title { font-size: 16px; font-weight: 800; }
+    .page-header-sub { font-size: 11px; opacity: 0.85; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* フィルタータブ */
+    .filter-tabs { display: flex; gap: 8px; padding: 14px 16px 8px; background: white; border-bottom: 1px solid #EEEEEE; overflow-x: auto; }
+    .filter-tab { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; border: 1.5px solid #E0E0E0; background: white; color: var(--gray); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .filter-tab.active { background: var(--green); border-color: var(--green); color: white; }
+
+    /* メインコンテンツ */
+    .main { flex: 1; padding: 16px; max-width: 680px; margin: 0 auto; width: 100%; }
+
+    /* 申込カード */
+    .card-list { display: flex; flex-direction: column; gap: 12px; }
+    .applicant-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .card-top { padding: 16px; display: flex; align-items: flex-start; gap: 12px; }
+    .card-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #E8F5E9, #A5D6A7); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .card-body { flex: 1; min-width: 0; }
+    .card-name { font-size: 15px; font-weight: 800; color: var(--navy); }
+    .card-date { font-size: 11px; color: var(--gray); margin-top: 2px; }
+    .card-message { font-size: 13px; color: #444; line-height: 1.7; margin-top: 8px; padding: 10px 12px; background: var(--light); border-radius: 10px; border-left: 3px solid var(--green); }
+    .card-status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-top: 10px; }
+    .card-status.pending { background: #FFF8E1; color: #F57F17; }
+    .card-status.accepted { background: #E8F5E9; color: #1B5E20; }
+    .card-status.declined { background: #FFEBEE; color: #C62828; }
+
+    /* アクションボタン群 */
+    .card-actions { padding: 0 16px 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-accept { flex: 1; min-width: 100px; background: var(--green); color: white; border: none; padding: 10px 8px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .btn-accept:hover { opacity: 0.85; }
+    .btn-accept:disabled { opacity: 0.5; cursor: default; }
+    .btn-decline { flex: 1; min-width: 100px; background: none; border: 1.5px solid #FFCDD2; color: #C62828; padding: 10px 8px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-decline:hover { background: #FFEBEE; }
+    .btn-decline:disabled { opacity: 0.5; cursor: default; }
+    .btn-msg { flex: 1; min-width: 100px; background: none; border: 1.5px solid #E0E0E0; color: var(--navy); padding: 10px 8px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-msg:hover { border-color: var(--green); color: var(--green); }
+
+    /* 空/ローディング */
+    .center-msg { text-align: center; padding: 60px 20px; color: var(--gray); }
+    .center-msg-icon { font-size: 48px; margin-bottom: 16px; }
+    .center-msg-text { font-size: 14px; line-height: 2; }
+
+    /* スピナー */
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .spin { display: inline-block; animation: spin 1s linear infinite; }
+
+    /* 成功トースト */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; white-space: nowrap; }
+    .toast.show { opacity: 1; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 12px; margin-top: auto; }
+    footer strong { color: white; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <button class="back-btn" onclick="goBack()">&#8592;</button>
+  <div class="page-header-info">
+    <div class="page-header-title">支援申込の管理</div>
+    <div class="page-header-sub" id="planTitle">読み込み中...</div>
+  </div>
+  <span id="countBadge" style="font-size:12px;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:12px;font-weight:700;"></span>
+</div>
+
+<div class="filter-tabs">
+  <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">すべて</button>
+  <button class="filter-tab" data-filter="pending" onclick="setFilter('pending')">⏳ 検討中</button>
+  <button class="filter-tab" data-filter="accepted" onclick="setFilter('accepted')">✅ 承認済み</button>
+  <button class="filter-tab" data-filter="declined" onclick="setFilter('declined')">❌ 見送り</button>
+</div>
+
+<div class="main">
+  <div id="cardArea">
+    <div class="center-msg">
+      <div class="center-msg-icon spin">&#9881;</div>
+      <div class="center-msg-text">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer><strong>ASOBI CREATE PARK</strong> &copy; 2025</footer>
+
+<script>
+  const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+  const HEADERS = {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+    'Content-Type': 'application/json',
+  };
+
+  var org = null;
+  var planId = null;
+  var allHands = [];
+  var currentFilter = 'all';
+
+  window.addEventListener('DOMContentLoaded', async function() {
+    var orgStr = sessionStorage.getItem('acp_org');
+    if (!orgStr) {
+      location.href = 'login.html';
+      return;
+    }
+    org = JSON.parse(orgStr);
+
+    var params = new URLSearchParams(window.location.search);
+    planId = params.get('plan_id');
+    if (!planId) {
+      showEmpty('URLが正しくありません（plan_id が必要です）');
+      return;
+    }
+
+    await loadData();
+  });
+
+  function goBack() {
+    if (history.length > 1) history.back();
+    else location.href = 'plans-manage.html';
+  }
+
+  async function loadData() {
+    try {
+      // 企画情報
+      var planRes = await fetch(
+        SUPABASE_URL + '/rest/v1/plans?id=eq.' + planId + '&select=id,title,organization_id',
+        { headers: HEADERS }
+      );
+      var plans = await planRes.json();
+      if (!plans.length || plans[0].organization_id !== org.id) {
+        showEmpty('企画が見つかりません、またはアクセス権がありません');
+        return;
+      }
+      document.getElementById('planTitle').textContent = plans[0].title;
+
+      // support_hands 取得
+      var shRes = await fetch(
+        SUPABASE_URL + '/rest/v1/support_hands?plan_id=eq.' + planId + '&order=created_at.desc',
+        { headers: HEADERS }
+      );
+      var hands = await shRes.json();
+
+      if (!hands.length) {
+        showEmpty('まだ支援申込はありません');
+        document.getElementById('countBadge').textContent = '0件';
+        return;
+      }
+
+      // supporter情報を一括取得
+      var supIds = hands.map(function(h) { return h.supporter_id; }).join(',');
+      var supRes = await fetch(
+        SUPABASE_URL + '/rest/v1/supporters?id=in.(' + supIds + ')&select=id,display_name,profile_image',
+        { headers: HEADERS }
+      );
+      var supporters = await supRes.json();
+      var supMap = {};
+      supporters.forEach(function(s) { supMap[s.id] = s; });
+
+      allHands = hands.map(function(h) {
+        return Object.assign({}, h, { supporter: supMap[h.supporter_id] || null });
+      });
+
+      document.getElementById('countBadge').textContent = allHands.length + '件';
+      renderCards();
+    } catch(e) {
+      showEmpty('読み込みに失敗しました: ' + e.message);
+    }
+  }
+
+  function setFilter(filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.filter === filter);
+    });
+    renderCards();
+  }
+
+  function renderCards() {
+    var filtered = currentFilter === 'all'
+      ? allHands
+      : allHands.filter(function(h) { return h.status === currentFilter; });
+
+    var area = document.getElementById('cardArea');
+
+    if (!filtered.length) {
+      area.innerHTML = '<div class="center-msg"><div class="center-msg-icon">📭</div><div class="center-msg-text">該当する申込がありません</div></div>';
+      return;
+    }
+
+    var html = '<div class="card-list">';
+    filtered.forEach(function(hand) {
+      var sup = hand.supporter;
+      var name = (sup && sup.display_name) ? escHtml(sup.display_name) : '名前未設定';
+      var date = new Date(hand.created_at).toLocaleDateString('ja-JP', { year: 'numeric', month: 'numeric', day: 'numeric' });
+      var statusLabel = { pending: '⏳ 検討中', accepted: '✅ 承認済み', declined: '❌ 見送り' };
+      var statusClass = { pending: 'pending', accepted: 'accepted', declined: 'declined' };
+
+      var acceptBtn = hand.status === 'accepted'
+        ? '<button class="btn-accept" disabled>✅ 承認済み</button>'
+        : '<button class="btn-accept" onclick="updateStatus(' + hand.id + ',\'accepted\')">✅ 承認する</button>';
+
+      var declineBtn = hand.status === 'declined'
+        ? '<button class="btn-decline" disabled>❌ 見送り済み</button>'
+        : '<button class="btn-decline" onclick="updateStatus(' + hand.id + ',\'declined\')">❌ 見送り</button>';
+
+      html +=
+        '<div class="applicant-card" id="hand-' + hand.id + '">' +
+          '<div class="card-top">' +
+            '<div class="card-avatar">' + (sup && sup.profile_image ? '<img src="' + escHtml(sup.profile_image) + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">' : '🤝') + '</div>' +
+            '<div class="card-body">' +
+              '<div class="card-name">' + name + '</div>' +
+              '<div class="card-date">申込日: ' + date + '</div>' +
+              (hand.message ? '<div class="card-message">' + escHtml(hand.message) + '</div>' : '') +
+              '<span class="card-status ' + (statusClass[hand.status] || '') + '">' + (statusLabel[hand.status] || hand.status) + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="card-actions">' +
+            acceptBtn +
+            declineBtn +
+            '<button class="btn-msg" onclick="openMessage(' + hand.id + ')">💬 メッセージ</button>' +
+          '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    area.innerHTML = html;
+  }
+
+  async function updateStatus(handId, newStatus) {
+    // ボタンを無効化
+    var card = document.getElementById('hand-' + handId);
+    if (card) {
+      card.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
+    }
+
+    try {
+      var res = await fetch(
+        SUPABASE_URL + '/rest/v1/support_hands?id=eq.' + handId,
+        {
+          method: 'PATCH',
+          headers: Object.assign({}, HEADERS, { 'Prefer': 'return=representation' }),
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+      if (!res.ok) throw new Error('更新に失敗しました');
+
+      // ローカルデータ更新
+      allHands = allHands.map(function(h) {
+        return h.id === handId ? Object.assign({}, h, { status: newStatus }) : h;
+      });
+
+      var label = newStatus === 'accepted' ? '承認しました ✅' : '見送りにしました';
+      showToast(label);
+      renderCards();
+    } catch(e) {
+      alert('エラー: ' + e.message);
+      if (card) {
+        card.querySelectorAll('button').forEach(function(b) { b.disabled = false; });
+      }
+    }
+  }
+
+  function openMessage(handId) {
+    location.href = 'messages.html?hand_id=' + handId;
+  }
+
+  function showEmpty(msg) {
+    document.getElementById('cardArea').innerHTML =
+      '<div class="center-msg"><div class="center-msg-icon">📭</div><div class="center-msg-text">' + escHtml(msg) + '</div></div>';
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>
