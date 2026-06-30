@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教科書エリア | ASOBI CREATE PARK</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; --orange: #FF6B35; }
+    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ヘッダー */
+    .site-header { background: white; border-bottom: 1px solid #F0F0F0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
+    .logo-main span { color: var(--green); }
+    .logo-sub { font-size: 9px; color: var(--gray); }
+    .header-nav { margin-left: auto; display: flex; gap: 16px; align-items: center; }
+    .header-nav a { font-size: 13px; font-weight: 700; color: var(--gray); text-decoration: none; }
+    .header-nav a:hover { color: var(--green); }
+
+    /* ヒーロー */
+    .hero { background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%); color: white; padding: 48px 24px 40px; text-align: center; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.08em; }
+    .hero-title { font-size: 28px; font-weight: 900; margin-bottom: 12px; }
+    .hero-desc { font-size: 14px; opacity: 0.8; line-height: 1.8; max-width: 560px; margin: 0 auto 24px; }
+    .btn-download-all { display: inline-flex; align-items: center; gap: 8px; background: var(--orange); color: white; font-size: 14px; font-weight: 800; padding: 12px 24px; border-radius: 24px; border: none; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .btn-download-all:hover { opacity: 0.85; }
+
+    /* フィルター */
+    .filter-wrap { background: white; border-bottom: 1px solid #EEE; padding: 12px 24px; display: flex; gap: 8px; overflow-x: auto; }
+    .filter-chip { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; border: 1.5px solid #E0E0E0; background: white; color: var(--gray); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .filter-chip.active { background: var(--green); border-color: var(--green); color: white; }
+
+    /* メイン */
+    .main { flex: 1; max-width: 1200px; margin: 0 auto; width: 100%; padding: 24px; }
+
+    /* カードグリッド */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+    .tb-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.07); transition: all 0.2s; border: 1.5px solid transparent; cursor: pointer; }
+    .tb-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); border-color: var(--green); }
+    .tb-card-thumb { height: 120px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; overflow: hidden; }
+    .tb-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .tb-card-cat { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.92); color: var(--green); font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 12px; }
+    .tb-card-body { padding: 18px; }
+    .tb-card-title { font-size: 16px; font-weight: 900; color: var(--navy); margin-bottom: 8px; line-height: 1.4; }
+    .tb-card-summary { font-size: 13px; color: var(--gray); line-height: 1.7; margin-bottom: 12px; }
+    .tb-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tb-tag { font-size: 11px; color: var(--green); background: #E8F5E9; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+    .tb-card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .tb-author { font-size: 11px; color: var(--gray); }
+    .btn-detail { background: var(--green); color: white; border: none; padding: 7px 16px; border-radius: 12px; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .btn-detail:hover { opacity: 0.85; }
+
+    /* モーダル */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: white; border-radius: 24px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .modal-header { padding: 24px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .modal-cat { font-size: 12px; font-weight: 700; color: var(--green); background: #E8F5E9; padding: 3px 10px; border-radius: 10px; margin-bottom: 8px; display: inline-block; }
+    .modal-title { font-size: 20px; font-weight: 900; color: var(--navy); line-height: 1.4; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--gray); flex-shrink: 0; padding: 0; line-height: 1; }
+    .modal-body { padding: 20px 24px 28px; }
+    .modal-content { font-size: 14px; line-height: 2; color: #333; white-space: pre-wrap; }
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0; }
+    .modal-footer { border-top: 1px solid #F0F0F0; padding: 16px 24px; display: flex; gap: 8px; }
+    .btn-dl-single { flex: 1; background: var(--orange); color: white; border: none; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .btn-dl-single:hover { opacity: 0.85; }
+
+    /* 空 / ローディング */
+    .state-msg { text-align: center; padding: 80px 20px; color: var(--gray); }
+    .state-icon { font-size: 52px; margin-bottom: 16px; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .spin { display: inline-block; animation: spin 1s linear infinite; }
+
+    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
+    footer strong { color: white; }
+
+    @media (max-width: 600px) {
+      .hero-title { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text">
+        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
+        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="index.html">トップ</a>
+      <a href="plans.html">企画一覧</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="hero-badge">📚 LAYER 1 — TEXTBOOKS</div>
+  <div class="hero-title">教科書エリア</div>
+  <div class="hero-desc">あそびを企画する人のための事例集・ノウハウ集。<br>現場で使えるヒントを集めました。</div>
+  <button class="btn-download-all" onclick="downloadAllAsExcel()">
+    📥 全件をExcelでダウンロード
+  </button>
+</section>
+
+<!-- フィルター -->
+<div class="filter-wrap" id="filterWrap">
+  <button class="filter-chip active" data-cat="all" onclick="setFilter('all')">すべて</button>
+</div>
+
+<!-- メイン -->
+<main class="main">
+  <div id="cardArea">
+    <div class="state-msg">
+      <div class="state-icon spin">&#9881;</div>
+      <div>読み込み中...</div>
+    </div>
+  </div>
+</main>
+
+<!-- 詳細モーダル -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <div>
+        <div class="modal-cat" id="modalCat"></div>
+        <div class="modal-title" id="modalTitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tags" id="modalTags"></div>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-dl-single" id="modalDlBtn">📥 この記事をExcelでダウンロード</button>
+    </div>
+  </div>
+</div>
+
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+  var SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+
+  var allBooks = [];
+  var currentFilter = 'all';
+  var currentModal = null;
+
+  // ── データ読み込み ──
+  window.addEventListener('DOMContentLoaded', async function() {
+    try {
+      var res = await fetch(
+        SUPABASE_URL + '/rest/v1/textbooks?status=eq.published&order=created_at.asc&select=*',
+        {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          }
+        }
+      );
+      allBooks = await res.json();
+      buildFilters();
+      renderCards();
+    } catch(e) {
+      document.getElementById('cardArea').innerHTML =
+        '<div class="state-msg"><div class="state-icon">⚠️</div><div>読み込みに失敗しました</div></div>';
+    }
+  });
+
+  // ── フィルタービルド ──
+  function buildFilters() {
+    var cats = [];
+    allBooks.forEach(function(b) {
+      if (b.category && cats.indexOf(b.category) === -1) cats.push(b.category);
+    });
+    var wrap = document.getElementById('filterWrap');
+    cats.forEach(function(cat) {
+      var btn = document.createElement('button');
+      btn.className = 'filter-chip';
+      btn.dataset.cat = cat;
+      btn.textContent = cat;
+      btn.onclick = function() { setFilter(cat); };
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── フィルター ──
+  function setFilter(cat) {
+    currentFilter = cat;
+    document.querySelectorAll('.filter-chip').forEach(function(c) {
+      c.classList.toggle('active', c.dataset.cat === cat);
+    });
+    renderCards();
+  }
+
+  // ── カード描画 ──
+  function renderCards() {
+    var filtered = currentFilter === 'all'
+      ? allBooks
+      : allBooks.filter(function(b) { return b.category === currentFilter; });
+
+    var area = document.getElementById('cardArea');
+
+    if (!filtered.length) {
+      area.innerHTML = '<div class="state-msg"><div class="state-icon">📭</div><div>記事がありません</div></div>';
+      return;
+    }
+
+    var html = '<div class="card-grid">';
+    filtered.forEach(function(book) {
+      var tags = (book.tags || []).map(function(t) {
+        return '<span class="tb-tag">#' + escHtml(t) + '</span>';
+      }).join('');
+
+      var emoji = catEmoji(book.category);
+
+      html +=
+        '<div class="tb-card" onclick="openModal(' + book.id + ')">' +
+          '<div class="tb-card-thumb">' +
+            (book.thumbnail_url
+              ? '<img src="' + escHtml(book.thumbnail_url) + '" alt="">'
+              : emoji) +
+            (book.category ? '<span class="tb-card-cat">' + escHtml(book.category) + '</span>' : '') +
+          '</div>' +
+          '<div class="tb-card-body">' +
+            '<div class="tb-card-title">' + escHtml(book.title) + '</div>' +
+            '<div class="tb-card-summary">' + escHtml(book.summary || '') + '</div>' +
+            '<div class="tb-card-tags">' + tags + '</div>' +
+            '<div class="tb-card-footer">' +
+              '<div class="tb-author">' + (book.author ? '✍️ ' + escHtml(book.author) : '') + '</div>' +
+              '<button class="btn-detail" onclick="event.stopPropagation();openModal(' + book.id + ')">詳しく見る</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    area.innerHTML = html;
+  }
+
+  // ── モーダル ──
+  function openModal(id) {
+    var book = allBooks.find(function(b) { return b.id === id; });
+    if (!book) return;
+    currentModal = book;
+
+    document.getElementById('modalCat').textContent = book.category || '';
+    document.getElementById('modalTitle').textContent = book.title;
+    document.getElementById('modalContent').textContent = book.content || book.summary || '';
+
+    var tagsHtml = (book.tags || []).map(function(t) {
+      return '<span class="tb-tag">#' + escHtml(t) + '</span>';
+    }).join('');
+    document.getElementById('modalTags').innerHTML = tagsHtml;
+
+    var dlBtn = document.getElementById('modalDlBtn');
+    dlBtn.onclick = function() { downloadSingleAsExcel(book); };
+
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentModal = null;
+  }
+
+  // ── Excel: 全件 ──
+  function downloadAllAsExcel() {
+    if (!allBooks.length) { alert('データがありません'); return; }
+
+    var rows = [['タイトル', 'カテゴリ', '概要', '内容', '著者', 'タグ', '作成日']];
+    allBooks.forEach(function(b) {
+      rows.push([
+        b.title || '',
+        b.category || '',
+        b.summary || '',
+        b.content || '',
+        b.author || '',
+        (b.tags || []).join(', '),
+        b.created_at ? new Date(b.created_at).toLocaleDateString('ja-JP') : '',
+      ]);
+    });
+
+    exportExcel(rows, 'ASOBI_CREATE_PARK_教科書一覧');
+  }
+
+  // ── Excel: 単件 ──
+  function downloadSingleAsExcel(book) {
+    var rows = [
+      ['項目', '内容'],
+      ['タイトル', book.title || ''],
+      ['カテゴリ', book.category || ''],
+      ['概要', book.summary || ''],
+      ['内容', book.content || ''],
+      ['著者', book.author || ''],
+      ['タグ', (book.tags || []).join(', ')],
+      ['作成日', book.created_at ? new Date(book.created_at).toLocaleDateString('ja-JP') : ''],
+    ];
+    var safeName = (book.title || 'textbook').replace(/[/\\:*?"<>|]/g, '_').slice(0, 40);
+    exportExcel(rows, 'ACP_' + safeName);
+  }
+
+  // ── SheetJS エクスポート ──
+  function exportExcel(rows, filename) {
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(rows);
+
+    // 列幅調整
+    ws['!cols'] = rows[0].map(function(_, i) {
+      var maxLen = rows.reduce(function(max, row) {
+        return Math.max(max, String(row[i] || '').length);
+      }, 0);
+      return { wch: Math.min(Math.max(maxLen, 10), 60) };
+    });
+
+    XLSX.utils.book_append_sheet(wb, ws, '教科書一覧');
+    XLSX.writeFile(wb, filename + '.xlsx');
+  }
+
+  // ── ユーティリティ ──
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function catEmoji(cat) {
+    var map = {
+      'イベント設計': '🎪', '広報・マーケティング': '📣',
+      '組織運営': '🏢', '地域連携': '🤝', '資金調達': '💰'
+    };
+    return map[cat] || '📚';
+  }
+
+  // ESCキーでモーダルを閉じる
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModalDirect();
+  });
+</script>
+
+<footer>
+  <strong>ASOBI CREATE PARK</strong> &copy; 2025 ASOBI CREATE Park
+</footer>
+</body>
+</html>
