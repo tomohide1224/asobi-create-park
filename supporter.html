@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>支援者ログイン — ASOBI CREATE PARK</title>
+<style>
+:root {
+  --orange: #FF6B35;
+  --green: #2D9E6B;
+  --green-light: #4CAF78;
+  --navy: #1A1A2E;
+  --light: #F8F9FA;
+  --gray: #6C757D;
+  --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', sans-serif; background: #FAFAF8; color: var(--navy); min-height: 100vh; }
+
+/* Header */
+.site-header { background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; max-width: 1200px; margin: 0 auto; }
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo-icon { font-size: 24px; }
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-main { font-size: 15px; font-weight: 900; letter-spacing: 1px; color: var(--navy); }
+.logo-main span { color: var(--orange); }
+.logo-sub { font-size: 10px; color: var(--gray); letter-spacing: 0.5px; }
+.header-back { font-size: 13px; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+.header-back:hover { color: var(--navy); }
+
+/* Phase wrapper */
+.phase { display: none; }
+.phase.active { display: block; }
+
+/* ===== PHASE 1: ログイン ===== */
+.login-wrap { max-width: 480px; margin: 60px auto; padding: 0 20px; text-align: center; }
+.login-badge { display: inline-block; background: var(--green); color: white; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 1px; }
+.login-wrap h1 { font-size: 26px; font-weight: 900; margin-bottom: 10px; }
+.login-wrap .subtitle { font-size: 14px; color: var(--gray); margin-bottom: 40px; line-height: 1.6; }
+.btn-line-green {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #06C755; color: white; border: none; border-radius: 12px;
+  padding: 16px 24px; font-size: 16px; font-weight: 700; width: 100%;
+  cursor: pointer; transition: all 0.2s; margin-bottom: 12px;
+}
+.btn-line-green:hover { background: #05a847; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(6,199,85,0.3); }
+.btn-line-green .line-logo { width: 24px; height: 24px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #06C755; }
+.login-note { font-size: 12px; color: var(--gray); margin-top: 20px; line-height: 1.6; }
+.login-features { background: white; border-radius: 16px; padding: 24px; margin: 32px 0; text-align: left; box-shadow: var(--card-shadow); }
+.login-features h3 { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+.feature-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.feature-item:last-child { border-bottom: none; }
+.feature-icon { font-size: 20px; width: 32px; text-align: center; }
+.organizer-link { display: block; margin-top: 24px; font-size: 13px; color: var(--gray); text-decoration: none; }
+.organizer-link:hover { color: var(--navy); }
+
+/* ===== PHASE 2: ローディング ===== */
+.loading-wrap { max-width: 480px; margin: 100px auto; padding: 0 20px; text-align: center; }
+.spinner { width: 48px; height: 48px; border: 4px solid #eee; border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-wrap p { color: var(--gray); font-size: 15px; }
+
+/* ===== PHASE 3: エラー ===== */
+.error-wrap { max-width: 480px; margin: 100px auto; padding: 0 20px; text-align: center; }
+.error-icon { font-size: 48px; margin-bottom: 16px; }
+.error-wrap h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+#errorMsg { font-size: 14px; color: var(--gray); margin-bottom: 24px; }
+.btn-retry { background: var(--green); color: white; border: none; border-radius: 10px; padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+/* ===== PHASE 4: 新規登録フォーム ===== */
+.reg-wrap { max-width: 480px; margin: 60px auto; padding: 0 20px; }
+.reg-card { background: white; border-radius: 20px; padding: 32px; box-shadow: var(--card-shadow); }
+.reg-card h2 { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+.reg-card .reg-sub { font-size: 13px; color: var(--gray); margin-bottom: 28px; line-height: 1.6; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--navy); }
+.form-group input { width: 100%; border: 2px solid #e8e8e8; border-radius: 10px; padding: 12px 14px; font-size: 15px; transition: border-color 0.2s; }
+.form-group input:focus { outline: none; border-color: var(--green); }
+.form-hint { font-size: 11px; color: var(--gray); margin-top: 4px; }
+.form-line-preview { background: #f8f8f8; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.form-line-preview img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.btn-register { background: var(--green); color: white; border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+.btn-register:hover { background: var(--green-light); }
+.btn-register:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ===== PHASE 5: ダッシュボード ===== */
+.dash-wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+.dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.dash-user { display: flex; align-items: center; gap: 12px; }
+.dash-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
+.dash-avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: 700; }
+.dash-name { font-size: 16px; font-weight: 700; }
+.dash-role { font-size: 12px; color: var(--green); font-weight: 700; }
+.btn-logout { background: transparent; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 13px; color: var(--gray); cursor: pointer; }
+.btn-logout:hover { border-color: var(--navy); color: var(--navy); }
+
+/* Tabs */
+.tab-nav { display: flex; gap: 0; border-bottom: 2px solid #eee; margin-bottom: 28px; }
+.tab-btn { background: none; border: none; padding: 12px 20px; font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Plans list */
+.plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.plan-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); transition: transform 0.2s; }
+.plan-card:hover { transform: translateY(-4px); }
+.plan-img { width: 100%; height: 160px; object-fit: cover; background: linear-gradient(135deg, #f0faf5, #e8f5ee); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+.plan-body { padding: 16px; }
+.plan-status { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.plan-status.recruiting { background: #e8f5ee; color: var(--green); }
+.plan-status.closed { background: #f0f0f0; color: var(--gray); }
+.plan-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+.plan-org { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+.plan-meta { font-size: 12px; color: var(--gray); display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
+.plan-actions { display: flex; gap: 8px; }
+.btn-fav { flex: 1; background: white; border: 2px solid #eee; border-radius: 8px; padding: 8px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.btn-fav.active { border-color: #ff4d6d; color: #ff4d6d; }
+.btn-fav:hover { border-color: #ff4d6d; color: #ff4d6d; }
+.btn-hand { flex: 2; background: var(--green); color: white; border: none; border-radius: 8px; padding: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-hand.active { background: var(--gray); cursor: default; }
+.btn-hand:hover:not(.active) { background: var(--green-light); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { color: var(--gray); font-size: 15px; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 20px; padding: 28px; max-width: 440px; width: 100%; }
+.modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.modal p { font-size: 14px; color: var(--gray); margin-bottom: 20px; }
+.modal textarea { width: 100%; border: 2px solid #eee; border-radius: 10px; padding: 12px; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 16px; font-family: inherit; }
+.modal textarea:focus { outline: none; border-color: var(--green); }
+.modal-actions { display: flex; gap: 10px; }
+.btn-modal-cancel { flex: 1; background: white; border: 2px solid #eee; border-radius: 10px; padding: 12px; font-size: 14px; cursor: pointer; }
+.btn-modal-submit { flex: 2; background: var(--green); color: white; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-modal-submit:hover { background: var(--green-light); }
+
+@media (max-width: 600px) {
+  .plans-grid { grid-template-columns: 1fr; }
+  .tab-btn { padding: 10px 12px; font-size: 12px; }
+  .header-inner { padding: 12px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">🎪</span>
+      <span class="logo-text">
+        <span class="logo-main">ASOBI <span>CREATE</span> PARK</span>
+        <span class="logo-sub">あつまる・つくる・あそぶ</span>
+      </span>
+    </a>
+    <a href="index.html" class="header-back">← トップへ戻る</a>
+  </div>
+</header>
+
+<!-- PHASE 1: ログイン画面 -->
+<div id="phase1" class="phase active">
+  <div class="login-wrap">
+    <div class="login-badge">🤝 支援者ログイン</div>
+    <h1>あそびを支援しよう</h1>
+    <p class="subtitle">LINEアカウントで簡単ログイン。<br>気になる企画に「手を上げる」だけでOK。</p>
+
+    <div class="login-features">
+      <h3>支援者でできること</h3>
+      <div class="feature-item"><span class="feature-icon">📋</span><span>準備中の企画を一覧で見られる</span></div>
+      <div class="feature-item"><span class="feature-icon">❤️</span><span>気になる企画をお気に入り登録</span></div>
+      <div class="feature-item"><span class="feature-icon">🙋</span><span>「手を上げる」で支援申込</span></div>
+      <div class="feature-item"><span class="feature-icon">💬</span><span>企画者とサイト内でメッセージ</span></div>
+    </div>
+
+    <button class="btn-line-green" onclick="loginWithLINE()">
+      <span class="line-logo">L</span>
+      LINEでログイン（支援者）
+    </button>
+    <p class="login-note">登録は名前だけ。団体情報は不要です。</p>
+    <a href="login.html" class="organizer-link">企画者（団体）の方はこちら →</a>
+  </div>
+</div>
+
+<!-- PHASE 2: ローディング -->
+<div id="phase2" class="phase">
+  <div class="loading-wrap">
+    <div class="spinner"></div>
+    <p>認証中です。しばらくお待ちください…</p>
+  </div>
+</div>
+
+<!-- PHASE 3: エラー -->
+<div id="phase3" class="phase">
+  <div class="error-wrap">
+    <div class="error-icon">⚠️</div>
+    <h2>エラーが発生しました</h2>
+    <p id="errorMsg">認証に失敗しました。もう一度お試しください。</p>
+    <button class="btn-retry" onclick="showPhase('phase1')">もう一度試す</button>
+  </div>
+</div>
+
+<!-- PHASE 4: 新規登録フォーム -->
+<div id="phase4" class="phase">
+  <div class="reg-wrap">
+    <div class="reg-card">
+      <h2>支援者として登録</h2>
+      <p class="reg-sub">LINEのニックネームを確認して、登録名を決めてください。<br>団体情報は不要です。名前だけで使えます。</p>
+
+      <div class="form-line-preview" id="linePreview">
+        <img id="lineProfileImg" src="" alt="" style="display:none; width:32px; height:32px; border-radius:50%;">
+        <span id="lineProfilePlaceholder" style="font-size:24px;">👤</span>
+        <div>
+          <div id="lineDisplayNamePreview" style="font-weight:700;font-size:15px;"></div>
+          <span style="font-size:12px; color:var(--gray);">LINEアカウント</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="supporterName">表示名（ニックネームでOK）</label>
+        <input type="text" id="supporterName" placeholder="例：田中たろう" maxlength="30">
+        <div class="form-hint">他の人に見える名前です。本名でなくてもOK。</div>
+      </div>
+
+      <button class="btn-register" onclick="registerSupporter()" id="btnRegister">
+        🙋 支援者として登録する
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 5: ダッシュボード -->
+<div id="phase5" class="phase">
+  <div class="dash-wrap">
+    <div class="dash-header">
+      <div class="dash-user">
+        <div class="dash-avatar-placeholder" id="dashAvatarPlaceholder">🙋</div>
+        <img id="dashAvatar" class="dash-avatar" src="" alt="" style="display:none;">
+        <div>
+          <div class="dash-name" id="dashName">支援者</div>
+          <div class="dash-role">🤝 支援者</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">ログアウト</button>
+    </div>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('pane-plans', this)">📋 企画一覧</button>
+      <button class="tab-btn" onclick="switchTab('pane-favorites', this)">❤️ お気に入り</button>
+      <button class="tab-btn" onclick="switchTab('pane-hands', this)">🙋 手を上げた企画</button>
+    </div>
+
+    <div id="pane-plans" class="tab-pane active">
+      <div id="plansList" class="plans-grid">
+        <div class="empty-state"><div class="empty-icon">⏳</div><p>読み込み中...</p></div>
+      </div>
+    </div>
+    <div id="pane-favorites" class="tab-pane">
+      <div id="favoritesList" class="plans-grid">
+        <div class="empty-state"><div class="empty-icon">❤️</div><p>お気に入りに追加した企画はここに表示されます。</p></div>
+      </div>
+    </div>
+    <div id="pane-hands" class="tab-pane">
+      <div id="handsList" class="plans-grid">
+        <div class="empty-state"><div class="empty-icon">🙋</div><p>手を上げた企画はここに表示されます。</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 手を上げるモーダル -->
+<div class="modal-overlay" id="handModal">
+  <div class="modal">
+    <h3>🙋 手を上げる</h3>
+    <p>この企画への参加意向を伝えます。企画者からメッセージが届くことがあります。</p>
+    <textarea id="handMessage" placeholder="メッセージ（任意）：どんな形で参加したいか、得意なことなど"></textarea>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeHandModal()">キャンセル</button>
+      <button class="btn-modal-submit" onclick="submitHand()">手を上げる！</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL      = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+const SUPABASE_FUNC_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co/functions/v1';
+const LINE_LOGIN_CHANNEL_ID = '2010526701';
+const HEADERS = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' };
+
+function showPhase(id) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showError(msg) { document.getElementById('errorMsg').textContent = msg; showPhase('phase3'); }
+function getRedirectUri() { return `${location.origin}${location.pathname}`; }
+
+function switchTab(paneId, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(paneId).classList.add('active');
+  btn.classList.add('active');
+  if (paneId === 'pane-favorites') loadFavorites();
+  if (paneId === 'pane-hands') loadHands();
+}
+
+function loginWithLINE() {
+  const state = Math.random().toString(36).slice(2);
+  sessionStorage.setItem('acp_sup_state', state);
+  const params = new URLSearchParams({ response_type: 'code', client_id: LINE_LOGIN_CHANNEL_ID, redirect_uri: getRedirectUri(), state, scope: 'profile' });
+  window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
+}
+
+async function handleLineCallback(code, state) {
+  const savedState = sessionStorage.getItem('acp_sup_state');
+  if (state && savedState && state !== savedState) { showError('セキュリティエラー。もう一度お試しください。'); return; }
+  showPhase('phase2');
+  window.history.replaceState({}, '', location.pathname);
+  try {
+    const res = await fetch(`${SUPABASE_FUNC_URL}/line-auth`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, redirect_uri: getRedirectUri() }) });
+    const data = await res.json();
+    if (!data.line_user_id) { showError('LINEログインに失敗しました。もう一度お試しください。'); return; }
+    sessionStorage.setItem('acp_sup_line_uid', data.line_user_id);
+    sessionStorage.setItem('acp_sup_line_name', data.line_display_name || '');
+    sessionStorage.setItem('acp_sup_line_img', data.line_profile_image || '');
+    const supRes = await fetch(`${SUPABASE_URL}/rest/v1/supporters?line_user_id=eq.${encodeURIComponent(data.line_user_id)}&limit=1`, { headers: HEADERS });
+    const supporters = await supRes.json();
+    if (supporters.length > 0) {
+      sessionStorage.setItem('acp_supporter', JSON.stringify(supporters[0]));
+      showDashboard(supporters[0], data.line_profile_image);
+    } else {
+      showRegistrationForm(data.line_display_name, data.line_profile_image);
+    }
+  } catch (e) { showError('通信エラー：' + e.message); }
+}
+
+function showRegistrationForm(lineName, lineImg) {
+  document.getElementById('supporterName').value = lineName || '';
+  document.getElementById('lineDisplayNamePreview').textContent = lineName || '';
+  if (lineImg) {
+    const img = document.getElementById('lineProfileImg');
+    img.src = lineImg; img.style.display = 'block';
+    document.getElementById('lineProfilePlaceholder').style.display = 'none';
+  }
+  showPhase('phase4');
+}
+
+async function registerSupporter() {
+  const name = document.getElementById('supporterName').value.trim();
+  if (!name) { alert('表示名を入力してください。'); return; }
+  const lineUid = sessionStorage.getItem('acp_sup_line_uid');
+  const lineImg = sessionStorage.getItem('acp_sup_line_img');
+  if (!lineUid) { showError('セッションが切れました。もう一度ログインしてください。'); return; }
+  const btn = document.getElementById('btnRegister');
+  btn.disabled = true; btn.textContent = '登録中…';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/supporters`, { method: 'POST', headers: { ...HEADERS, 'Prefer': 'return=representation' }, body: JSON.stringify({ line_user_id: lineUid, display_name: name, profile_image: lineImg || null }) });
+    const data = await res.json();
+    if (!Array.isArray(data) || !data.length) throw new Error('登録に失敗しました。');
+    sessionStorage.setItem('acp_supporter', JSON.stringify(data[0]));
+    showDashboard(data[0], lineImg);
+  } catch (e) { alert('エラー：' + e.message); btn.disabled = false; btn.textContent = '🙋 支援者として登録する'; }
+}
+
+function showDashboard(supporter, lineImg) {
+  document.getElementById('dashName').textContent = supporter.display_name;
+  const img = lineImg || supporter.profile_image;
+  if (img) { document.getElementById('dashAvatar').src = img; document.getElementById('dashAvatar').style.display = 'block'; document.getElementById('dashAvatarPlaceholder').style.display = 'none'; }
+  showPhase('phase5');
+  loadPlans(supporter.id);
+}
+
+function logout() {
+  ['acp_supporter','acp_sup_line_uid','acp_sup_line_name','acp_sup_line_img','acp_sup_state'].forEach(k => sessionStorage.removeItem(k));
+  showPhase('phase1');
+}
+
+async function loadPlans(supporterId) {
+  const container = document.getElementById('plansList');
+  container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>読み込み中...</p></div>';
+  try {
+    const [plansRes, favRes, handRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/plans?status=eq.recruiting&order=created_at.desc`, { headers: HEADERS }),
+      fetch(`${SUPABASE_URL}/rest/v1/favorite_plans?supporter_id=eq.${supporterId}`, { headers: HEADERS }),
+      fetch(`${SUPABASE_URL}/rest/v1/support_hands?supporter_id=eq.${supporterId}`, { headers: HEADERS }),
+    ]);
+    const [plans, favs, hands] = await Promise.all([plansRes.json(), favRes.json(), handRes.json()]);
+    const favSet = new Set(favs.map(f => f.plan_id));
+    const handSet = new Set(hands.map(h => h.plan_id));
+    if (!plans.length) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>現在募集中の企画はありません。</p></div>'; return; }
+    container.innerHTML = '';
+    plans.forEach(plan => container.appendChild(buildPlanCard(plan, favSet.has(plan.id), handSet.has(plan.id), supporterId)));
+  } catch (e) { container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー：${e.message}</p></div>`; }
+}
+
+function buildPlanCard(plan, isFav, isHand, supporterId) {
+  const card = document.createElement('div');
+  card.className = 'plan-card'; card.dataset.planId = plan.id;
+  const catEmoji = {'食事・屋台':'🍜','あそび':'🎮','防災':'🚒','工作':'✂️','水遊び':'💧','音楽':'🎵','スポーツ':'⚽'}[plan.category] || '🎪';
+  const statusLabel = {recruiting:'🟢 支援者募集中', closed:'🔒 締め切り済み'}[plan.status] || plan.status;
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  card.innerHTML = `
+    <div class="plan-img">${catEmoji}</div>
+    <div class="plan-body">
+      <span class="plan-status ${plan.status}">${statusLabel}</span>
+      <div class="plan-title">${esc(plan.title)}</div>
+      <div class="plan-meta">
+        ${plan.target_date ? `<span>📅 ${plan.target_date}</span>` : ''}
+        ${plan.location ? `<span>📍 ${esc(plan.location)}</span>` : ''}
+      </div>
+      <div class="plan-actions">
+        <button class="btn-fav ${isFav?'active':''}" onclick="toggleFav(${plan.id},${supporterId},this)">${isFav?'❤️':'🤍'} お気に入り</button>
+        <button class="btn-hand ${isHand?'active':''}" ${isHand?'':'onclick="openHandModal('+plan.id+','+supporterId+')"'}>${isHand?'✅ 手を上げた':'🙋 手を上げる'}</button>
+      </div>
+    </div>`;
+  return card;
+}
+
+async function toggleFav(planId, supporterId, btn) {
+  if (btn.classList.contains('active')) {
+    await fetch(`${SUPABASE_URL}/rest/v1/favorite_plans?supporter_id=eq.${supporterId}&plan_id=eq.${planId}`, { method: 'DELETE', headers: HEADERS });
+    btn.classList.remove('active'); btn.textContent = '🤍 お気に入り';
+  } else {
+    await fetch(`${SUPABASE_URL}/rest/v1/favorite_plans`, { method: 'POST', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify({ supporter_id: supporterId, plan_id: planId }) });
+    btn.classList.add('active'); btn.textContent = '❤️ お気に入り';
+  }
+}
+
+async function loadFavorites() {
+  const supporter = JSON.parse(sessionStorage.getItem('acp_supporter') || '{}');
+  if (!supporter.id) return;
+  const container = document.getElementById('favoritesList');
+  container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>読み込み中...</p></div>';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/favorite_plans?supporter_id=eq.${supporter.id}&select=plan_id,plans(*)`, { headers: HEADERS });
+    const data = await res.json();
+    const plans = data.map(d => d.plans).filter(Boolean);
+    if (!plans.length) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">❤️</div><p>お気に入りに追加した企画はここに表示されます。</p></div>'; return; }
+    container.innerHTML = '';
+    plans.forEach(plan => container.appendChild(buildPlanCard(plan, true, false, supporter.id)));
+  } catch (e) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー</p></div>'; }
+}
+
+let _handPlanId = null, _handSupporterId = null;
+function openHandModal(planId, supporterId) { _handPlanId = planId; _handSupporterId = supporterId; document.getElementById('handMessage').value = ''; document.getElementById('handModal').classList.add('open'); }
+function closeHandModal() { document.getElementById('handModal').classList.remove('open'); }
+
+async function submitHand() {
+  const message = document.getElementById('handMessage').value.trim();
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/support_hands`, { method: 'POST', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify({ supporter_id: _handSupporterId, plan_id: _handPlanId, message: message || null, status: 'pending' }) });
+    closeHandModal();
+    const card = document.querySelector(`.plan-card[data-plan-id="${_handPlanId}"]`);
+    if (card) { const b = card.querySelector('.btn-hand'); if (b) { b.classList.add('active'); b.textContent = '✅ 手を上げた'; b.onclick = null; } }
+  } catch (e) { alert('エラー：' + e.message); }
+}
+
+async function loadHands() {
+  const supporter = JSON.parse(sessionStorage.getItem('acp_supporter') || '{}');
+  if (!supporter.id) return;
+  const container = document.getElementById('handsList');
+  container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>読み込み中...</p></div>';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/support_hands?supporter_id=eq.${supporter.id}&select=*,plans(*)`, { headers: HEADERS });
+    const data = await res.json();
+    const plans = data.map(d => d.plans).filter(Boolean);
+    if (!plans.length) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">🙋</div><p>手を上げた企画はここに表示されます。</p></div>'; return; }
+    container.innerHTML = '';
+    plans.forEach(plan => container.appendChild(buildPlanCard(plan, false, true, supporter.id)));
+  } catch (e) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー</p></div>'; }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code'), state = params.get('state');
+  if (code) { handleLineCallback(code, state); return; }
+  const saved = sessionStorage.getItem('acp_supporter');
+  if (saved) { try { showDashboard(JSON.parse(saved), null); return; } catch(e) {} }
+  showPhase('phase1');
+});
+</script>
+</body>
+</html>
