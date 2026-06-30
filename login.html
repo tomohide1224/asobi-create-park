@@ -27,7 +27,6 @@
     .phase { display: none; }
     .phase.active { display: block; }
 
-    /* LINEログインボタン */
     .btn-line { width: 100%; background: var(--line); color: white; border: none; padding: 16px 24px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.2s; }
     .btn-line:hover { opacity: 0.9; }
     .btn-line-icon { width: 28px; height: 28px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -37,20 +36,17 @@
     .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid #F0F0F0; }
     .divider-text { font-size: 12px; color: var(--gray); }
 
-    /* 処理中 */
     .processing-box { text-align: center; padding: 20px 0; }
     .processing-icon { font-size: 48px; margin-bottom: 16px; animation: spin 1.5s linear infinite; }
     @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     .processing-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
     .processing-desc { font-size: 13px; color: var(--gray); }
 
-    /* エラー */
     .error-box { background: #FFF5F5; border: 1.5px solid #FFCDD2; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
     .error-icon { font-size: 36px; margin-bottom: 10px; }
     .error-title { font-size: 15px; font-weight: 800; color: #C62828; margin-bottom: 8px; }
     .error-desc { font-size: 13px; color: #555; line-height: 1.8; }
 
-    /* LINE友だち追加 */
     .friend-box { background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 20px; text-align: center; margin: 16px 0; }
     .friend-title { font-size: 14px; font-weight: 800; color: var(--green); margin-bottom: 8px; }
     .friend-desc { font-size: 12px; color: #555; line-height: 1.8; margin-bottom: 12px; }
@@ -59,7 +55,6 @@
     .btn-secondary { width: 100%; background: none; border: 1.5px solid #ddd; color: #555; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
     .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
 
-    /* ダッシュボード */
     .dashboard { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
     .dashboard-welcome { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
     .dashboard-org { font-size: 14px; color: var(--gray); margin-bottom: 28px; }
@@ -80,7 +75,6 @@
     footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
     footer strong { color: white; }
 
-    /* 登録フォーム */
     .register-form { margin-bottom: 16px; }
     .form-group { margin-bottom: 16px; }
     .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
@@ -122,7 +116,6 @@
     .dash-loading { text-align: center; padding: 40px; color: var(--gray); font-size: 13px; }
     .dash-empty { text-align: center; padding: 48px 20px; color: var(--gray); font-size: 14px; line-height: 2; }
 
-    /* イベントカード（A: Airbnb風） */
     .event-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .event-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1.5px solid transparent; transition: all 0.2s; cursor: pointer; }
     .event-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
@@ -137,7 +130,6 @@
     .event-card-meta { font-size: 11px; color: var(--gray); line-height: 1.6; }
     .event-card-inquiry { font-size: 11px; color: var(--green); font-weight: 700; margin-top: 6px; }
 
-    /* 問い合わせリスト（B: Peatix風） */
     .request-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .request-item { background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid var(--green); }
     .request-event-tag { font-size: 12px; color: var(--green); font-weight: 700; margin-bottom: 6px; }
@@ -147,7 +139,6 @@
     .request-type-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: #E3F2FD; color: #1565C0; margin-bottom: 4px; }
     .request-message { font-size: 12px; color: var(--gray); line-height: 1.6; margin-top: 4px; }
 
-    /* 団体情報 */
     .orginfo-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
     .orginfo-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F5F5F5; }
     .orginfo-row:last-child { border-bottom: none; }
@@ -157,7 +148,6 @@
     .dash-post-btn { margin-top: 8px; }
     .dash-section-title { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 10px; letter-spacing: 0.05em; }
 
-    /* 団体情報編集 */
     .orginfo-edit-btn { width: 100%; background: none; border: 1.5px solid var(--green); color: var(--green); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: all 0.2s; font-family: inherit; }
     .orginfo-edit-btn:hover { background: var(--green); color: white; }
     .orginfo-edit-form { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
@@ -168,7 +158,6 @@
     .btn-cancel:hover { border-color: #999; color: #555; }
     .orginfo-save-msg { font-size: 13px; color: var(--green); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
 
-    /* 画像アップロードエリア */
     .img-upload-area { border: 2px dashed #E0E0E0; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; background: var(--light); }
     .img-upload-area:hover { border-color: var(--green); background: #F0FBF5; }
     .img-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
@@ -180,7 +169,6 @@
     .logo-preview.has-img { display: block; }
     .upload-progress { font-size: 12px; color: var(--green); font-weight: 700; text-align: center; margin-top: 6px; display: none; }
 
-    /* 団体ヘッダーロゴ */
     .dash-org-logo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 
     @media (max-width: 520px) {
@@ -347,6 +335,7 @@
       <button class="dash-tab active" data-tab="events" onclick="switchTab('events')">📅 イベント</button>
       <button class="dash-tab" data-tab="requests" onclick="switchTab('requests')">📥 問い合わせ</button>
       <button class="dash-tab" data-tab="orginfo" onclick="switchTab('orginfo')">🏢 団体情報</button>
+      <button class="dash-tab" onclick="location.href='plans-manage.html'" style="background:var(--green);color:#fff;border-color:var(--green)">📋 企画管理</button>
     </div>
 
     <!-- イベントタブ（Aカード型） -->
@@ -522,7 +511,6 @@
       });
       const data = await res.json();
 
-      // URLのパラメータを消す
       window.history.replaceState({}, '', window.location.pathname);
 
       if (data.success) {
@@ -530,10 +518,8 @@
         sessionStorage.setItem('acp_line_name', data.line_display_name);
         showDashboard(data.organization, data.line_display_name);
       } else if (data.line_user_id) {
-        // 団体未登録 → 新規登録フォームへ
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         sessionStorage.setItem('acp_line_name', data.line_display_name || '');
-        // 代表者名をLINE表示名で初期設定
         if (data.line_display_name) {
           document.getElementById('reg_rep_name').value = data.line_display_name;
         }
@@ -612,7 +598,6 @@
     const name = lineName || org?.org_name || '';
     document.getElementById('dashOrg').textContent = org?.org_name || '団体名未設定';
     document.getElementById('dashWelcome').textContent = `${name} さん、おかえりなさい 🌿`;
-    // ロゴがあれば画像、なければ絵文字
     const iconEl = document.getElementById('dashOrgIcon');
     if (iconEl) {
       if (org?.logo_url) {
@@ -630,13 +615,12 @@
     return '<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" style="width:56px;height:56px;display:block;"><rect width="56" height="56" fill="#87CEEB"/><ellipse cx="28" cy="56" rx="32" ry="22" fill="#2D9E6B"/><ellipse cx="28" cy="50" rx="20" ry="14" fill="#4CAF78"/><circle cx="42" cy="14" r="7" fill="#FFF176" opacity="0.9"/></svg>';
   }
 
-  // ===== Google風ロゴピッカー =====
-  const CIRCLE_R = 140; // 固定円半径(px)
+  const CIRCLE_R = 140;
   let _cropRotation = 0;
   let _imgScale = 1;
   let _imgX = 0;
   let _imgY = 0;
-  let _logoPickerMode = 'dashboard'; // 'dashboard' | 'form'
+  let _logoPickerMode = 'dashboard';
   let _pendingLogoBlob = null;
 
   function openLogoPicker() {
@@ -661,7 +645,6 @@
     reader.onload = e => {
       const img = document.getElementById('crop-img');
       img.onload = () => {
-        // 円を覚う最小スケールで初期化
         _imgScale = (CIRCLE_R * 2) / Math.min(img.naturalWidth, img.naturalHeight);
         updateCropImgTransform();
       };
@@ -681,7 +664,7 @@
 
   function rotateCropImg() {
     _cropRotation = (_cropRotation + 90) % 360;
-    _imgX = 0; _imgY = 0; // 回転時は位置リセット
+    _imgX = 0; _imgY = 0;
     const img = document.getElementById('crop-img');
     const minScale = (CIRCLE_R * 2) / Math.min(img.naturalWidth, img.naturalHeight);
     if (_imgScale < minScale) _imgScale = minScale;
@@ -720,7 +703,6 @@
       updateCropImgTransform();
     }, { passive: false });
 
-    // タッチ（ドラッグ＋ピンチ）
     let lastDist = 0, lastTX = 0, lastTY = 0;
     area.addEventListener('touchstart', e => {
       e.preventDefault();
@@ -769,13 +751,11 @@
     canvas.width = size; canvas.height = size;
     const ctx = canvas.getContext('2d');
 
-    // 円形クリップ
     ctx.beginPath();
     ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
     ctx.clip();
 
-    // 画面上の円の中身を再現（ドラッグ位置・スケール・回転を反映）
-    const sf = (size / 2) / CIRCLE_R; // 画面px → キャンバスpx
+    const sf = (size / 2) / CIRCLE_R;
     ctx.translate(size/2, size/2);
     ctx.scale(sf, sf);
     ctx.translate(_imgX, _imgY);
@@ -784,7 +764,6 @@
     ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
 
     canvas.toBlob(async blob => {
-      // フォームモード：プレビューだけ更新して保存は後で
       if (_logoPickerMode === 'form') {
         _pendingLogoBlob = blob;
         const blobUrl = URL.createObjectURL(blob);
@@ -797,7 +776,6 @@
         return;
       }
 
-      // ダッシュボードモード：即時アップロード＆DB保存
       const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
       if (!org.id) { closeCropOverlay(); btn.disabled=false; btn.textContent='次へ'; return; }
 
@@ -832,7 +810,6 @@
 
   async function loadDashboard(org) {
     if (!org?.id) {
-      // IDがない場合はデモ表示
       document.getElementById('statEvents').textContent = '0';
       document.getElementById('statRequests').textContent = '0';
       document.getElementById('statNew').textContent = '0';
@@ -843,14 +820,12 @@
     }
 
     try {
-      // イベント取得
       const eventsRes = await fetch(
         `${SUPABASE_URL}/rest/v1/events?organization_id=eq.${org.id}&order=created_at.desc`,
         { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
       );
       const events = eventsRes.ok ? await eventsRes.json() : [];
 
-      // 問い合わせ取得
       let requests = [];
       if (events.length > 0) {
         const ids = events.map(e => e.id).join(',');
@@ -861,7 +836,6 @@
         requests = reqRes.ok ? await reqRes.json() : [];
       }
 
-      // 統計
       document.getElementById('statEvents').textContent = events.length;
       document.getElementById('statRequests').textContent = requests.length;
       const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -1038,7 +1012,6 @@
     btn.disabled = true;
     btn.textContent = '保存中...';
 
-    // ロゴ画像アップロード（クロップ済びつがblobがあればそれを使う）
     let logo_url = org.logo_url || null;
     if (_pendingLogoBlob) {
       const path = `organizations/${org.id}/logo_${Date.now()}.jpg`;
@@ -1089,7 +1062,6 @@
       const newOrg = { ...org, ...updated };
       sessionStorage.setItem('acp_org', JSON.stringify(newOrg));
 
-      // ヘッダーの団体名・ロゴも更新
       document.getElementById('dashOrg').textContent = newOrg.org_name || '';
       const iconEl = document.getElementById('dashOrgIcon');
       if (iconEl && newOrg.logo_url) {
@@ -1112,7 +1084,6 @@
     }
   }
 
-  // ===== 画像アップロード共通関数 =====
   async function uploadImage(file, path) {
     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, {
       method: 'POST',
@@ -1131,7 +1102,6 @@
     return `${SUPABASE_URL}/storage/v1/object/public/images/${path}`;
   }
 
-  // ===== ロゴプレビュー =====
   function previewLogo(input) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
@@ -1147,7 +1117,6 @@
     reader.readAsDataURL(input.files[0]);
   }
 
-  // ===== イベント画像プレビュー =====
   function previewEventImage(input) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
@@ -1160,10 +1129,7 @@
     reader.readAsDataURL(input.files[0]);
   }
 
-  // ===== イベント投稿フォーム表示 =====
   function showEventForm() {
-    // フォームリセット
-    // マッププレビューをリセット
     const mapPreview = document.getElementById('ev_map_preview');
     if (mapPreview) { mapPreview.style.display = 'none'; }
     const mapIframe = document.getElementById('ev_map_iframe');
@@ -1183,7 +1149,6 @@
     showPhase('phase6');
   }
 
-  // ===== Googleマップ確認 =====
   function searchMapLocation() {
     const addr = document.getElementById('ev_location').value.trim();
     if (!addr) {
@@ -1195,7 +1160,6 @@
       'https://maps.google.com/maps?q=' + encoded + '&output=embed&hl=ja';
     document.getElementById('ev_map_preview').style.display = 'block';
     document.getElementById('ev_map_address_display').textContent = addr;
-    // 地図タイプをリセット
     document.getElementById('map_type_road').style.background = '#2D9E6B';
     document.getElementById('map_type_road').style.color = 'white';
     document.getElementById('map_type_road').style.borderColor = '#2D9E6B';
@@ -1225,7 +1189,6 @@
     if (preview) preview.style.display = 'none';
   }
 
-  // ===== イベント保存 =====
   async function saveEvent() {
     const title = document.getElementById('ev_title').value.trim();
     if (!title) {
@@ -1243,7 +1206,6 @@
     document.getElementById('ev_error').style.display = 'none';
 
     try {
-      // 画像アップロード
       let image_url = null;
       const fileInput = document.getElementById('event_image_file');
       if (fileInput.files && fileInput.files[0]) {
@@ -1285,7 +1247,6 @@
         throw new Error(err.message || '投稿に失敗しました。');
       }
 
-      // ダッシュボードに戻ってリロード
       document.querySelector('.page-wrap').classList.add('dashboard-mode');
       showPhase('phase4');
       switchTab('events');
@@ -1317,17 +1278,14 @@
     showPhase('phase1');
   }
 
-  // ページ読み込み時の処理
   window.addEventListener('DOMContentLoaded', () => {
     setupCropInteraction();
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
 
     if (code) {
-      // LINEからのコールバック
       handleLineCallback(code);
     } else {
-      // セッション復元チェック
       const orgStr = sessionStorage.getItem('acp_org');
       if (orgStr) {
         const org = JSON.parse(orgStr);
