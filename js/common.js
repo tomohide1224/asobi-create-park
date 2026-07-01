@@ -37,7 +37,7 @@ function setActiveNav() {
   // about配下のページをグループ化
   const aboutGroup = ['concept.html', 'safety.html', 'guidelines.html', 'about.html'];
 
-  document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+  document.querySelectorAll('.nav-link[data-page], .sp-nav-link[data-page]').forEach(link => {
     const targetPage = link.getAttribute('data-page');
     if (
       targetPage === page ||
@@ -48,13 +48,65 @@ function setActiveNav() {
   });
 }
 
+// ---------- スマホ：ハンバーガーメニュー開閉 ----------
+
+/**
+ * ハンバーガーボタンのクリックでドロワーを開閉する
+ * スマホ専用（PCではボタン自体がCSS非表示）
+ */
+function initHamburger() {
+  const btn = document.getElementById('hamburgerBtn');
+  const nav = document.getElementById('spNav');
+  if (!btn || !nav) return;
+
+  btn.addEventListener('click', () => {
+    const isOpen = btn.classList.toggle('open');
+    nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(isOpen));
+    nav.setAttribute('aria-hidden', String(!isOpen));
+  });
+}
+
+// ---------- スマホ：スクロール方向でヘッダー表示/非表示 ----------
+
+/**
+ * スクロールダウンでヘッダーを隠し、スクロールアップで即表示する
+ * 768px以下のスマホのみ動作
+ */
+function initMobileHeader() {
+  if (window.innerWidth > 768) return;
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+
+  let lastY = window.scrollY;
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > lastY && y > 60) {
+      // 下スクロール：ヘッダーを隠す＋メニューも閉じる
+      header.classList.add('header-hidden');
+      document.getElementById('spNav')?.classList.remove('open');
+      const btn = document.getElementById('hamburgerBtn');
+      if (btn) { btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+    } else {
+      // 上スクロール：即表示
+      header.classList.remove('header-hidden');
+    }
+    lastY = y;
+  }, { passive: true });
+}
+
 // ---------- ヘッダー・フッター読み込み ----------
 
 /**
  * 標準ヘッダー（グロナビ付き）を読み込む
  */
 function loadHeader() {
-  loadComponent('site-header', '/components/header.html', setActiveNav);
+  loadComponent('site-header', '/components/header.html', () => {
+    setActiveNav();
+    initHamburger();
+    initMobileHeader();
+  });
 }
 
 /**

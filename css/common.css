@@ -300,9 +300,89 @@ select.error {
   .header-actions .btn-login { display: none; }
   .header-inner { gap: 12px; }
 }
+
+/* スマホ専用：ハンバーガーメニュー＆ヘッダースクロール制御 */
 @media (max-width: 768px) {
+  /* PC用ナビ・アクションを非表示 */
   .site-nav { display: none; }
+  .header-actions { display: none; }
+
+  /* fixedに切り替え（PCはstickyのまま） */
+  .site-header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    transition: transform 0.3s ease;
+  }
+  .site-header.header-hidden {
+    transform: translateY(-100%);
+  }
+  /* fixedにした分のオフセット */
+  body { padding-top: 64px; }
+
+  /* ハンバーガーボタン */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: auto;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--navy);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* スマホ用ドロワーメニュー */
+  .sp-nav {
+    display: none;
+    flex-direction: column;
+    background: white;
+    border-top: 1px solid #eee;
+    padding: 8px 0 16px;
+  }
+  .sp-nav.open { display: flex; }
+  .sp-nav-link {
+    padding: 14px 24px;
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .sp-nav-link:hover { background: #f8f9fa; }
+  .sp-nav-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 24px 0;
+  }
+  .sp-nav-actions .btn-login,
+  .sp-nav-actions .btn-register {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 24px;
+  }
 }
+
+/* PCではハンバーガー・ドロワーを完全非表示 */
+@media (min-width: 769px) {
+  .hamburger { display: none; }
+  .sp-nav { display: none !important; }
+}
+
 @media (max-width: 480px) {
   .header-inner { padding-left: 16px; padding-right: 16px; gap: 8px; }
   .btn-register { padding: 8px 10px; font-size: 11px; }
