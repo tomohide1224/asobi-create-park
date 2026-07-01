@@ -139,6 +139,42 @@ body {
   .logo-image { height: 32px; }
 }
 
+/* ---------- メンバー向けヘッダー（企画者/支援者） ---------- */
+.site-header.member-header {
+  background: var(--navy);
+  border-bottom-color: rgba(255,255,255,0.08);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.member-header .nav-link {
+  color: rgba(255,255,255,0.72);
+}
+.member-header .nav-link:hover,
+.member-header .nav-link.active {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.btn-dashboard {
+  background: var(--green);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.btn-dashboard:hover { opacity: 0.85; }
+.member-header-back {
+  color: rgba(255,255,255,0.55);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: auto;
+  transition: color 0.2s;
+}
+.member-header-back:hover { color: #fff; }
+
 /* ---------- フッター ---------- */
 footer {
   background: var(--navy);
@@ -369,12 +405,25 @@ select.error {
     padding: 16px 24px 0;
   }
   .sp-nav-actions .btn-login,
-  .sp-nav-actions .btn-register {
+  .sp-nav-actions .btn-register,
+  .sp-nav-actions .btn-dashboard {
     display: block;
     text-align: center;
     padding: 12px;
     border-radius: 24px;
   }
+
+  /* メンバーヘッダーのSP上書き */
+  .member-header .hamburger span { background: rgba(255,255,255,0.9); }
+  .member-header .sp-nav {
+    background: var(--navy);
+    border-top-color: rgba(255,255,255,0.1);
+  }
+  .member-header .sp-nav-link {
+    color: rgba(255,255,255,0.85);
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+  .member-header .sp-nav-link:hover { background: rgba(255,255,255,0.07); }
 }
 
 /* PCではハンバーガー・ドロワーを完全非表示 */

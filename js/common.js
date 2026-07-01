@@ -28,15 +28,10 @@ async function loadComponent(id, path, callback) {
 
 /**
  * 現在のページに対応するナビリンクにactiveクラスを付与する
- * data-page属性で対応ページを指定。
- * サブページ（concept/safety/guidelinesなど）はdata-parent属性でグループ指定。
  */
 function setActiveNav() {
   const page = window.location.pathname.split('/').pop() || 'index.html';
-
-  // about配下のページをグループ化
   const aboutGroup = ['concept.html', 'safety.html', 'guidelines.html', 'about.html'];
-
   document.querySelectorAll('.nav-link[data-page], .sp-nav-link[data-page]').forEach(link => {
     const targetPage = link.getAttribute('data-page');
     if (
@@ -50,15 +45,10 @@ function setActiveNav() {
 
 // ---------- スマホ：ハンバーガーメニュー開閉 ----------
 
-/**
- * ハンバーガーボタンのクリックでドロワーを開閉する
- * スマホ専用（PCではボタン自体がCSS非表示）
- */
 function initHamburger() {
   const btn = document.getElementById('hamburgerBtn');
   const nav = document.getElementById('spNav');
   if (!btn || !nav) return;
-
   btn.addEventListener('click', () => {
     const isOpen = btn.classList.toggle('open');
     nav.classList.toggle('open');
@@ -69,27 +59,19 @@ function initHamburger() {
 
 // ---------- スマホ：スクロール方向でヘッダー表示/非表示 ----------
 
-/**
- * スクロールダウンでヘッダーを隠し、スクロールアップで即表示する
- * 768px以下のスマホのみ動作
- */
 function initMobileHeader() {
   if (window.innerWidth > 768) return;
   const header = document.querySelector('.site-header');
   if (!header) return;
-
   let lastY = window.scrollY;
-
   window.addEventListener('scroll', () => {
     const y = window.scrollY;
     if (y > lastY && y > 60) {
-      // 下スクロール：ヘッダーを隠す＋メニューも閉じる
       header.classList.add('header-hidden');
       document.getElementById('spNav')?.classList.remove('open');
       const btn = document.getElementById('hamburgerBtn');
       if (btn) { btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
     } else {
-      // 上スクロール：即表示
       header.classList.remove('header-hidden');
     }
     lastY = y;
@@ -99,7 +81,7 @@ function initMobileHeader() {
 // ---------- ヘッダー・フッター読み込み ----------
 
 /**
- * 標準ヘッダー（グロナビ付き）を読み込む
+ * 一般向けヘッダー（グロナビ付き）を読み込む
  */
 function loadHeader() {
   loadComponent('site-header', '/components/header.html', () => {
@@ -110,7 +92,27 @@ function loadHeader() {
 }
 
 /**
- * シンプルヘッダー（ロゴのみ）を読み込む — login.htmlで使用
+ * メンバー向けヘッダー（企画者/支援者）を読み込む
+ * cases.html / textbooks.html などで使用
+ */
+function loadHeaderMember() {
+  loadComponent('site-header', '/components/header-member.html', () => {
+    setActiveNav();
+    initHamburger();
+    initMobileHeader();
+  });
+}
+
+/**
+ * メンバー向けシンプルヘッダー（ロゴのみ）を読み込む
+ * login.html で使用
+ */
+function loadHeaderMemberSimple() {
+  loadComponent('site-header', '/components/header-member-simple.html');
+}
+
+/**
+ * シンプルヘッダー（ロゴのみ）を読み込む
  */
 function loadHeaderSimple() {
   loadComponent('site-header', '/components/header-simple.html');
@@ -118,8 +120,6 @@ function loadHeaderSimple() {
 
 /**
  * 管理ヘッダー（戻るリンク付き）を読み込む
- * @param {string} [backLabel] - 戻るリンクのテキスト（省略時は「← 管理画面に戻る」）
- * @param {string} [backHref]  - 戻るリンクのURL（省略時は /login.html）
  */
 function loadHeaderAdmin(backLabel, backHref) {
   loadComponent('site-header', '/components/header-admin.html', () => {
