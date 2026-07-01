@@ -3,38 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>メッセージ | ASOBI CREATE PARK</title>
+  <title>お問い合わせ一覧 | ASOBI CREATE PARK</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/pages/messages.css">
 </head>
 <body>
 
-<!-- カスタムヘッダー（緑背景・戻るボタン） -->
-<div class="msg-header">
-  <button class="msg-back" id="backBtn" onclick="goBack()">&#8592;</button>
-  <div class="msg-header-info">
-    <div class="msg-header-name" id="headerName">読み込み中...</div>
-    <div class="msg-header-plan" id="headerPlan"></div>
-  </div>
-  <span class="hand-status" id="handStatus"></span>
-</div>
+<div id="site-header"></div>
 
-<!-- メッセージリスト -->
-<div class="msg-list" id="msgList">
-  <div class="msg-center">
-    <div class="msg-center-icon spin">&#9881;</div>
-    <div class="msg-center-text">読み込み中...</div>
+<div class="msg-hero">
+  <div class="msg-hero-inner">
+    <div class="hero-badge">MEMBER</div>
+    <h1 class="hero-title">📬 お問い合わせ一覧</h1>
+    <p class="hero-desc" id="orgName">読み込み中...</p>
   </div>
 </div>
 
-<!-- 入力エリア -->
-<div class="msg-input-area" id="inputArea">
-  <textarea class="msg-textarea" id="msgInput" placeholder="メッセージを入力..." rows="1"
-    oninput="autoResize(this)" onkeydown="handleKeydown(event)"></textarea>
-  <button class="msg-send-btn" id="sendBtn" onclick="sendMessage()" disabled>&#9658;</button>
+<div class="msg-filter-wrap">
+  <div class="msg-filter">
+    <button class="filter-btn active" data-type="all" onclick="setFilter('all')">すべて <span class="filter-cnt" id="cnt-all"></span></button>
+    <button class="filter-btn" data-type="participate" onclick="setFilter('participate')">参加希望 <span class="filter-cnt" id="cnt-participate"></span></button>
+    <button class="filter-btn" data-type="help" onclick="setFilter('help')">手伝い希望 <span class="filter-cnt" id="cnt-help"></span></button>
+    <button class="filter-btn" data-type="inquiry" onclick="setFilter('inquiry')">お問い合わせ <span class="filter-cnt" id="cnt-inquiry"></span></button>
+  </div>
 </div>
 
-<script src="/js/pages/messages.js"></script>
+<div class="msg-list-wrap">
+  <div id="msg-loading" class="msg-state">⚙️ 読み込み中...</div>
+  <div id="msg-empty" class="msg-state" style="display:none">💭 まだ問い合わせはありません<br><small>イベントへの参加希望・支援・お問い合わせが届くと、ここに表示されます。</small></div>
+  <div id="msg-error" class="msg-state msg-state-error" style="display:none">⚠️ 読み込みに失敗しました。<br>再度ページを開いてください。</div>
+  <div id="msg-list"></div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script>
+  loadHeaderMember();
+  loadFooter();
+
+  const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+
+  let allRequests = [];
+  let allEvents = {};
+  let currentFilter = 'all';
+
+  const typeLabel = { participate: '参加希望', help: '手伝い希望', inquiry: 'お問い合わせ' };
+  const typeClass = { participate: 'type-participate', help: 'type-help', inquiry: 'type-inquiry' };
+
+  function setFilter(type) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+    renderList();
+  }
+
+  function updateCounts() {
+    ['all', 'participate', 'help', 'inquiry'].forEach(t => {
+      const cnt = t === 'all' ? allRequests.length : allRequests.filter(r => r.request_type === t).length;
+      const el = document.getElementById('cnt-' + t);
+      if (el) el.textContent = cnt > 0 ? cnt : '';
+    });
+  }
+
+  function renderList() {
+    const filtered = currentFilter === 'all'
+      ? allRequests
+      : allRequests.filter(r => r.request_type === currentFilter);
+    const el = document.getElementById('msg-list');
+
+    if (filtered.length === 0) {
+      document.getElementById('msg-empty').style.display = 'block';
+      el.innerHTML = '';
+      return;
+    }
+    document.getElementById('msg-empty').style.display = 'none';
+
+    el.innerHTML = filtered.map(r => {
+      const ev = allEvents[r.event_id] || {};
+      const d = new Date(r.created_at);
+      const date = d.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+        + ' ' + d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+      const type = typeLabel[r.request_type] || 'お問い合わせ';
+      const tClass = typeClass[r.request_type] || 'type-inquiry';
+      const imgHtml = ev.image_url
+        ? `<img src="${escHtml(ev.image_url)}" class="msg-event-img" alt="">`
+        : `<div class="msg-event-img-placeholder">🎦</div>`;
+
+      return `<div class="msg-card">
+        <div class="msg-card-event">
+          ${imgHtml}
+          <div class="msg-event-info">
+            <div class="msg-event-title">${escHtml(ev.title || 'イベント不明')}</div>
+            <div class="msg-event-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? '　📍 ' + escHtml(ev.location) : ''}</div>
+          </div>
+        </div>
+        <div class="msg-card-header">
+          <span class="msg-type ${tClass}">${type}</span>
+          <strong class="msg-sender">${escHtml(r.name || '匿名')}</strong>
+          <span class="msg-date">${date}</span>
+        </div>
+        ${r.message
+          ? `<div class="msg-body">${escHtml(r.message)}</div>`
+          : `<div class="msg-body msg-no-text">（メッセージなし）</div>`
+        }
+      </div>`;
+    }).join('');
+  }
+
+  async function loadMessages() {
+    const orgStr = sessionStorage.getItem('acp_org');
+    if (!orgStr) { window.location.href = '/login.html'; return; }
+
+    const org = JSON.parse(orgStr);
+    document.getElementById('orgName').textContent = org.org_name + ' へのお問い合わせ';
+
+    try {
+      const evRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/events?organization_id=eq.${org.id}&order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      const events = evRes.ok ? await evRes.json() : [];
+      events.forEach(e => { allEvents[e.id] = e; });
+
+      document.getElementById('msg-loading').style.display = 'none';
+
+      if (events.length === 0) {
+        document.getElementById('msg-empty').style.display = 'block';
+        return;
+      }
+
+      const ids = events.map(e => e.id).join(',');
+      const reqRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/participation_requests?event_id=in.(${ids})&order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      allRequests = reqRes.ok ? await reqRes.json() : [];
+
+      updateCounts();
+      renderList();
+    } catch(e) {
+      document.getElementById('msg-loading').style.display = 'none';
+      document.getElementById('msg-error').style.display = 'block';
+    }
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.addEventListener('DOMContentLoaded', loadMessages);
+</script>
 </body>
 </html>
