@@ -90,11 +90,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="logo" href="index.html">
-      <div class="logo-icon">🌿</div>
-      <div class="logo-text">
-        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
-        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
-      </div>
+      <img src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。" style="height:40px;width:auto;display:block;">
     </a>
     <nav class="header-nav">
       <a href="index.html">トップ</a>
@@ -314,7 +310,7 @@
       ['タグ', (book.tags || []).join(', ')],
       ['作成日', book.created_at ? new Date(book.created_at).toLocaleDateString('ja-JP') : ''],
     ];
-    var safeName = (book.title || 'textbook').replace(/[/\\:*?"<>|]/g, '_').slice(0, 40);
+    var safeName = (book.title || 'textbook').replace(/[\/\\:*?"<>|]/g, '_').slice(0, 40);
     exportExcel(rows, 'ACP_' + safeName);
   }
 
@@ -323,7 +319,6 @@
     var wb = XLSX.utils.book_new();
     var ws = XLSX.utils.aoa_to_sheet(rows);
 
-    // 列幅調整
     ws['!cols'] = rows[0].map(function(_, i) {
       var maxLen = rows.reduce(function(max, row) {
         return Math.max(max, String(row[i] || '').length);
@@ -348,7 +343,6 @@
     return map[cat] || '📚';
   }
 
-  // ESCキーでモーダルを閉じる
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModalDirect();
   });
