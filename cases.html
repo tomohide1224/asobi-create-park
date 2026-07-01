@@ -12,7 +12,7 @@
 
     .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo { display: flex; align-items: center; text-decoration: none; }
     .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
     .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
     .logo-main span { color: var(--green); }
@@ -66,8 +66,6 @@
     .case-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
     .case-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; background: #F0F0F0; color: #555; }
     .case-desc { font-size: 13px; color: #555; line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .case-meta { display: flex; gap: 16px; margin-top: 10px; }
-    .case-meta-item { font-size: 11px; color: var(--gray); }
     .case-arrow { display: flex; align-items: center; padding: 0 16px; color: var(--green); font-size: 20px; }
 
     .cat-1 { background: #E8F5E9; color: #2D9E6B; }
@@ -140,11 +138,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="logo" href="index.html">
-      <div class="logo-icon">🌿</div>
-      <div class="logo-text">
-        <div class="logo-main">ASOBI <span>CREATE PARK</span></div>
-        <div class="logo-sub">あそびをつくる人へ、関わる人をつなぐ</div>
-      </div>
+      <img src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。" style="height:40px;width:auto;display:block;">
     </a>
     <nav class="site-nav">
       <a href="events.html" class="nav-link">あそびを探す</a>
@@ -357,7 +351,7 @@
         ${ev.location ? `<div class="info-item"><div class="info-label">📍 実施場所</div><div class="info-value">${ev.location}</div></div>` : ''}
         ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${ev.target_audience}</div></div>` : ''}
         <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${ev.fee || '無料'}</div></div>
-        ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 参加人数</div><div class="info-value">約4${ev.max_participants}名</div></div>` : ''}
+        ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 参加人数</div><div class="info-value">約${ev.max_participants}名</div></div>` : ''}
         ${ev.tools_needed ? `<div class="info-item" style="grid-column:1/-1"><div class="info-label">🛠️ 必要な道具・準備物</div><div class="info-value" style="font-weight:400;font-size:13px">${ev.tools_needed}</div></div>` : ''}
       </div>
       ${ev.knowhow_summary ? `
