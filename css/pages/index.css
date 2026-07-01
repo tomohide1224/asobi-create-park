@@ -3,7 +3,7 @@
 
 body { background: var(--bg); }
 
-/* ─── ヒーロー（PC: 画像の上にテキストをオーバーレイ） ─── */
+/* ─── ヒーロー（PC） ─── */
 .hero {
   position: relative;
   width: 100%;
@@ -146,6 +146,7 @@ body { background: var(--bg); }
     pointer-events: none;
   }
 
+  /* テキストエリアを画像に重ねて引き上げる */
   .hero-text {
     position: relative;
     top: unset;
@@ -153,6 +154,7 @@ body { background: var(--bg); }
     width: 100%;
     height: auto;
     background: white;
+    margin-top: -28px;
     padding: 8px 16px 12px;
   }
   .hero-text h1 {
