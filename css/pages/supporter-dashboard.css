@@ -1,0 +1,60 @@
+/* supporter-dashboard.html 固有スタイル */
+body { min-height: 100vh; display: flex; flex-direction: column; background: var(--light); }
+
+.sup-hero { background: var(--green-light); padding: 24px 20px; }
+.sup-hero-inner { max-width: 680px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+.sup-hero-avatar { width: 56px; height: 56px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); flex-shrink: 0; }
+.sup-hero-name { font-size: 20px; font-weight: 900; color: white; }
+.sup-hero-sub { font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 2px; }
+
+.sup-main { flex: 1; max-width: 680px; margin: 0 auto; width: 100%; padding: 20px 16px 40px; }
+
+.sup-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.sup-stat { background: white; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.sup-stat-num { font-size: 28px; font-weight: 900; color: var(--green); }
+.sup-stat-label { font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+.sup-filter { display: flex; gap: 8px; margin-bottom: 16px; }
+.sup-filter-btn { flex: 1; background: white; border: 1.5px solid #E0E0E0; color: var(--gray); padding: 10px 6px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.sup-filter-btn.active { background: var(--green); border-color: var(--green); color: white; }
+
+.sup-loading { text-align: center; padding: 40px; color: var(--gray); font-size: 13px; }
+.sup-empty { text-align: center; padding: 48px 20px; color: var(--gray); font-size: 14px; line-height: 2; background: white; border-radius: 16px; }
+
+.sup-card { background: white; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 12px; overflow: hidden; }
+.sup-card-event { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #F5F5F5; }
+.sup-card-thumb { width: 56px; height: 56px; border-radius: 10px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; overflow: hidden; }
+.sup-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.sup-card-event-name { font-size: 14px; font-weight: 800; color: var(--navy); line-height: 1.4; }
+.sup-card-event-meta { font-size: 11px; color: var(--gray); margin-top: 3px; }
+
+.sup-card-body { padding: 14px 16px; }
+.sup-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sup-type { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
+.type-participate { background: #E3F2FD; color: #1565C0; }
+.type-help { background: #F3E5F5; color: #6A1B9A; }
+.type-inquiry { background: #FFF3E0; color: #E65100; }
+.sup-card-date { font-size: 11px; color: var(--gray); }
+.sup-card-msg { font-size: 13px; color: #555; line-height: 1.7; background: var(--light); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; }
+
+.sup-pending-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #F57F17; font-weight: 700; background: #FFF8E1; padding: 6px 12px; border-radius: 20px; margin-bottom: 8px; }
+
+.sup-reply { background: #E8F5E9; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+.sup-reply-label { font-size: 11px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+.sup-reply-text { font-size: 13px; color: var(--navy); line-height: 1.7; }
+.sup-reply-date { font-size: 11px; color: var(--gray); margin-top: 6px; text-align: right; }
+
+.sup-line-btn { display: block; text-align: center; background: #06C755; color: white; padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: 800; text-decoration: none; margin-top: 8px; transition: opacity 0.2s; }
+.sup-line-btn:hover { opacity: 0.9; }
+
+.btn-logout { width: 100%; background: none; border: 1.5px solid #ddd; color: #888; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 24px; transition: all 0.2s; font-family: inherit; }
+.btn-logout:hover { border-color: #E53935; color: #E53935; }
+
+footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
+footer strong { color: white; }
+
+@media (max-width: 480px) {
+  .sup-stats-row { gap: 8px; }
+  .sup-stat-num { font-size: 22px; }
+  .sup-stat { padding: 12px 8px; }
+}

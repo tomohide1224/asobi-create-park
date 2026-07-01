@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支援者ダッシュボード | ASOBI CREATE PARK</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/pages/supporter-dashboard.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="sup-hero">
+  <div class="sup-hero-inner">
+    <div class="sup-hero-avatar">🤝</div>
+    <div>
+      <div class="sup-hero-name" id="supName">支援者</div>
+      <div class="sup-hero-sub">✅ LINE連携済み</div>
+    </div>
+  </div>
+</section>
+
+<main class="sup-main">
+
+  <div class="sup-stats-row">
+    <div class="sup-stat">
+      <div class="sup-stat-num" id="statTotal">-</div>
+      <div class="sup-stat-label">問い合わせ総数</div>
+    </div>
+    <div class="sup-stat">
+      <div class="sup-stat-num" id="statPending">-</div>
+      <div class="sup-stat-label">回答待ち</div>
+    </div>
+    <div class="sup-stat">
+      <div class="sup-stat-num" id="statReplied">-</div>
+      <div class="sup-stat-label">回答済み</div>
+    </div>
+  </div>
+
+  <div class="sup-filter">
+    <button class="sup-filter-btn active" data-filter="all" onclick="applyFilter('all')">すべて</button>
+    <button class="sup-filter-btn" data-filter="pending" onclick="applyFilter('pending')">回答待ち</button>
+    <button class="sup-filter-btn" data-filter="replied" onclick="applyFilter('replied')">回答済み</button>
+  </div>
+
+  <div id="sup-list">
+    <div class="sup-loading">⚙️ 読み込み中...</div>
+  </div>
+
+  <button class="btn-logout" onclick="signOut()">ログアウト</button>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script>
+  loadHeaderMember();
+  loadFooter();
+</script>
+<script>
+  const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+
+  let allRequests = [];
+  let allEvents = {};
+  let allOrgs = {};
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const supporterStr = sessionStorage.getItem('acp_supporter');
+    if (!supporterStr) {
+      window.location.href = '/login.html';
+      return;
+    }
+    const supporter = JSON.parse(supporterStr);
+    const lineName = sessionStorage.getItem('acp_line_name') || supporter.display_name || '支援者';
+    document.getElementById('supName').textContent = lineName;
+    await loadRequests(supporter);
+  });
+
+  async function loadRequests(supporter) {
+    const line_user_id = sessionStorage.getItem('acp_line_user_id') || supporter.line_user_id;
+    if (!line_user_id) {
+      document.getElementById('sup-list').innerHTML = '<div class="sup-empty">⚠️ ユーザー情報が取得できませんでした</div>';
+      return;
+    }
+    try {
+      const reqRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/participation_requests?line_user_id=eq.${encodeURIComponent(line_user_id)}&order=created_at.desc`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      allRequests = reqRes.ok ? await reqRes.json() : [];
+
+      if (allRequests.length > 0) {
+        const eventIds = [...new Set(allRequests.map(r => r.event_id).filter(Boolean))].join(',');
+        if (eventIds) {
+          const evRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/events?id=in.(${eventIds})`,
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+          );
+          const events = evRes.ok ? await evRes.json() : [];
+          events.forEach(e => { allEvents[e.id] = e; });
+
+          const orgIds = [...new Set(events.map(e => e.organization_id).filter(Boolean))].join(',');
+          if (orgIds) {
+            const orgRes = await fetch(
+              `${SUPABASE_URL}/rest/v1/organizations?id=in.(${orgIds})&select=id,org_name,line_basic_id`,
+              { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+            );
+            const orgs = orgRes.ok ? await orgRes.json() : [];
+            orgs.forEach(o => { allOrgs[o.id] = o; });
+          }
+        }
+      }
+
+      const total = allRequests.length;
+      const replied = allRequests.filter(r => r.reply).length;
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statPending').textContent = total - replied;
+      document.getElementById('statReplied').textContent = replied;
+
+      renderList(allRequests);
+    } catch(e) {
+      document.getElementById('sup-list').innerHTML = '<div class="sup-empty">⚠️ データの読み込みに失敗しました</div>';
+    }
+  }
+
+  function applyFilter(filter) {
+    document.querySelectorAll('.sup-filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+    let filtered = allRequests;
+    if (filter === 'pending') filtered = allRequests.filter(r => !r.reply);
+    if (filter === 'replied') filtered = allRequests.filter(r => r.reply);
+    renderList(filtered);
+  }
+
+  function renderList(requests) {
+    const el = document.getElementById('sup-list');
+    if (requests.length === 0) {
+      el.innerHTML = '<div class="sup-empty">💭 まだ問い合わせはありません<br><small>イベント詳細ページから問い合わせできます</small></div>';
+      return;
+    }
+    const typeLabel = { participate: '参加希望', help: '手伝い希望', inquiry: 'お問い合わせ' };
+    const typeClass = { participate: 'type-participate', help: 'type-help', inquiry: 'type-inquiry' };
+
+    const cards = requests.map(r => {
+      const ev = allEvents[r.event_id] || {};
+      const org = allOrgs[ev.organization_id] || {};
+      const type = typeLabel[r.request_type] || r.request_type || 'お問い合わせ';
+      const tClass = typeClass[r.request_type] || 'type-inquiry';
+      const date = new Date(r.created_at).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+      const imgHtml = ev.image_url ? `<img src="${escHtml(ev.image_url)}" alt="">` : '🎦';
+
+      const replyHtml = r.reply
+        ? `<div class="sup-reply">
+            <div class="sup-reply-label">📨 企画者からの回答</div>
+            <div class="sup-reply-text">${escHtml(r.reply)}</div>
+            <div class="sup-reply-date">${new Date(r.replied_at).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })}</div>
+          </div>`
+        : `<div class="sup-pending-badge">⏳ 回答待ち</div>`;
+
+      const lineBtn = org.line_basic_id
+        ? `<a href="https://line.me/R/ti/p/${escHtml(org.line_basic_id)}" target="_blank" rel="noopener" class="sup-line-btn">💬 LINEで直接質問する</a>`
+        : '';
+
+      return `<div class="sup-card">
+        <div class="sup-card-event">
+          <div class="sup-card-thumb">${imgHtml}</div>
+          <div class="sup-card-event-info">
+            <div class="sup-card-event-name">${escHtml(ev.title || 'イベント不明')}</div>
+            <div class="sup-card-event-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>
+          </div>
+        </div>
+        <div class="sup-card-body">
+          <div class="sup-card-header">
+            <span class="sup-type ${tClass}">${escHtml(type)}</span>
+            <span class="sup-card-date">${date}</span>
+          </div>
+          ${r.message ? `<div class="sup-card-msg">${escHtml(r.message)}</div>` : ''}
+          ${replyHtml}
+          ${lineBtn}
+        </div>
+      </div>`;
+    }).join('');
+
+    el.innerHTML = cards;
+  }
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function signOut() {
+    sessionStorage.removeItem('acp_supporter');
+    sessionStorage.removeItem('acp_line_name');
+    sessionStorage.removeItem('acp_line_user_id');
+    window.location.href = '/login.html';
+  }
+</script>
+</body>
+</html>
