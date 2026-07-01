@@ -4,160 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>支援者ログイン — ASOBI CREATE PARK</title>
-<style>
-:root {
-  --orange: #FF6B35;
-  --green: #2D9E6B;
-  --green-light: #4CAF78;
-  --navy: #1A1A2E;
-  --light: #F8F9FA;
-  --gray: #6C757D;
-  --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', sans-serif; background: #FAFAF8; color: var(--navy); min-height: 100vh; }
-
-/* Header */
-.site-header { background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; max-width: 1200px; margin: 0 auto; }
-.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.logo-icon { font-size: 24px; }
-.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
-.logo-main { font-size: 15px; font-weight: 900; letter-spacing: 1px; color: var(--navy); }
-.logo-main span { color: var(--orange); }
-.logo-sub { font-size: 10px; color: var(--gray); letter-spacing: 0.5px; }
-.header-back { font-size: 13px; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 4px; }
-.header-back:hover { color: var(--navy); }
-
-/* Phase wrapper */
-.phase { display: none; }
-.phase.active { display: block; }
-
-/* ===== PHASE 1: ログイン ===== */
-.login-wrap { max-width: 480px; margin: 60px auto; padding: 0 20px; text-align: center; }
-.login-badge { display: inline-block; background: var(--green); color: white; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 1px; }
-.login-wrap h1 { font-size: 26px; font-weight: 900; margin-bottom: 10px; }
-.login-wrap .subtitle { font-size: 14px; color: var(--gray); margin-bottom: 40px; line-height: 1.6; }
-.btn-line-green {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  background: #06C755; color: white; border: none; border-radius: 12px;
-  padding: 16px 24px; font-size: 16px; font-weight: 700; width: 100%;
-  cursor: pointer; transition: all 0.2s; margin-bottom: 12px;
-}
-.btn-line-green:hover { background: #05a847; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(6,199,85,0.3); }
-.btn-line-green .line-logo { width: 24px; height: 24px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #06C755; }
-.login-note { font-size: 12px; color: var(--gray); margin-top: 20px; line-height: 1.6; }
-.login-features { background: white; border-radius: 16px; padding: 24px; margin: 32px 0; text-align: left; box-shadow: var(--card-shadow); }
-.login-features h3 { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
-.feature-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-.feature-item:last-child { border-bottom: none; }
-.feature-icon { font-size: 20px; width: 32px; text-align: center; }
-.organizer-link { display: block; margin-top: 24px; font-size: 13px; color: var(--gray); text-decoration: none; }
-.organizer-link:hover { color: var(--navy); }
-
-/* ===== PHASE 2: ローディング ===== */
-.loading-wrap { max-width: 480px; margin: 100px auto; padding: 0 20px; text-align: center; }
-.spinner { width: 48px; height: 48px; border: 4px solid #eee; border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-wrap p { color: var(--gray); font-size: 15px; }
-
-/* ===== PHASE 3: エラー ===== */
-.error-wrap { max-width: 480px; margin: 100px auto; padding: 0 20px; text-align: center; }
-.error-icon { font-size: 48px; margin-bottom: 16px; }
-.error-wrap h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-#errorMsg { font-size: 14px; color: var(--gray); margin-bottom: 24px; }
-.btn-retry { background: var(--green); color: white; border: none; border-radius: 10px; padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer; }
-
-/* ===== PHASE 4: 新規登録フォーム ===== */
-.reg-wrap { max-width: 480px; margin: 60px auto; padding: 0 20px; }
-.reg-card { background: white; border-radius: 20px; padding: 32px; box-shadow: var(--card-shadow); }
-.reg-card h2 { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
-.reg-card .reg-sub { font-size: 13px; color: var(--gray); margin-bottom: 28px; line-height: 1.6; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--navy); }
-.form-group input { width: 100%; border: 2px solid #e8e8e8; border-radius: 10px; padding: 12px 14px; font-size: 15px; transition: border-color 0.2s; }
-.form-group input:focus { outline: none; border-color: var(--green); }
-.form-hint { font-size: 11px; color: var(--gray); margin-top: 4px; }
-.form-line-preview { background: #f8f8f8; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-.form-line-preview img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.btn-register { background: var(--green); color: white; border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
-.btn-register:hover { background: var(--green-light); }
-.btn-register:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* ===== PHASE 5: ダッシュボード ===== */
-.dash-wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
-.dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.dash-user { display: flex; align-items: center; gap: 12px; }
-.dash-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
-.dash-avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: 700; }
-.dash-name { font-size: 16px; font-weight: 700; }
-.dash-role { font-size: 12px; color: var(--green); font-weight: 700; }
-.btn-logout { background: transparent; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 13px; color: var(--gray); cursor: pointer; }
-.btn-logout:hover { border-color: var(--navy); color: var(--navy); }
-
-/* Tabs */
-.tab-nav { display: flex; gap: 0; border-bottom: 2px solid #eee; margin-bottom: 28px; }
-.tab-btn { background: none; border: none; padding: 12px 20px; font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
-.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
-
-/* Plans list */
-.plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-.plan-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); transition: transform 0.2s; }
-.plan-card:hover { transform: translateY(-4px); }
-.plan-img { width: 100%; height: 160px; object-fit: cover; background: linear-gradient(135deg, #f0faf5, #e8f5ee); display: flex; align-items: center; justify-content: center; font-size: 40px; }
-.plan-body { padding: 16px; }
-.plan-status { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
-.plan-status.recruiting { background: #e8f5ee; color: var(--green); }
-.plan-status.closed { background: #f0f0f0; color: var(--gray); }
-.plan-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
-.plan-org { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
-.plan-meta { font-size: 12px; color: var(--gray); display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
-.plan-actions { display: flex; gap: 8px; }
-.btn-fav { flex: 1; background: white; border: 2px solid #eee; border-radius: 8px; padding: 8px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-.btn-fav.active { border-color: #ff4d6d; color: #ff4d6d; }
-.btn-fav:hover { border-color: #ff4d6d; color: #ff4d6d; }
-.btn-hand { flex: 2; background: var(--green); color: white; border: none; border-radius: 8px; padding: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-.btn-hand.active { background: var(--gray); cursor: default; }
-.btn-hand:hover:not(.active) { background: var(--green-light); }
-
-/* Empty state */
-.empty-state { text-align: center; padding: 60px 20px; }
-.empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
-.empty-state p { color: var(--gray); font-size: 15px; }
-
-/* Modal */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
-.modal-overlay.open { display: flex; }
-.modal { background: white; border-radius: 20px; padding: 28px; max-width: 440px; width: 100%; }
-.modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-.modal p { font-size: 14px; color: var(--gray); margin-bottom: 20px; }
-.modal textarea { width: 100%; border: 2px solid #eee; border-radius: 10px; padding: 12px; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 16px; font-family: inherit; }
-.modal textarea:focus { outline: none; border-color: var(--green); }
-.modal-actions { display: flex; gap: 10px; }
-.btn-modal-cancel { flex: 1; background: white; border: 2px solid #eee; border-radius: 10px; padding: 12px; font-size: 14px; cursor: pointer; }
-.btn-modal-submit { flex: 2; background: var(--green); color: white; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; }
-.btn-modal-submit:hover { background: var(--green-light); }
-
-@media (max-width: 600px) {
-  .plans-grid { grid-template-columns: 1fr; }
-  .tab-btn { padding: 10px 12px; font-size: 12px; }
-  .header-inner { padding: 12px 16px; }
-}
-</style>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/pages/supporter.css">
 </head>
 <body>
 
-<!-- Header -->
-<header class="site-header">
-  <div class="header-inner">
-    <a href="index.html" class="logo">
-      <img src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。" style="height:40px;width:auto;display:block;">
-    </a>
-    <a href="index.html" class="header-back">← トップへ戻る</a>
-  </div>
-</header>
+<div id="site-header"></div>
 
 <!-- PHASE 1: ログイン画面 -->
 <div id="phase1" class="phase active">
@@ -479,6 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (saved) { try { showDashboard(JSON.parse(saved), null); return; } catch(e) {} }
   showPhase('phase1');
 });
+</script>
+<script src="/js/common.js"></script>
+<script>
+  loadHeaderAdmin('← トップへ戻る', '/index.html');
 </script>
 </body>
 </html>

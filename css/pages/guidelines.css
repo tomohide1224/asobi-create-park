@@ -1,0 +1,29 @@
+/* guidelines.html 固有スタイル */
+
+.page-hero { background: linear-gradient(135deg, #3d2b1f, #6d4c3b); }
+
+.page-body { max-width: 800px; margin: 0 auto; padding: 56px 24px 80px; }
+
+.updated-notice { background: var(--light); border-radius: 12px; padding: 14px 20px; font-size: 13px; color: var(--gray); margin-bottom: 40px; }
+
+.section { margin-bottom: 48px; }
+.section-title { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #F0F0F0; display: flex; align-items: center; gap: 10px; }
+.body-text { font-size: 15px; color: #444; line-height: 2.1; margin-bottom: 12px; }
+
+.rule-list { margin-top: 16px; }
+.rule-item { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid #F5F5F5; align-items: flex-start; }
+.rule-item:last-child { border-bottom: none; }
+.rule-icon { font-size: 24px; flex-shrink: 0; width: 36px; text-align: center; }
+.rule-content { flex: 1; }
+.rule-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+.rule-desc { font-size: 13px; color: #666; line-height: 1.9; }
+
+.prohibited-list { background: #FFF5F5; border: 2px solid #FFCDD2; border-radius: 16px; padding: 24px; margin-top: 16px; }
+.prohibited-title { font-size: 14px; font-weight: 800; color: #C62828; margin-bottom: 16px; }
+.prohibited-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 14px; color: #555; line-height: 1.7; }
+.prohibited-item:last-child { margin-bottom: 0; }
+.prohibited-item::before { content: '✕'; color: #E53935; font-weight: 900; flex-shrink: 0; }
+
+.action-box { background: var(--light); border-radius: 16px; padding: 24px; margin-top: 24px; }
+.action-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+.action-text { font-size: 14px; color: #555; line-height: 2.0; }

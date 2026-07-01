@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ページタイトルを変更 -->
+  <title>ページタイトル | ASOBI CREATE PARK</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <!-- ページ固有CSSを追加: css/pages/xxx.css を作成してリンク -->
+  <!-- <link rel="stylesheet" href="/css/pages/xxx.css"> -->
+</head>
+<body>
+
+<!--
+  ヘッダーの種類を選択（1つだけ使用）:
+
+  A) 標準ヘッダー（ナビ付き）
+     → <div id="site-header"></div>
+        <script>loadHeader('ページ名');</script>
+        ※ data-page 属性でナビのアクティブ状態を制御
+
+  B) シンプルヘッダー（ロゴのみ、ログイン系）
+     → <div id="site-header"></div>
+        <script>loadHeaderSimple();</script>
+
+  C) 管理画面ヘッダー（戻るリンク付き）
+     → <div id="site-header"></div>
+        <script>loadHeaderAdmin('← 管理画面に戻る', '/login.html');</script>
+
+  D) カスタムヘッダー（messages.html / applicants.html スタイル）
+     → ヘッダーHTMLをそのまま記述（loadHeader不要）
+-->
+<div id="site-header"></div>
+
+<!-- ページ固有コンテンツをここに記述 -->
+<main>
+  <p>コンテンツ</p>
+</main>
+
+<div id="site-footer"></div>
+
+<!--
+  Supabase JS SDK が必要な場合（cases.html / events.html スタイル）:
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  SheetJS が必要な場合（textbooks.html スタイル）:
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+-->
+<script src="/js/common.js"></script>
+<!-- ページ固有JSを追加: js/pages/xxx.js を作成してリンク -->
+<!-- <script src="/js/pages/xxx.js"></script> -->
+<script>
+  // A) 標準ヘッダー
+  loadHeader();
+  // B) シンプルヘッダー → loadHeaderSimple();
+  // C) 管理ヘッダー → loadHeaderAdmin('← 管理画面に戻る', '/login.html');
+  loadFooter();
+</script>
+</body>
+</html>

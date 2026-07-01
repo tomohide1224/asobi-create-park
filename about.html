@@ -4,106 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>このサイトについて | ASOBI CREATE PARK</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78;
-      --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D;
-    }
-    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: white; color: var(--navy); }
-    .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
-    .logo { display: flex; align-items: center; text-decoration: none; }
-    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
-    .logo-main span { color: var(--green); }
-    .logo-sub { font-size: 9px; color: var(--gray); }
-    .site-nav { display: flex; gap: 4px; margin-left: auto; }
-    .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
-    .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
-    .header-actions { display: flex; gap: 8px; }
-    .btn-login { background: none; border: 1.5px solid #ddd; color: #555; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; }
-    .btn-register { background: var(--orange); border: none; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; cursor: pointer; text-decoration: none; }
-    .breadcrumb { background: var(--light); border-bottom: 1px solid #eee; }
-    .breadcrumb-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gray); }
-    .breadcrumb-inner a { color: var(--gray); text-decoration: none; }
-    .breadcrumb-sep { color: #ccc; }
-
-    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%); padding: 64px 24px 56px; }
-    .page-hero-inner { max-width: 900px; margin: 0 auto; }
-    .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
-    .hero-title { font-size: 34px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 16px; }
-    .hero-title span { color: #5DD4A4; }
-    .hero-desc { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.9; }
-
-    .page-body { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
-
-    .section-intro { text-align: center; margin-bottom: 48px; }
-    .section-intro-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
-    .section-intro-desc { font-size: 15px; color: var(--gray); line-height: 1.9; }
-
-    .about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 56px; }
-    .about-card {
-      background: white; border: 2px solid #F0F0F0; border-radius: 20px; padding: 32px 24px;
-      text-decoration: none; color: var(--navy); transition: all 0.25s; display: block;
-    }
-    .about-card:hover { border-color: var(--green); box-shadow: 0 8px 32px rgba(45,158,107,0.12); transform: translateY(-4px); }
-    .about-card-icon { font-size: 40px; margin-bottom: 16px; }
-    .about-card-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 10px; line-height: 1.4; }
-    .about-card-desc { font-size: 13px; color: #666; line-height: 1.9; margin-bottom: 16px; }
-    .about-card-link { font-size: 13px; font-weight: 700; color: var(--green); }
-
-    .divider { border: none; border-top: 1px solid #EFEFEF; margin: 48px 0; }
-
-    .quick-links { background: var(--light); border-radius: 20px; padding: 32px; }
-    .quick-links-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
-    .quick-links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .quick-link-item {
-      background: white; border-radius: 12px; padding: 16px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      text-decoration: none; color: var(--navy); border: 1.5px solid #eee;
-      font-size: 14px; font-weight: 700; transition: all 0.2s;
-    }
-    .quick-link-item:hover { border-color: var(--green); color: var(--green); }
-    .quick-link-item span { color: var(--gray); font-size: 18px; }
-
-    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 12px; line-height: 2.0; }
-    footer strong { color: white; }
-    .footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-    .footer-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
-    .footer-nav a:hover { color: white; }
-    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 12px; }
-
-    @media (max-width: 768px) {
-      .about-grid { grid-template-columns: 1fr; }
-      .quick-links-grid { grid-template-columns: 1fr; }
-      .site-nav { display: none; }
-      .hero-title { font-size: 24px; }
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/pages/about.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      <img src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。" style="height:40px;width:auto;display:block;">
-    </a>
-    <nav class="site-nav">
-      <a href="events.html" class="nav-link">あそびを探す</a>
-      <a href="cases.html" class="nav-link">事例を見る</a>
-      <a href="about.html" class="nav-link active">このサイトについて</a>
-      <a href="faq.html" class="nav-link">よくある質問</a>
-    </nav>
-    <div class="header-actions">
-      <a href="login.html" class="btn-login">登録団体ログイン</a>
-      <a href="index.html#register" class="btn-register">✏️ あそびを登録する</a>
-    </div>
-  </div>
-</header>
+<div id="site-header"></div>
 
 <div class="breadcrumb">
   <div class="breadcrumb-inner">
-    <a href="index.html">トップ</a>
+    <a href="/index.html">トップ</a>
     <span class="breadcrumb-sep">›</span>
     <span>このサイトについて</span>
   </div>
@@ -125,37 +36,37 @@
   </div>
 
   <div class="about-grid">
-    <a href="concept.html" class="about-card">
+    <a href="/concept.html" class="about-card">
       <div class="about-card-icon">🌱</div>
       <div class="about-card-title">コンセプト</div>
       <div class="about-card-desc">なぜこのサイトが必要なのか。「あそびをつくる人と、関わる人をつなぐ」ために生まれた背景と思想。</div>
       <div class="about-card-link">読む →</div>
     </a>
-    <a href="safety.html" class="about-card">
+    <a href="/safety.html" class="about-card">
       <div class="about-card-icon">🛡️</div>
       <div class="about-card-title">安心・安全への取り組み</div>
       <div class="about-card-desc">掲載団体・参加者・手伝う人が安心できる仕組みと、信頼できる情報を守るための取り組み。</div>
       <div class="about-card-link">読む →</div>
     </a>
-    <a href="faq.html" class="about-card">
+    <a href="/faq.html" class="about-card">
       <div class="about-card-icon">💬</div>
       <div class="about-card-title">よくある質問</div>
       <div class="about-card-desc">「登録は必要？」「個人でも掲載できる？」など、よくある疑問にまとめてお答えします。</div>
       <div class="about-card-link">読む →</div>
     </a>
-    <a href="guidelines.html" class="about-card">
+    <a href="/guidelines.html" class="about-card">
       <div class="about-card-icon">📋</div>
       <div class="about-card-title">掲載ガイドライン</div>
       <div class="about-card-desc">ASOBI CREATE PARKに掲載できる内容のルールと、禁止事項についての説明。</div>
       <div class="about-card-link">読む →</div>
     </a>
-    <a href="concept.html#features" class="about-card">
+    <a href="/concept.html#features" class="about-card">
       <div class="about-card-icon">🎯</div>
       <div class="about-card-title">できること</div>
       <div class="about-card-desc">事例を見る・あそびを企画する・参加する・手伝う。4つの使い方をご紹介します。</div>
       <div class="about-card-link">読む →</div>
     </a>
-    <a href="concept.html#who" class="about-card">
+    <a href="/concept.html#who" class="about-card">
       <div class="about-card-icon">👥</div>
       <div class="about-card-title">対象となる人・団体</div>
       <div class="about-card-desc">学校・PTA・おやじの会・地域団体・NPO・個人企画者など、幅広い方に開かれたサイトです。</div>
@@ -168,27 +79,22 @@
   <div class="quick-links">
     <div class="quick-links-title">🔗 関連リンク</div>
     <div class="quick-links-grid">
-      <a href="faq.html" class="quick-link-item">よくある質問 <span>›</span></a>
-      <a href="guidelines.html" class="quick-link-item">掲載ガイドライン <span>›</span></a>
-      <a href="safety.html" class="quick-link-item">安心・安全への取り組み <span>›</span></a>
+      <a href="/faq.html" class="quick-link-item">よくある質問 <span>›</span></a>
+      <a href="/guidelines.html" class="quick-link-item">掲載ガイドライン <span>›</span></a>
+      <a href="/safety.html" class="quick-link-item">安心・安全への取り組み <span>›</span></a>
       <a href="mailto:info@asobi-create-park.jp" class="quick-link-item">運営へのお問い合わせ <span>›</span></a>
     </div>
   </div>
 
 </div>
 
-<footer>
-  <div class="footer-nav">
-    <a href="about.html">このサイトについて</a>
-    <a href="concept.html">コンセプト</a>
-    <a href="safety.html">安心・安全への取り組み</a>
-    <a href="faq.html">よくある質問</a>
-    <a href="guidelines.html">掲載ガイドライン</a>
-  </div>
-  <div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
-  <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
-  © 2025 ASOBI CREATE Park
-</footer>
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script>
+  loadHeader();
+  loadFooter();
+</script>
 
 </body>
 </html>

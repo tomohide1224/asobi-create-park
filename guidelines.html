@@ -4,103 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>掲載ガイドライン | ASOBI CREATE PARK</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; }
-    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: white; color: var(--navy); }
-    .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
-    .logo { display: block; flex-shrink: 0; line-height: 0; text-decoration: none; }
-    .logo-image { display: block; width: min(260px, 22vw); height: auto; }
-    .site-nav { display: flex; gap: 4px; margin-left: auto; }
-    .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
-    .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
-    .header-actions { display: flex; gap: 8px; }
-    .btn-login { background: none; border: 1.5px solid #ddd; color: #555; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; }
-    .btn-register { background: var(--orange); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-decoration: none; }
-    .breadcrumb { background: var(--light); border-bottom: 1px solid #eee; }
-    .breadcrumb-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 8px; font-size: 12px; color: var(--gray); }
-    .breadcrumb-inner a { color: var(--gray); text-decoration: none; }
-    .breadcrumb-sep { color: #ccc; }
-
-    .page-hero { background: linear-gradient(135deg, #3d2b1f, #6d4c3b); padding: 64px 24px 56px; }
-    .page-hero-inner { max-width: 800px; margin: 0 auto; }
-    .hero-badge { display: inline-block; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
-    .hero-title { font-size: 34px; font-weight: 900; color: white; line-height: 1.4; margin-bottom: 16px; }
-    .hero-desc { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.9; }
-
-    .page-body { max-width: 800px; margin: 0 auto; padding: 56px 24px 80px; }
-
-    .updated-notice { background: var(--light); border-radius: 12px; padding: 14px 20px; font-size: 13px; color: var(--gray); margin-bottom: 40px; }
-
-    .section { margin-bottom: 48px; }
-    .section-title { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #F0F0F0; display: flex; align-items: center; gap: 10px; }
-    .body-text { font-size: 15px; color: #444; line-height: 2.1; margin-bottom: 12px; }
-
-    .rule-list { margin-top: 16px; }
-    .rule-item { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid #F5F5F5; align-items: flex-start; }
-    .rule-item:last-child { border-bottom: none; }
-    .rule-icon { font-size: 24px; flex-shrink: 0; width: 36px; text-align: center; }
-    .rule-content { flex: 1; }
-    .rule-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
-    .rule-desc { font-size: 13px; color: #666; line-height: 1.9; }
-
-    .prohibited-list { background: #FFF5F5; border: 2px solid #FFCDD2; border-radius: 16px; padding: 24px; margin-top: 16px; }
-    .prohibited-title { font-size: 14px; font-weight: 800; color: #C62828; margin-bottom: 16px; }
-    .prohibited-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 14px; color: #555; line-height: 1.7; }
-    .prohibited-item:last-child { margin-bottom: 0; }
-    .prohibited-item::before { content: '✕'; color: #E53935; font-weight: 900; flex-shrink: 0; }
-
-    .action-box { background: var(--light); border-radius: 16px; padding: 24px; margin-top: 24px; }
-    .action-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
-    .action-text { font-size: 14px; color: #555; line-height: 2.0; }
-
-    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 12px; line-height: 2.0; }
-    footer strong { color: white; }
-    .footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-    .footer-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
-    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 12px; }
-
-    @media (max-width: 768px) { .site-nav { display: none; } .hero-title { font-size: 24px; } }
-  
-    @media (max-width: 900px) {
-      .logo-image { width: 150px; }
-      .header-actions .btn-login { display: none; }
-      .header-inner { gap: 12px; }
-    }
-    @media (max-width: 480px) {
-      .header-inner { padding-left: 16px; padding-right: 16px; gap: 8px; }
-      .logo-image { width: 132px; }
-      .btn-register, .btn-register-event { padding: 8px 10px; font-size: 11px; }
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/pages/guidelines.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      <img src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。" style="height:40px;width:auto;display:block;">
-    </a>
-    <nav class="site-nav">
-      <a href="events.html" class="nav-link">あそびを探す</a>
-      <a href="cases.html" class="nav-link">事例を見る</a>
-      <a href="about.html" class="nav-link active">このサイトについて</a>
-      <a href="faq.html" class="nav-link">よくある質問</a>
-    </nav>
-    <div class="header-actions">
-      <a href="login.html" class="btn-login">登録団体ログイン</a>
-      <a href="index.html#register" class="btn-register">✏️ あそびを登録する</a>
-    </div>
-  </div>
-</header>
+<div id="site-header"></div>
 
 <div class="breadcrumb">
   <div class="breadcrumb-inner">
-    <a href="index.html">トップ</a>
+    <a href="/index.html">トップ</a>
     <span class="breadcrumb-sep">›</span>
-    <a href="about.html">このサイトについて</a>
+    <a href="/about.html">このサイトについて</a>
     <span class="breadcrumb-sep">›</span>
     <span>掲載ガイドライン</span>
   </div>
@@ -118,7 +34,6 @@
 
   <div class="updated-notice">最終更新日：2024年12月</div>
 
-  <!-- 掲載できる内容 -->
   <div class="section">
     <h2 class="section-title">✅ 掲載できる内容</h2>
     <p class="body-text">ASOBI CREATE PARKは、地域のあそびやイベントを通じて人と人がつながる場所を目指しています。以下のような内容を歓迎しています。</p>
@@ -154,7 +69,6 @@
     </div>
   </div>
 
-  <!-- 禁止事項 -->
   <div class="section">
     <h2 class="section-title">🚫 禁止事項</h2>
     <p class="body-text">以下の内容を含む掲載は、発見次第差し戻しまたは非公開化を行います。悪質な場合はアカウントを停止することがあります。</p>
@@ -173,12 +87,9 @@
     </div>
   </div>
 
-  <!-- 運営の判断 -->
   <div class="section">
     <h2 class="section-title">⚖️ 運営の判断について</h2>
-    <p class="body-text">
-      掲載内容の審査・承認・差し戻し・非公開化は、運営の裁量で行う場合があります。ガイドラインに明記されていない場合でも、サイトの目的・地域コミュニティへの影響を考慮して判断します。
-    </p>
+    <p class="body-text">掲載内容の審査・承認・差し戻し・非公開化は、運営の裁量で行う場合があります。ガイドラインに明記されていない場合でも、サイトの目的・地域コミュニティへの影響を考慮して判断します。</p>
     <div class="action-box">
       <div class="action-title">運営が行う可能性のある対応</div>
       <div class="action-text">
@@ -190,34 +101,21 @@
     </div>
   </div>
 
-  <!-- 通報 -->
   <div class="section">
     <h2 class="section-title">🚩 不適切な投稿の通報</h2>
-    <p class="body-text">
-      ガイドラインに反すると思われる投稿を見つけた場合は、下記の連絡先までご報告ください。いただいた内容を確認し、速やかに対応します。
-    </p>
-    <p class="body-text">
-      通報メール：<a href="mailto:report@asobi-create-park.jp" style="color:var(--green); font-weight:700; text-decoration:none;">report@asobi-create-park.jp</a>
-    </p>
-    <p class="body-text">
-      ※ 通報内容や対応結果についてのご回答はいたしかねますので、あらかじめご了承ください。
-    </p>
+    <p class="body-text">ガイドラインに反すると思われる投稿を見つけた場合は、下記の連絡先までご報告ください。いただいた内容を確認し、速やかに対応します。</p>
+    <p class="body-text">通報メール：<a href="mailto:report@asobi-create-park.jp" style="color:var(--green); font-weight:700; text-decoration:none;">report@asobi-create-park.jp</a></p>
+    <p class="body-text">※ 通報内容や対応結果についてのご回答はいたしかねますので、あらかじめご了承ください。</p>
   </div>
 
 </div>
 
-<footer>
-  <div class="footer-nav">
-    <a href="about.html">このサイトについて</a>
-    <a href="concept.html">コンセプト</a>
-    <a href="safety.html">安心・安全への取り組み</a>
-    <a href="faq.html">よくある質問</a>
-    <a href="guidelines.html">掲載ガイドライン</a>
-  </div>
-  <div class="footer-tagline">みんなの「やってみたい」が、未来のあそび場をつくります。</div>
-  <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
-  © 2024 世田谷区地域あそびプラットフォーム
-</footer>
+<div id="site-footer"></div>
 
+<script src="/js/common.js"></script>
+<script>
+  loadHeader();
+  loadFooter();
+</script>
 </body>
 </html>

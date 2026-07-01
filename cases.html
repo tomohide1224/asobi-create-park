@@ -4,158 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>事例・ヒントを見る | ASOBI CREATE PARK</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; }
-    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: #F8F9FA; color: var(--navy); }
-
-    .site-header { background: white; border-bottom: 1px solid #F0F0F0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 32px; }
-    .logo { display: flex; align-items: center; text-decoration: none; }
-    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .logo-main { font-size: 14px; font-weight: 900; color: var(--navy); letter-spacing: 0.05em; }
-    .logo-main span { color: var(--green); }
-    .logo-sub { font-size: 9px; color: var(--gray); }
-    .site-nav { display: flex; gap: 4px; margin-left: auto; }
-    .nav-link { color: #555; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: all 0.2s; }
-    .nav-link:hover, .nav-link.active { background: #F0FBF5; color: var(--green); }
-    .header-actions { display: flex; gap: 8px; align-items: center; }
-    .btn-login { background: none; border: 1.5px solid #ddd; color: #555; padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; }
-    .btn-register { background: var(--orange); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-decoration: none; white-space: nowrap; }
-    .breadcrumb { background: white; border-bottom: 1px solid #eee; }
-    .breadcrumb-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 8px; font-size: 12px; color: var(--gray); }
-    .breadcrumb-inner a { color: var(--gray); text-decoration: none; }
-    .breadcrumb-sep { color: #ccc; }
-
-    .page-hero { background: linear-gradient(135deg, var(--navy) 0%, #2a3f6f 100%); padding: 40px 24px 36px; }
-    .page-hero-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-    .hero-left h1 { font-size: 28px; font-weight: 900; color: white; margin-bottom: 6px; }
-    .hero-left p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; }
-    .hero-count { background: rgba(255,255,255,0.12); border-radius: 16px; padding: 16px 24px; text-align: center; }
-    .hero-count-num { font-size: 36px; font-weight: 900; color: #5DD4A4; line-height: 1; }
-    .hero-count-label { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; }
-
-    .page-layout { max-width: 1200px; margin: 32px auto; padding: 0 24px; display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
-
-    .filter-panel { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: sticky; top: 84px; }
-    .filter-panel-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 16px; }
-    .filter-section { margin-bottom: 20px; }
-    .filter-label { font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
-    .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .filter-chip { padding: 6px 12px; border: 1.5px solid #E0E0E0; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; background: white; color: #555; transition: all 0.2s; }
-    .filter-chip:hover { border-color: var(--green); color: var(--green); }
-    .filter-chip.active { background: var(--green); border-color: var(--green); color: white; }
-    .filter-reset { width: 100%; background: none; border: 1.5px solid #eee; border-radius: 12px; padding: 10px; font-size: 13px; font-weight: 700; color: var(--gray); cursor: pointer; margin-top: 8px; transition: all 0.2s; }
-    .filter-reset:hover { border-color: var(--orange); color: var(--orange); }
-
-    .search-bar { background: white; border-radius: 16px; padding: 16px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; display: flex; gap: 12px; align-items: center; }
-    .search-input { flex: 1; border: 1.5px solid #E0E0E0; border-radius: 12px; padding: 10px 16px; font-size: 14px; outline: none; transition: border-color 0.2s; }
-    .search-input:focus { border-color: var(--green); }
-    .result-info { font-size: 13px; color: var(--gray); margin-bottom: 12px; font-weight: 600; }
-
-    .cases-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-
-    .case-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; }
-    .case-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-    .case-thumb { width: 120px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; }
-    .case-cat-badge { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
-    .case-body { flex: 1; padding: 20px; }
-    .case-title { font-size: 16px; font-weight: 800; color: var(--navy); line-height: 1.4; margin-bottom: 8px; }
-    .case-org { font-size: 12px; color: var(--gray); margin-bottom: 12px; }
-    .case-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-    .case-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; background: #F0F0F0; color: #555; }
-    .case-desc { font-size: 13px; color: #555; line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .case-arrow { display: flex; align-items: center; padding: 0 16px; color: var(--green); font-size: 20px; }
-
-    .cat-1 { background: #E8F5E9; color: #2D9E6B; }
-    .cat-2 { background: #E3F2FD; color: #1565C0; }
-    .cat-3 { background: #F3E5F5; color: #7B1FA2; }
-    .cat-4 { background: #FFF8E1; color: #F57F17; }
-    .cat-5 { background: #FCE4EC; color: #C2185B; }
-    .cat-6 { background: #E0F7FA; color: #00838F; }
-    .cat-7 { background: #FBE9E7; color: #BF360C; }
-    .cat-8 { background: #EFEBE9; color: #4E342E; }
-
-    .loading-wrap { text-align: center; padding: 60px 0; }
-    .spinner { width: 36px; height: 36px; border: 3px solid #eee; border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .empty-state { background: white; border-radius: 20px; padding: 48px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .empty-icon { font-size: 48px; margin-bottom: 16px; }
-    .empty-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
-    .empty-desc { font-size: 14px; color: var(--gray); }
-
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; }
-    .modal-overlay.show { display: flex; }
-    .modal-sheet { background: white; border-radius: 24px 24px 0 0; width: 100%; max-width: 680px; max-height: 92vh; overflow-y: auto; }
-    .modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 14px auto 0; }
-    .modal-header { padding: 20px 24px 12px; }
-    .modal-cat-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 12px; margin-bottom: 12px; }
-    .modal-title { font-size: 22px; font-weight: 900; line-height: 1.4; margin-bottom: 6px; }
-    .modal-org { font-size: 13px; color: var(--gray); font-weight: 600; }
-    .modal-body { padding: 0 24px 36px; }
-    .modal-desc { font-size: 14px; line-height: 1.9; color: #333; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
-    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-    .info-item { background: #F8F9FA; border-radius: 12px; padding: 12px 14px; }
-    .info-label { font-size: 11px; font-weight: 700; color: var(--gray); margin-bottom: 4px; }
-    .info-value { font-size: 13px; font-weight: 700; color: var(--navy); }
-    .knowhow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-    .knowhow-box { border-radius: 14px; padding: 16px; }
-    .knowhow-box.good { background: #F0FBF5; }
-    .knowhow-box.hard { background: #FFF8E1; }
-    .knowhow-box.improve { background: #FFF0F0; }
-    .knowhow-box.memo { background: #F0F4FF; }
-    .knowhow-title { font-size: 12px; font-weight: 800; margin-bottom: 8px; }
-    .knowhow-box.good .knowhow-title { color: var(--green); }
-    .knowhow-box.hard .knowhow-title { color: #F57F17; }
-    .knowhow-box.improve .knowhow-title { color: #C62828; }
-    .knowhow-box.memo .knowhow-title { color: #3949AB; }
-    .knowhow-text { font-size: 13px; color: #444; line-height: 1.8; }
-    .contact-box { background: linear-gradient(135deg, #F0FBF5, #E8F5E9); border-radius: 16px; padding: 20px; margin-top: 20px; border: 1.5px solid #A5D6A7; }
-    .contact-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
-    .contact-email { font-size: 14px; color: var(--green); font-weight: 700; text-decoration: none; }
-    .modal-close-btn { position: fixed; top: 16px; right: 16px; background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1001; display: none; align-items: center; justify-content: center; }
-    .modal-close-btn.show { display: flex; }
-
-    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 32px 24px; font-size: 12px; line-height: 2.0; margin-top: 48px; }
-    footer strong { color: white; }
-    .footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
-    .footer-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
-
-    @media (max-width: 900px) {
-      .page-layout { grid-template-columns: 1fr; }
-      .filter-panel { position: static; }
-      .case-card { flex-direction: column; }
-      .case-thumb { width: 100%; height: 100px; }
-      .info-grid { grid-template-columns: 1fr 1fr; }
-      .knowhow-grid { grid-template-columns: 1fr; }
-      .site-nav { display: none; }
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/pages/cases.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      <img src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。" style="height:40px;width:auto;display:block;">
-    </a>
-    <nav class="site-nav">
-      <a href="events.html" class="nav-link">あそびを探す</a>
-      <a href="cases.html" class="nav-link active">事例を見る</a>
-      <a href="about.html" class="nav-link">このサイトについて</a>
-      <a href="faq.html" class="nav-link">よくある質問</a>
-    </nav>
-    <div class="header-actions">
-      <a href="login.html" class="btn-login">登録団体ログイン</a>
-      <a href="index.html#register" class="btn-register">✏️ あそびを登録する</a>
-    </div>
-  </div>
-</header>
+<div id="site-header"></div>
 
 <div class="breadcrumb">
   <div class="breadcrumb-inner">
-    <a href="index.html">トップ</a>
+    <a href="/index.html">トップ</a>
     <span class="breadcrumb-sep">›</span>
     <span>事例・ヒントを見る</span>
   </div>
@@ -182,7 +41,7 @@
     <div class="filter-section">
       <div class="filter-label">ジャンル</div>
       <div class="filter-chips" id="catChips">
-        <button class="filter-chip active" data-cat="all" onclick="filterCat(this,'all'">すべて</button>
+        <button class="filter-chip active" data-cat="all" onclick="filterCat(this,'all')">すべて</button>
       </div>
     </div>
 
@@ -219,165 +78,14 @@
 </div>
 <button class="modal-close-btn" id="modalCloseBtn" onclick="closeModal()">✕</button>
 
-<footer>
-  <div class="footer-nav">
-    <a href="index.html">トップ</a>
-    <a href="events.html">あそびを探す</a>
-    <a href="about.html">このサイトについて</a>
-    <a href="faq.html">よくある質問</a>
-    <a href="guidelines.html">掲載ガイドライン</a>
-  </div>
-  <strong>ASOBI CREATE PARK</strong> — あつまる · つくる · あそぶ<br>
-  © 2025 ASOBI CREATE Park
-</footer>
+<div id="site-footer"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/common.js"></script>
+<script src="/js/pages/cases.js"></script>
 <script>
-  const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
-  const CAT_COLORS = ['','cat-1','cat-2','cat-3','cat-4','cat-5','cat-6','cat-7','cat-8'];
-  const THUMB_GRADIENTS = ['linear-gradient(135deg,#a5d6a7,#81c784)','linear-gradient(135deg,#90caf9,#64b5f6)','linear-gradient(135deg,#ce93d8,#ab47bc)','linear-gradient(135deg,#ffe082,#ffca28)','linear-gradient(135deg,#f48fb1,#e91e63)','linear-gradient(135deg,#80deea,#00acc1)','linear-gradient(135deg,#ffab91,#ff5722)','linear-gradient(135deg,#bcaaa4,#8d6e63)'];
-
-  let client, allEvents = [], allCategories = [], allOrgs = [];
-  let activeCat = 'all', knowhowOnly = false;
-
-  window.addEventListener('DOMContentLoaded', async () => {
-    client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const [catsRes, eventsRes, orgsRes] = await Promise.all([
-      client.from('event_categories').select('*').order('id'),
-      client.from('events').select('*, event_categories(name, emoji)').eq('status', 'published').order('id'),
-      client.from('organizations').select('*')
-    ]);
-    allCategories = catsRes.data || [];
-    allEvents = eventsRes.data || [];
-    allOrgs = orgsRes.data || [];
-
-    document.getElementById('heroCount').textContent = allEvents.length;
-
-    const chips = document.getElementById('catChips');
-    allCategories.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-chip';
-      btn.dataset.cat = cat.id;
-      btn.textContent = (cat.emoji || '') + ' ' + cat.name;
-      btn.onclick = () => filterCat(btn, cat.id);
-      chips.appendChild(btn);
-    });
-
-    applyFilters();
-  });
-
-  function filterCat(el, cat) {
-    activeCat = cat;
-    document.querySelectorAll('#catChips .filter-chip').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-    applyFilters();
-  }
-
-  function toggleKnowhow(btn) {
-    knowhowOnly = !knowhowOnly;
-    btn.classList.toggle('active', knowhowOnly);
-    applyFilters();
-  }
-
-  function resetFilters() {
-    activeCat = 'all'; knowhowOnly = false;
-    document.getElementById('searchInput').value = '';
-    document.querySelectorAll('#catChips .filter-chip').forEach(c => c.classList.remove('active'));
-    document.querySelector('#catChips .filter-chip[data-cat="all"]').classList.add('active');
-    document.getElementById('chipKnowhow').classList.remove('active');
-    applyFilters();
-  }
-
-  function applyFilters() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    let filtered = allEvents.filter(ev => {
-      if (activeCat !== 'all' && ev.category_id != activeCat) return false;
-      if (knowhowOnly && !ev.knowhow_summary) return false;
-      if (q && !ev.title.toLowerCase().includes(q) && !(ev.organizer_name||'').toLowerCase().includes(q)) return false;
-      return true;
-    });
-    renderCases(filtered);
-  }
-
-  function renderCases(events) {
-    const grid = document.getElementById('casesGrid');
-    document.getElementById('resultInfo').textContent = `${events.length}件の事例を表示中`;
-    if (!events.length) {
-      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">事例が見つかりませんでした</div><div class="empty-desc">絞り込みを変えて探してみてください</div></div>`;
-      return;
-    }
-    grid.innerHTML = events.map(ev => {
-      const cat = ev.event_categories;
-      const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
-      const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
-      const emoji = cat ? cat.emoji : '📚';
-      return `<div class="case-card" onclick="openModal(${ev.id})">
-        <div class="case-thumb" style="background:${grad}">
-          <span>${emoji}</span>
-          <div class="case-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
-        </div>
-        <div class="case-body">
-          <div class="case-title">${ev.title}</div>
-          <div class="case-org">📍 ${ev.organizer_name || ''}　${ev.organizer_type ? '｜ ' + ev.organizer_type : ''}</div>
-          <div class="case-tags">
-            ${ev.target_audience ? `<span class="case-tag">👥 ${ev.target_audience}</span>` : ''}
-            ${ev.event_date ? `<span class="case-tag">📅 ${ev.event_date}</span>` : ''}
-            ${ev.fee ? `<span class="case-tag">💴 ${ev.fee}</span>` : '<span class="case-tag">💴 無料</span>'}
-            ${ev.knowhow_summary ? '<span class="case-tag" style="background:#F0FBF5;color:var(--green)">💡 ノウハウあり</span>' : ''}
-          </div>
-          <div class="case-desc">${ev.description || ''}</div>
-        </div>
-        <div class="case-arrow">›</div>
-      </div>`;
-    }).join('');
-  }
-
-  function openModal(id) {
-    const ev = allEvents.find(e => e.id === id);
-    if (!ev) return;
-    const cat = ev.event_categories;
-    const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
-    const org = allOrgs.find(o => o.org_name === ev.organizer_name);
-
-    document.getElementById('modalHeader').innerHTML = `
-      <div class="modal-cat-badge ${catClass}">${cat ? cat.emoji + ' ' + cat.name : ''}</div>
-      <div class="modal-title">${ev.title}</div>
-      <div class="modal-org">📍 ${ev.organizer_name || ''}　${ev.organizer_type ? '｜ ' + ev.organizer_type : ''}</div>`;
-
-    document.getElementById('modalBody').innerHTML = `
-      <p class="modal-desc">${ev.description || ''}</p>
-      <div class="info-grid">
-        ${ev.event_date ? `<div class="info-item"><div class="info-label">📅 実施時期</div><div class="info-value">${ev.event_date}</div></div>` : ''}
-        ${ev.location ? `<div class="info-item"><div class="info-label">📍 実施場所</div><div class="info-value">${ev.location}</div></div>` : ''}
-        ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${ev.target_audience}</div></div>` : ''}
-        <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${ev.fee || '無料'}</div></div>
-        ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 参加人数</div><div class="info-value">約${ev.max_participants}名</div></div>` : ''}
-        ${ev.tools_needed ? `<div class="info-item" style="grid-column:1/-1"><div class="info-label">🛠️ 必要な道具・準備物</div><div class="info-value" style="font-weight:400;font-size:13px">${ev.tools_needed}</div></div>` : ''}
-      </div>
-      ${ev.knowhow_summary ? `
-      <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:12px">💡 ノウハウ・ポイント</div>
-        <div class="knowhow-grid">
-          <div class="knowhow-box good"><div class="knowhow-title">✅ よかった点</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>
-          <div class="knowhow-box memo"><div class="knowhow-title">📝 企画したい人へのメモ</div><div class="knowhow-text">詳細は主催団体へお問い合わせください。</div></div>
-        </div>
-      </div>` : ''}
-      ${org && org.contact_email ? `<div class="contact-box"><div class="contact-title">📧 この事例について問い合わせる</div><a href="mailto:${org.contact_email}" class="contact-email">${org.contact_email}</a></div>` : ''}
-      <div style="margin-top:20px;padding-top:20px;border-top:1px solid #f0f0f0">
-        <a href="events.html" style="color:var(--green);font-weight:700;font-size:14px;text-decoration:none">→ このジャンルのあそびに参加・手伝う</a>
-      </div>`;
-
-    document.getElementById('modalOverlay').classList.add('show');
-    document.getElementById('modalCloseBtn').classList.add('show');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('show');
-    document.getElementById('modalCloseBtn').classList.remove('show');
-    document.body.style.overflow = '';
-  }
-  function handleOverlayClick(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+  loadHeader();
+  loadFooter();
 </script>
 </body>
 </html>

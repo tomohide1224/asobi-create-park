@@ -4,193 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登録団体ログイン | ASOBI CREATE PARK</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --orange: #FF6B35; --green: #2D9E6B; --green-light: #4CAF78; --navy: #1A1A2E; --light: #F8F9FA; --gray: #6C757D; --line: #06C755; }
-    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
-
-    .site-header { background: white; border-bottom: 1px solid #F0F0F0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: flex-start; }
-    .logo { display: block; flex-shrink: 0; line-height: 0; text-decoration: none; }
-    .logo-image { display: block; height: 40px; width: auto; }
-
-    .page-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
-
-    .login-card { background: white; border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 460px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
-    .login-icon { width: 64px; height: 64px; background: linear-gradient(135deg, var(--navy), #2a3f6f); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 24px; }
-    .login-title { font-size: 24px; font-weight: 900; color: var(--navy); text-align: center; margin-bottom: 8px; }
-    .login-desc { font-size: 14px; color: var(--gray); text-align: center; line-height: 1.8; margin-bottom: 32px; }
-
-    .phase { display: none; }
-    .phase.active { display: block; }
-
-    .btn-line { width: 100%; background: var(--line); color: white; border: none; padding: 16px 24px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.2s; }
-    .btn-line:hover { opacity: 0.9; }
-    .btn-line-icon { width: 28px; height: 28px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .btn-line-icon svg { width: 20px; height: 20px; }
-
-    .divider { display: flex; align-items: center; gap: 12px; margin: 28px 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid #F0F0F0; }
-    .divider-text { font-size: 12px; color: var(--gray); }
-
-    .processing-box { text-align: center; padding: 20px 0; }
-    .processing-icon { font-size: 48px; margin-bottom: 16px; animation: spin 1.5s linear infinite; }
-    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-    .processing-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
-    .processing-desc { font-size: 13px; color: var(--gray); }
-
-    .error-box { background: #FFF5F5; border: 1.5px solid #FFCDD2; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
-    .error-icon { font-size: 36px; margin-bottom: 10px; }
-    .error-title { font-size: 15px; font-weight: 800; color: #C62828; margin-bottom: 8px; }
-    .error-desc { font-size: 13px; color: #555; line-height: 1.8; }
-
-    .friend-box { background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 20px; text-align: center; margin: 16px 0; }
-    .friend-title { font-size: 14px; font-weight: 800; color: var(--green); margin-bottom: 8px; }
-    .friend-desc { font-size: 12px; color: #555; line-height: 1.8; margin-bottom: 12px; }
-    .btn-friend { display: inline-block; background: var(--line); color: white; padding: 10px 24px; border-radius: 20px; font-size: 13px; font-weight: 800; text-decoration: none; }
-
-    .btn-secondary { width: 100%; background: none; border: 1.5px solid #ddd; color: #555; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
-    .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
-
-    .dashboard { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
-    .dashboard-welcome { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
-    .dashboard-org { font-size: 14px; color: var(--gray); margin-bottom: 28px; }
-    .line-badge { display: inline-flex; align-items: center; gap: 6px; background: #E8F5E9; color: var(--green); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 24px; }
-    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .menu-item { background: var(--light); border-radius: 16px; padding: 20px; text-decoration: none; color: var(--navy); transition: all 0.2s; border: 1.5px solid transparent; display: block; }
-    .menu-item:hover { border-color: var(--green); background: #F0FBF5; }
-    .menu-item-icon { font-size: 28px; margin-bottom: 10px; }
-    .menu-item-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-    .menu-item-desc { font-size: 12px; color: var(--gray); line-height: 1.6; }
-    .btn-logout { width: 100%; background: none; border: 1.5px solid #ddd; color: #888; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 24px; transition: all 0.2s; }
-    .btn-logout:hover { border-color: #E53935; color: #E53935; }
-
-    .notice { background: var(--light); border-radius: 12px; padding: 14px 16px; font-size: 12px; color: var(--gray); line-height: 1.8; margin-top: 16px; }
-    .register-hint { text-align: center; font-size: 13px; color: var(--gray); line-height: 1.8; }
-    .register-hint a { color: var(--green); font-weight: 700; text-decoration: none; }
-
-    footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px; font-size: 12px; }
-    footer strong { color: white; }
-
-    .register-form { margin-bottom: 16px; }
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
-    .form-label .required { color: #E53935; }
-    .form-input { width: 100%; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 10px 14px; font-size: 14px; color: var(--navy); outline: none; transition: border-color 0.2s; font-family: inherit; }
-    .form-input:focus { border-color: var(--green); }
-    textarea.form-input { resize: vertical; }
-
-    @media (max-width: 480px) {
-      .login-card, .dashboard { padding: 32px 24px; }
-      .menu-grid { grid-template-columns: 1fr; }
-    }
-
-    .page-wrap.dashboard-mode { align-items: flex-start; padding-top: 24px; }
-    .dashboard-full { width: 100%; max-width: 680px; }
-
-    .dash-header { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 16px; }
-    .dash-org-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .dash-org-icon { width: 56px; height: 56px; background: linear-gradient(to bottom, #87CEEB 45%, #4CAF78 45%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; cursor: pointer; }
-    .dash-org-icon-wrap { position: relative; flex-shrink: 0; cursor: pointer; }
-    .dash-org-icon-wrap:hover .logo-cam-badge { background: var(--green); }
-    .logo-cam-badge { position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.25); transition: background 0.2s; border: 1.5px solid white; }
-    .dash-org-name { font-size: 18px; font-weight: 900; color: var(--navy); }
-    .dash-welcome-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
-    .line-badge-sm { margin-left: auto; background: #E8F5E9; color: var(--green); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
-    .dash-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .dash-stat-box { background: var(--light); border-radius: 12px; padding: 14px; text-align: center; }
-    .dash-stat-num { font-size: 28px; font-weight: 900; color: var(--green); }
-    .dash-stat-label { font-size: 11px; color: var(--gray); margin-top: 4px; }
-
-    .dash-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-    .dash-tab { flex: 1; background: white; border: 1.5px solid #E0E0E0; color: var(--gray); padding: 10px 6px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-    .dash-tab.active { background: var(--green); border-color: var(--green); color: white; }
-
-    .dash-pane { display: none; }
-    .dash-pane.active { display: block; }
-
-    .dash-loading { text-align: center; padding: 40px; color: var(--gray); font-size: 13px; }
-    .dash-empty { text-align: center; padding: 48px 20px; color: var(--gray); font-size: 14px; line-height: 2; }
-
-    .event-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .event-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1.5px solid transparent; transition: all 0.2s; cursor: pointer; }
-    .event-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-    .event-card-img { height: 80px; background: linear-gradient(135deg, #E8F5E9, #C8E6C9); display: flex; align-items: center; justify-content: center; font-size: 36px; overflow: hidden; }
-    .event-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .event-card-body { padding: 12px; }
-    .event-card-status { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-bottom: 6px; }
-    .status-active { background: #E8F5E9; color: var(--green); }
-    .status-pending { background: #FFF8E1; color: #F57F17; }
-    .status-closed { background: #F5F5F5; color: #9E9E9E; }
-    .event-card-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 4px; line-height: 1.4; }
-    .event-card-meta { font-size: 11px; color: var(--gray); line-height: 1.6; }
-    .event-card-inquiry { font-size: 11px; color: var(--green); font-weight: 700; margin-top: 6px; }
-
-    .request-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-    .request-item { background: white; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid var(--green); }
-    .request-event-tag { font-size: 12px; color: var(--green); font-weight: 700; margin-bottom: 6px; }
-    .request-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
-    .request-name { font-size: 14px; font-weight: 800; color: var(--navy); }
-    .request-date { font-size: 11px; color: var(--gray); white-space: nowrap; margin-left: 8px; }
-    .request-type-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: #E3F2FD; color: #1565C0; margin-bottom: 4px; }
-    .request-message { font-size: 12px; color: var(--gray); line-height: 1.6; margin-top: 4px; }
-
-    .orginfo-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
-    .orginfo-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F5F5F5; }
-    .orginfo-row:last-child { border-bottom: none; }
-    .orginfo-label { font-size: 12px; font-weight: 700; color: var(--gray); width: 90px; flex-shrink: 0; padding-top: 2px; }
-    .orginfo-value { font-size: 14px; color: var(--navy); flex: 1; line-height: 1.6; }
-
-    .dash-post-btn { margin-top: 8px; }
-    .dash-section-title { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 10px; letter-spacing: 0.05em; }
-
-    .orginfo-edit-btn { width: 100%; background: none; border: 1.5px solid var(--green); color: var(--green); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: all 0.2s; font-family: inherit; }
-    .orginfo-edit-btn:hover { background: var(--green); color: white; }
-    .orginfo-edit-form { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
-    .orginfo-edit-actions { display: flex; gap: 8px; margin-top: 16px; }
-    .btn-save { flex: 1; background: var(--green); color: white; border: none; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
-    .btn-save:hover { opacity: 0.9; }
-    .btn-cancel { flex: 1; background: none; border: 1.5px solid #ddd; color: #888; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    .btn-cancel:hover { border-color: #999; color: #555; }
-    .orginfo-save-msg { font-size: 13px; color: var(--green); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
-
-    .img-upload-area { border: 2px dashed #E0E0E0; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; background: var(--light); }
-    .img-upload-area:hover { border-color: var(--green); background: #F0FBF5; }
-    .img-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .img-upload-icon { font-size: 28px; margin-bottom: 6px; }
-    .img-upload-label { font-size: 12px; color: var(--gray); }
-    .img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; display: none; }
-    .img-preview.has-img { display: block; }
-    .logo-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: none; margin: 0 auto 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
-    .logo-preview.has-img { display: block; }
-    .upload-progress { font-size: 12px; color: var(--green); font-weight: 700; text-align: center; margin-top: 6px; display: none; }
-
-    .dash-org-logo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-
-    @media (max-width: 520px) {
-      .event-cards { grid-template-columns: 1fr; }
-      .dash-tab { font-size: 11px; padding: 8px 4px; }
-      .dashboard-full { max-width: 100%; }
-    }
-
-    @media (max-width: 900px) {
-      .logo-image { height: 36px; }
-    }
-    @media (max-width: 480px) {
-      .logo-image { height: 32px; }
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/pages/login.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="logo" href="index.html">
-      <img class="logo-image" src="assets/ACP-logo.jpg" alt="ASOBI CREATE PARK やりたいを、カタチに。">
-    </a>
-  </div>
-</header>
+<div id="site-header"></div>
 
 <div class="page-wrap">
 
@@ -443,10 +263,13 @@
   </div>
 </div>
 
-<footer>
-  <strong>ASOBI CREATE PARK</strong> © 2024 世田谷区地域あそびプラットフォーム
-</footer>
+<div id="site-footer"></div>
 
+<script src="/js/common.js"></script>
+<script>
+  loadHeaderSimple();
+  loadFooter();
+</script>
 <script>
   const LINE_LOGIN_CHANNEL_ID = '2010526701';
   const SUPABASE_FUNC_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co/functions/v1';

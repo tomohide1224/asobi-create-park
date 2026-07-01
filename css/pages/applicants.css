@@ -1,0 +1,57 @@
+/* applicants.html 固有スタイル */
+
+/* ヘッダー */
+.page-header { background: var(--green); color: white; padding: 14px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.back-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1; padding: 0 6px 0 0; flex-shrink: 0; }
+.page-header-info { flex: 1; min-width: 0; }
+.page-header-title { font-size: 16px; font-weight: 800; }
+.page-header-sub { font-size: 11px; opacity: 0.85; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* フィルタータブ */
+.filter-tabs { display: flex; gap: 8px; padding: 14px 16px 8px; background: white; border-bottom: 1px solid #EEEEEE; overflow-x: auto; }
+.filter-tab { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; border: 1.5px solid #E0E0E0; background: white; color: var(--gray); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+.filter-tab.active { background: var(--green); border-color: var(--green); color: white; }
+
+/* メインコンテンツ */
+.main { flex: 1; padding: 16px; max-width: 680px; margin: 0 auto; width: 100%; }
+
+/* 申込カード */
+.card-list { display: flex; flex-direction: column; gap: 12px; }
+.applicant-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.card-top { padding: 16px; display: flex; align-items: flex-start; gap: 12px; }
+.card-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #E8F5E9, #A5D6A7); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.card-body { flex: 1; min-width: 0; }
+.card-name { font-size: 15px; font-weight: 800; color: var(--navy); }
+.card-date { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.card-message { font-size: 13px; color: #444; line-height: 1.7; margin-top: 8px; padding: 10px 12px; background: var(--light); border-radius: 10px; border-left: 3px solid var(--green); }
+.card-status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-top: 10px; }
+.card-status.pending { background: #FFF8E1; color: #F57F17; }
+.card-status.accepted { background: #E8F5E9; color: #1B5E20; }
+.card-status.declined { background: #FFEBEE; color: #C62828; }
+
+/* アクションボタン群 */
+.card-actions { padding: 0 16px 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-accept { flex: 1; min-width: 100px; background: var(--green); color: white; border: none; padding: 10px 8px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+.btn-accept:hover { opacity: 0.85; }
+.btn-accept:disabled { opacity: 0.5; cursor: default; }
+.btn-decline { flex: 1; min-width: 100px; background: none; border: 1.5px solid #FFCDD2; color: #C62828; padding: 10px 8px; border-radius: 12px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+.btn-decline:hover { background: #FFEBEE; }
+.btn-decline:disabled { opacity: 0.5; cursor: default; }
+.btn-msg { flex: 1; min-width: 100px; background: none; border: 1.5px solid #E0E0E0; color: var(--navy); padding: 10px 8px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+.btn-msg:hover { border-color: var(--green); color: var(--green); }
+
+/* 空/ローディング */
+.center-msg { text-align: center; padding: 60px 20px; color: var(--gray); }
+.center-msg-icon { font-size: 48px; margin-bottom: 16px; }
+.center-msg-text { font-size: 14px; line-height: 2; }
+
+/* スピナー */
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.spin { display: inline-block; animation: spin 1s linear infinite; }
+
+/* 成功トースト */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 12px; margin-top: auto; }
+footer strong { color: white; }

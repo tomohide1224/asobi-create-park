@@ -1,0 +1,309 @@
+/* ============================================================
+   ASOBI CREATE PARK — 共通スタイル
+   全ページで読み込む。ページ固有スタイルは css/pages/ へ。
+   ============================================================ */
+
+/* ---------- リセット ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- カラー変数 ---------- */
+:root {
+  --orange: #FF6B35;
+  --green: #2D9E6B;
+  --green-light: #4CAF78;
+  --navy: #1A1A2E;
+  --light: #F8F9FA;
+  --gray: #6C757D;
+}
+
+/* ---------- ベース ---------- */
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: white;
+  color: var(--navy);
+}
+
+/* ---------- ヘッダー（共通） ---------- */
+.site-header {
+  background: white;
+  border-bottom: 1px solid #F0F0F0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.logo {
+  display: block;
+  flex-shrink: 0;
+  line-height: 0;
+  text-decoration: none;
+}
+.logo-image {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+/* ---------- グローバルナビ ---------- */
+.site-nav {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.nav-link {
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-link:hover,
+.nav-link.active {
+  background: #F0FBF5;
+  color: var(--green);
+}
+
+/* ---------- ヘッダーアクション ---------- */
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-login {
+  background: none;
+  border: 1.5px solid #ddd;
+  color: #555;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-login:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+.btn-register {
+  background: var(--orange);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.btn-register:hover {
+  opacity: 0.85;
+}
+
+/* ---------- 管理系ヘッダー戻るリンク ---------- */
+.header-back {
+  font-size: 13px;
+  color: var(--gray);
+  text-decoration: none;
+  margin-left: auto;
+}
+.header-back:hover {
+  color: var(--navy);
+}
+
+/* ---------- ログインページヘッダー ---------- */
+.site-header .header-inner:has(.logo-image) {
+  justify-content: flex-start;
+}
+.logo-image {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+@media (max-width: 900px) {
+  .logo-image { height: 36px; }
+}
+@media (max-width: 480px) {
+  .logo-image { height: 32px; }
+}
+
+/* ---------- フッター ---------- */
+footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 40px 24px;
+  font-size: 12px;
+  line-height: 2.0;
+}
+footer strong {
+  color: white;
+}
+.footer-nav {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.footer-nav a {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.2s;
+}
+.footer-nav a:hover {
+  color: white;
+}
+.footer-tagline {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 12px;
+}
+
+/* ---------- パンくずリスト ---------- */
+.breadcrumb {
+  background: var(--light);
+  border-bottom: 1px solid #eee;
+}
+.breadcrumb-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--gray);
+}
+.breadcrumb-inner a {
+  color: var(--gray);
+  text-decoration: none;
+}
+.breadcrumb-sep { color: #ccc; }
+
+/* ---------- ページヒーロー（共通ベース） ---------- */
+.page-hero {
+  padding: 64px 24px 56px;
+}
+.page-hero-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.9);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.hero-title {
+  font-size: 34px;
+  font-weight: 900;
+  color: white;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+.hero-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.9;
+}
+@media (max-width: 768px) {
+  .hero-title { font-size: 24px; }
+}
+
+/* ---------- 共通UIパーツ ---------- */
+
+/* エラー・空・ローディング状態 */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray);
+  font-size: 14px;
+}
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray);
+  font-size: 14px;
+}
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #C62828;
+  font-size: 14px;
+}
+.error-state button {
+  margin-top: 16px;
+  padding: 8px 20px;
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* トースト通知 */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  animation: toastIn 0.3s ease;
+}
+.toast.success { background: var(--green); }
+.toast.error   { background: #E53935; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* フィールドエラー */
+.field-error {
+  font-size: 12px;
+  color: #E53935;
+  margin-top: 4px;
+}
+input.error,
+textarea.error,
+select.error {
+  border-color: #E53935 !important;
+}
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 900px) {
+  .header-actions .btn-login { display: none; }
+  .header-inner { gap: 12px; }
+}
+@media (max-width: 768px) {
+  .site-nav { display: none; }
+}
+@media (max-width: 480px) {
+  .header-inner { padding-left: 16px; padding-right: 16px; gap: 8px; }
+  .btn-register { padding: 8px 10px; font-size: 11px; }
+}
