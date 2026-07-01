@@ -3,9 +3,57 @@
 
 body { background: var(--bg); }
 
-/* ヒーロー */
-.hero { display: flex; align-items: stretch; width: 100%; background: #fff; }
-.hero-text { flex: 0 0 40%; display: flex; flex-direction: column; justify-content: center; padding: 56px 48px; background: var(--bg); }
+/* ─── ヒーロー（PC: 画像の上にテキストをオーバーレイ） ─── */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 540px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* PC: 画像を全面に敷く */
+.hero-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* PC: テキスト側（左）から透明への白グラデーション */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    rgba(255,255,255,0.97) 0%,
+    rgba(255,255,255,0.92) 20%,
+    rgba(255,255,255,0.70) 38%,
+    rgba(255,255,255,0.20) 55%,
+    rgba(255,255,255,0.00) 68%
+  );
+  pointer-events: none;
+}
+
+/* PC: テキストを画像の上にオーバーレイ */
+.hero-text {
+  position: relative;
+  z-index: 2;
+  width: 52%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 48px;
+  min-height: 540px;
+}
 .hero-text h1 { font-size: 38px; line-height: 1.6; font-weight: 900; letter-spacing: -1px; margin-bottom: 18px; color: var(--navy); }
 .o { color: var(--orange); }
 .g { color: var(--green); }
@@ -16,8 +64,6 @@ body { background: var(--bg); }
 .cta.plan { background: var(--green); }
 .cta.support { background: var(--orange); }
 .free-note { font-size: 13px; font-weight: 800; color: var(--gray); }
-.hero-img { flex: 0 0 60%; overflow: hidden; }
-.hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* カード */
 .cards { max-width: 1480px; margin: auto; padding: 22px 32px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
@@ -74,12 +120,51 @@ body { background: var(--bg); }
   .cards, .lanes { grid-template-columns: 1fr; }
   .trust-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ─── スマホ（760px以下） ─── */
 @media (max-width: 760px) {
-  .hero { flex-direction: column; }
-  .hero-text { flex: none; padding: 36px 22px; }
+  /* スマホ: 縦積みレイアウト */
+  .hero {
+    display: block;
+    min-height: unset;
+  }
+  /* PC用左グラデーションを無効化 */
+  .hero::before { display: none; }
+
+  /* スマホ: 画像を上部に相対配置 */
+  .hero-img {
+    position: relative;
+    inset: unset;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+  }
+  .hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  /* スマホ: 画像下端→白のグラデーション */
+  .hero-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 110px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    pointer-events: none;
+  }
+  /* スマホ: テキストは白背景の下に */
+  .hero-text {
+    position: relative;
+    width: 100%;
+    min-height: unset;
+    background: white;
+    padding: 20px 22px 36px;
+  }
   .hero-text h1 { font-size: 28px; }
-  .hero-img { flex: none; width: 100%; }
-  .hero-img img { width: 100%; height: auto; object-fit: unset; }
   .cta-row { flex-direction: column; }
   .cta { min-width: unset; width: 100%; }
   .cards, .lanes, .trust { padding-left: 18px; padding-right: 18px; }
