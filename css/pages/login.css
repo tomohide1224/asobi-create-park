@@ -42,6 +42,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; background: var
 .btn-secondary { width: 100%; background: none; border: 1.5px solid #ddd; color: #555; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
 .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
 
+.role-cards { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; width: 100%; }
+.role-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 16px; background: #f8faf9; border: 2px solid #e0e0e0; border-radius: 16px; cursor: pointer; transition: all 0.2s; font-family: inherit; width: 100%; }
+.role-card:hover { border-color: var(--green-light); background: #f0fbf5; }
+.role-card-icon { font-size: 32px; }
+.role-card-label { font-size: 16px; font-weight: 900; color: var(--navy); }
+.role-card-desc { font-size: 12px; color: var(--gray); line-height: 1.6; text-align: center; }
+
 .dashboard-full { width: 100%; max-width: 680px; }
 .dash-header { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 16px; }
 .dash-org-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }

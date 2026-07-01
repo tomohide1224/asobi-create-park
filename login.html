@@ -106,7 +106,7 @@
       </button>
       <div id="reg_error" style="color:#C62828;font-size:13px;margin-top:10px;text-align:center;display:none;"></div>
     </div>
-    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
+    <button class="btn-secondary" onclick="showPhase('phase_select')">← 選択画面に戻る</button>
   </div>
 
   <!-- PHASE 4: ダッシュボード（A+B型） -->
@@ -223,6 +223,44 @@
     </div>
   </div>
 
+  <!-- PHASE SELECT: 企画者 or 支援者を選択 -->
+  <div class="login-card phase" id="phase_select">
+    <div class="login-icon">🌿</div>
+    <div class="login-title">どちらで参加しますか？</div>
+    <div class="login-desc">LINEログインができました！<br>参加方法を選んでください。</div>
+    <div class="role-cards">
+      <button class="role-card" onclick="selectRole('organizer')">
+        <div class="role-card-icon">🏢</div>
+        <div class="role-card-label">企画者として登録</div>
+        <div class="role-card-desc">イベントを作って<br>参加者・支援者を集める</div>
+      </button>
+      <button class="role-card" onclick="selectRole('supporter')">
+        <div class="role-card-icon">🤝</div>
+        <div class="role-card-label">支援者として参加</div>
+        <div class="role-card-desc">気になるイベントに<br>参加・支援する</div>
+      </button>
+    </div>
+    <button class="btn-secondary" onclick="showPhase('phase1')">← ログイン画面に戻る</button>
+  </div>
+
+  <!-- PHASE 8: 支援者登録 -->
+  <div class="login-card phase" id="phase8">
+    <div class="login-icon">🤝</div>
+    <div class="login-title">支援者として参加する</div>
+    <div class="login-desc">お名前を登録してください。</div>
+    <div class="register-form">
+      <div class="form-group">
+        <label class="form-label">お名前 <span class="required">*</span></label>
+        <input type="text" id="sup_display_name" class="form-input" placeholder="例：山田 太郎">
+      </div>
+      <div id="sup_error" style="color:#C62828;font-size:13px;margin-top:10px;text-align:center;display:none;"></div>
+      <button class="btn-line" onclick="registerSupporter()" id="sup_submit_btn" style="margin-top:8px">
+        🤝 支援者として参加する
+      </button>
+    </div>
+    <button class="btn-secondary" onclick="showPhase('phase_select')">← 選択に戻る</button>
+  </div>
+
 </div>
 
 <input type="file" id="direct_logo_input" accept="image/*" style="display:none" onchange="handleDirectLogoSelect(this)">
@@ -302,8 +340,13 @@
       } else if (data.line_user_id) {
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         sessionStorage.setItem('acp_line_name', data.line_display_name || '');
-        if (data.line_display_name) document.getElementById('reg_rep_name').value = data.line_display_name;
-        showPhase('phase5');
+        const supporter = await checkSupporter(data.line_user_id);
+        if (supporter) {
+          sessionStorage.setItem('acp_supporter', JSON.stringify(supporter));
+          window.location.href = '/supporter-dashboard.html';
+        } else {
+          showPhase('phase_select');
+        }
       } else {
         document.getElementById('errorMsg').textContent = data.error || '通信エラーが発生しました。';
         showPhase('phase3');
@@ -311,6 +354,64 @@
     } catch (e) {
       document.getElementById('errorMsg').textContent = '通信エラーが発生しました。もう一度お試しください。';
       showPhase('phase3');
+    }
+  }
+
+  async function checkSupporter(line_user_id) {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/supporters?line_user_id=eq.${encodeURIComponent(line_user_id)}&limit=1`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.length > 0 ? data[0] : null;
+    } catch(e) { return null; }
+  }
+
+  function selectRole(role) {
+    if (role === 'organizer') {
+      const lineName = sessionStorage.getItem('acp_line_name');
+      if (lineName) document.getElementById('reg_rep_name').value = lineName;
+      showPhase('phase5');
+    } else {
+      const lineName = sessionStorage.getItem('acp_line_name');
+      if (lineName) document.getElementById('sup_display_name').value = lineName;
+      showPhase('phase8');
+    }
+  }
+
+  async function registerSupporter() {
+    const display_name = document.getElementById('sup_display_name').value.trim();
+    if (!display_name) {
+      document.getElementById('sup_error').textContent = 'お名前は必須です。';
+      document.getElementById('sup_error').style.display = 'block';
+      return;
+    }
+    const line_user_id = sessionStorage.getItem('acp_line_user_id');
+    if (!line_user_id) { showPhase('phase1'); return; }
+    const btn = document.getElementById('sup_submit_btn');
+    btn.disabled = true; btn.textContent = '登録中...';
+    document.getElementById('sup_error').style.display = 'none';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/supporters`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({ line_user_id, display_name })
+      });
+      if (!res.ok) { const err = await res.json(); throw new Error(err.message || '登録に失敗しました。'); }
+      const [supporter] = await res.json();
+      sessionStorage.setItem('acp_supporter', JSON.stringify(supporter));
+      window.location.href = '/supporter-dashboard.html';
+    } catch(e) {
+      document.getElementById('sup_error').textContent = e.message;
+      document.getElementById('sup_error').style.display = 'block';
+      btn.disabled = false; btn.textContent = '🤝 支援者として参加する';
     }
   }
 
@@ -599,7 +700,10 @@
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   function signOut() {
-    sessionStorage.removeItem('acp_org'); sessionStorage.removeItem('acp_line_name');
+    sessionStorage.removeItem('acp_org');
+    sessionStorage.removeItem('acp_line_name');
+    sessionStorage.removeItem('acp_line_user_id');
+    sessionStorage.removeItem('acp_supporter');
     document.querySelector('.page-wrap').classList.remove('dashboard-mode');
     showPhase('phase1');
   }
@@ -608,9 +712,22 @@
     setupCropInteraction();
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    if (code) { handleLineCallback(code); } else {
+    if (code) {
+      handleLineCallback(code);
+    } else {
       const orgStr = sessionStorage.getItem('acp_org');
-      if (orgStr) { const org = JSON.parse(orgStr); const lineName = sessionStorage.getItem('acp_line_name'); showDashboard(org, lineName); } else { showPhase('phase1'); }
+      if (orgStr) {
+        const org = JSON.parse(orgStr);
+        const lineName = sessionStorage.getItem('acp_line_name');
+        showDashboard(org, lineName);
+      } else {
+        const supporterStr = sessionStorage.getItem('acp_supporter');
+        if (supporterStr) {
+          window.location.href = '/supporter-dashboard.html';
+        } else {
+          showPhase('phase1');
+        }
+      }
     }
   });
 </script>
