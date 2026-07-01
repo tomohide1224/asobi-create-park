@@ -7,22 +7,19 @@ body { background: var(--bg); }
 .hero {
   position: relative;
   width: 100%;
-  min-height: 540px;
   overflow: hidden;
   background: #fff;
 }
 
-/* PC: 画像を全面に敷く */
+/* PC: 画像を展開してヒーローの高さを決める */
 .hero-img {
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 0;
+  line-height: 0;
 }
 .hero-img img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+  height: auto;
   display: block;
 }
 
@@ -45,14 +42,16 @@ body { background: var(--bg); }
 
 /* PC: テキストを画像の上にオーバーレイ */
 .hero-text {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
   width: 52%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 64px 48px;
-  min-height: 540px;
+  padding: 56px 48px;
 }
 .hero-text h1 { font-size: 38px; line-height: 1.6; font-weight: 900; letter-spacing: -1px; margin-bottom: 18px; color: var(--navy); }
 .o { color: var(--orange); }
@@ -126,18 +125,17 @@ body { background: var(--bg); }
   /* スマホ: 縦積みレイアウト */
   .hero {
     display: block;
-    min-height: unset;
   }
   /* PC用左グラデーションを無効化 */
   .hero::before { display: none; }
 
-  /* スマホ: 画像を上部に相対配置 */
+  /* スマホ: 画像を画面の約2/3に */
   .hero-img {
     position: relative;
-    inset: unset;
     width: 100%;
-    height: 300px;
+    height: 60vh;
     overflow: hidden;
+    line-height: 0;
   }
   .hero-img img {
     width: 100%;
@@ -152,21 +150,27 @@ body { background: var(--bg); }
     bottom: 0;
     left: 0;
     right: 0;
-    height: 110px;
+    height: 100px;
     background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
     pointer-events: none;
   }
-  /* スマホ: テキストは白背景の下に */
+  /* スマホ: テキストエリアを小さく・コンパクトに */
   .hero-text {
     position: relative;
+    top: unset;
+    left: unset;
     width: 100%;
-    min-height: unset;
+    height: auto;
     background: white;
-    padding: 20px 22px 36px;
+    padding: 14px 18px 24px;
   }
-  .hero-text h1 { font-size: 28px; }
-  .cta-row { flex-direction: column; }
-  .cta { min-width: unset; width: 100%; }
+  .hero-text h1 { font-size: 20px; line-height: 1.5; margin-bottom: 10px; }
+  .hero-text p { font-size: 12px; line-height: 1.7; margin-bottom: 14px; }
+  .cta-row { flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .cta { font-size: 14px; padding: 12px 16px; gap: 8px; border-radius: 12px; }
+  .cta small { font-size: 10px; }
+  .free-note { font-size: 11px; }
+
   .cards, .lanes, .trust { padding-left: 18px; padding-right: 18px; }
   .trust-grid { grid-template-columns: 1fr; }
   .trust-item { border-right: 0; border-bottom: 1px dashed #ddd; }
