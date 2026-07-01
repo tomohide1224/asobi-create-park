@@ -122,18 +122,14 @@ body { background: var(--bg); }
 
 /* ─── スマホ（760px以下） ─── */
 @media (max-width: 760px) {
-  /* スマホ: 縦積みレイアウト */
-  .hero {
-    display: block;
-  }
-  /* PC用左グラデーションを無効化 */
+  .hero { display: block; }
   .hero::before { display: none; }
 
-  /* スマホ: 画像を画面の約2/3に */
+  /* 画像エリア：画面の終55% */
   .hero-img {
     position: relative;
     width: 100%;
-    height: 60vh;
+    height: 55vh;
     overflow: hidden;
     line-height: 0;
   }
@@ -143,18 +139,18 @@ body { background: var(--bg); }
     object-fit: cover;
     object-position: center top;
   }
-  /* スマホ: 画像下端→白のグラデーション */
   .hero-img::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 90px;
     background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
     pointer-events: none;
   }
-  /* スマホ: テキストエリアを小さく・コンパクトに */
+
+  /* テキストエリア：最小限の余白でボタンまで収める */
   .hero-text {
     position: relative;
     top: unset;
@@ -162,14 +158,32 @@ body { background: var(--bg); }
     width: 100%;
     height: auto;
     background: white;
-    padding: 14px 18px 24px;
+    padding: 10px 16px 16px;
   }
-  .hero-text h1 { font-size: 20px; line-height: 1.5; margin-bottom: 10px; }
-  .hero-text p { font-size: 12px; line-height: 1.7; margin-bottom: 14px; }
-  .cta-row { flex-direction: column; gap: 8px; margin-bottom: 10px; }
-  .cta { font-size: 14px; padding: 12px 16px; gap: 8px; border-radius: 12px; }
-  .cta small { font-size: 10px; }
-  .free-note { font-size: 11px; }
+  .hero-text h1 {
+    font-size: 19px;
+    line-height: 1.45;
+    margin-bottom: 6px;
+  }
+  .hero-text p {
+    font-size: 11px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .cta-row {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .cta {
+    font-size: 13px;
+    padding: 10px 14px;
+    gap: 8px;
+    border-radius: 12px;
+    width: 100%;
+  }
+  .cta small { font-size: 10px; margin-top: 2px; }
+  .free-note { font-size: 10px; }
 
   .cards, .lanes, .trust { padding-left: 18px; padding-right: 18px; }
   .trust-grid { grid-template-columns: 1fr; }
