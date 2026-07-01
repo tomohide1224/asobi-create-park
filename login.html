@@ -11,9 +11,9 @@
     body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
 
     .site-header { background: white; border-bottom: 1px solid #F0F0F0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; }
+    .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: flex-start; }
     .logo { display: block; flex-shrink: 0; line-height: 0; text-decoration: none; }
-    .logo-image { display: block; height: 56px; width: auto; }
+    .logo-image { display: block; height: 40px; width: auto; }
 
     .page-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
 
@@ -175,10 +175,10 @@
     }
 
     @media (max-width: 900px) {
-      .logo-image { width: 150px; }
+      .logo-image { height: 36px; }
     }
     @media (max-width: 480px) {
-      .logo-image { width: 132px; }
+      .logo-image { height: 32px; }
     }
   </style>
 </head>
