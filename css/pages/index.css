@@ -47,8 +47,8 @@ body { background: var(--bg); }
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 56px 48px;
+  justify-content: flex-end;
+  padding: 56px 48px 72px;
 }
 .hero-text h1 { font-size: 38px; line-height: 1.6; font-weight: 900; letter-spacing: -1px; margin-bottom: 18px; color: var(--navy); }
 .o { color: var(--orange); }
@@ -135,7 +135,6 @@ body { background: var(--bg); }
     object-fit: cover;
     object-position: center top;
   }
-  /* 画像下部の白フェード（少し長めにして重なり部分をカバー） */
   .hero-img::after {
     content: '';
     position: absolute;
@@ -147,7 +146,6 @@ body { background: var(--bg); }
     pointer-events: none;
   }
 
-  /* テキストエリアを画像に28px重ねて引き上げ、上部を透明→白に */
   .hero-text {
     position: relative;
     top: unset;
