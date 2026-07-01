@@ -156,7 +156,7 @@
     <div class="dash-pane active" id="pane-events">
       <div class="dash-section-title">自分が登録したイベント</div>
       <div id="events-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
-      <button class="btn-line dash-post-btn" onclick="showEventForm()">＋ イベントを投稿する</button>
+      <button class="btn-line dash-post-btn" onclick="showEventForm()">&#xFF0B; イベントを投稿する</button>
     </div>
 
     <div class="dash-pane" id="pane-requests">
@@ -194,7 +194,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">イベント名 <span class="required">*</span></label>
-        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遊ぶ自然体験">
+        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遙ぶ自然体験">
       </div>
       <div class="form-group">
         <label class="form-label">開催日</label>
@@ -206,7 +206,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">対象年齢・人数</label>
-        <input type="text" id="ev_target" class="form-input" placeholder="例：3〜10歳、20名程度">
+        <input type="text" id="ev_target" class="form-input" placeholder="例：3～10歳、20名程度">
       </div>
       <div class="form-group">
         <label class="form-label">イベント説明</label>
@@ -267,7 +267,7 @@
 
 <script src="/js/common.js"></script>
 <script>
-  loadHeaderSimple();
+  loadHeaderMemberSimple();
   loadFooter();
 </script>
 <script>
@@ -447,8 +447,8 @@
   async function loadDashboard(org) {
     if (!org?.id) {
       document.getElementById('statEvents').textContent = '0'; document.getElementById('statRequests').textContent = '0'; document.getElementById('statNew').textContent = '0';
-      document.getElementById('events-list').innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
-      document.getElementById('requests-list').innerHTML = '<div class="dash-empty">📭 まだ問い合わせはありません</div>';
+      document.getElementById('events-list').innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      document.getElementById('requests-list').innerHTML = '<div class="dash-empty">💭 まだ問い合わせはありません</div>';
       renderOrgInfo(org || {}); return;
     }
     try {
@@ -470,17 +470,17 @@
 
   function renderEvents(events, requests) {
     const el = document.getElementById('events-list');
-    if (events.length === 0) { el.innerHTML = '<div class="dash-empty">📭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>'; return; }
+    if (events.length === 0) { el.innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>'; return; }
     const countMap = {}; requests.forEach(r => { countMap[r.event_id] = (countMap[r.event_id] || 0) + 1; });
     const statusLabel = { active: '掲載中', pending: '審査中', closed: '終了' };
     const statusClass = { active: 'status-active', pending: 'status-pending', closed: 'status-closed' };
-    const cards = events.map(ev => { const count = countMap[ev.id] || 0; const sLabel = statusLabel[ev.status] || '掲載中'; const sClass = statusClass[ev.status] || 'status-active'; const imgHtml = ev.image_url ? `<img src="${escHtml(ev.image_url)}" alt="">` : '🎪'; return `<div class="event-card"><div class="event-card-img">${imgHtml}</div><div class="event-card-body"><span class="event-card-status ${sClass}">${sLabel}</span><div class="event-card-title">${escHtml(ev.title)}</div><div class="event-card-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>${count > 0 ? `<div class="event-card-inquiry">📬 問い合わせ ${count}件</div>` : ''}</div></div>`; }).join('');
+    const cards = events.map(ev => { const count = countMap[ev.id] || 0; const sLabel = statusLabel[ev.status] || '掲載中'; const sClass = statusClass[ev.status] || 'status-active'; const imgHtml = ev.image_url ? `<img src="${escHtml(ev.image_url)}" alt="">` : '🎦'; return `<div class="event-card"><div class="event-card-img">${imgHtml}</div><div class="event-card-body"><span class="event-card-status ${sClass}">${sLabel}</span><div class="event-card-title">${escHtml(ev.title)}</div><div class="event-card-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>${count > 0 ? `<div class="event-card-inquiry">📬 問い合わせ ${count}件</div>` : ''}</div></div>`; }).join('');
     el.innerHTML = `<div class="event-cards">${cards}</div>`;
   }
 
   function renderRequests(requests, events) {
     const el = document.getElementById('requests-list');
-    if (requests.length === 0) { el.innerHTML = '<div class="dash-empty">📭 まだ問い合わせ・参加申請はありません</div>'; return; }
+    if (requests.length === 0) { el.innerHTML = '<div class="dash-empty">💭 まだ問い合わせ・参加申請はありません</div>'; return; }
     const eventMap = {}; events.forEach(e => { eventMap[e.id] = e.title; });
     const typeLabel = { participate: '参加希望', help: '手伝い希望', inquiry: 'お問い合わせ' };
     const items = requests.map(r => { const date = new Date(r.created_at).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' }); const type = typeLabel[r.request_type] || r.request_type || 'お問い合わせ'; return `<div class="request-item"><div class="request-event-tag">📅 ${escHtml(eventMap[r.event_id] || 'イベント不明')}</div><div class="request-header"><div><span class="request-type-badge">${escHtml(type)}</span><div class="request-name">${escHtml(r.name || '匿名')}</div></div><div class="request-date">${date}</div></div>${r.message ? `<div class="request-message">${escHtml(r.message)}</div>` : ''}</div>`; }).join('');
