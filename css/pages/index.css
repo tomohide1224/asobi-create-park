@@ -15,13 +15,12 @@ body { background: var(--bg); }
   position: relative;
   z-index: 0;
   line-height: 0;
-  max-height: 620px;
+  height: 620px;
   overflow: hidden;
 }
 .hero-img img {
   width: 100%;
-  height: auto;
-  max-height: 620px;
+  height: 100%;
   object-fit: cover;
   object-position: center top;
   display: block;
@@ -154,8 +153,8 @@ body { background: var(--bg); }
   .trust-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* ─── スマホ（760px以下） ─── */
-@media (max-width: 760px) {
+/* ─── スマホ（768px以下） ─── */
+@media (max-width: 768px) {
   .hero { display: block; }
   .hero::before { display: none; }
 
@@ -163,14 +162,12 @@ body { background: var(--bg); }
     position: relative;
     width: 100%;
     height: 48vh;
-    max-height: none;
     overflow: hidden;
     line-height: 0;
   }
   .hero-img img {
     width: 100%;
     height: 100%;
-    max-height: none;
     object-fit: cover;
     object-position: center top;
   }
