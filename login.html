@@ -156,7 +156,7 @@
     <div class="dash-pane active" id="pane-events">
       <div class="dash-section-title">自分が登録したイベント</div>
       <div id="events-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
-      <button class="btn-line dash-post-btn" onclick="showEventForm()">&#xFF0B; イベントを投稿する</button>
+      <a href="/event-manage.html" class="btn-line dash-post-btn">&#xFF0B; イベントを登録する</a>
     </div>
 
     <div class="dash-pane" id="pane-requests">
@@ -170,57 +170,6 @@
     </div>
 
     <button class="btn-logout" onclick="signOut()">ログアウト</button>
-  </div>
-
-  <!-- PHASE 6: イベント投稿フォーム -->
-  <div class="login-card phase" id="phase6" style="max-width:520px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-      <button onclick="showPhase('phase4')" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);">←</button>
-      <div style="font-size:18px;font-weight:900;color:var(--navy);">📅 イベントを投稿する</div>
-    </div>
-
-    <div class="register-form">
-      <div class="form-group">
-        <label class="form-label">イベント画像</label>
-        <div class="img-upload-area" id="event-img-area">
-          <input type="file" id="event_image_file" accept="image/*" onchange="previewEventImage(this)">
-          <img id="event_img_preview" class="img-preview" src="" alt="">
-          <div id="event-img-placeholder">
-            <div class="img-upload-icon">🖼️</div>
-            <div class="img-upload-label">タップして画像を選択（JPEG/PNG、5MBまで）</div>
-          </div>
-        </div>
-        <div id="event-img-progress" class="upload-progress">📤 アップロード中...</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">イベント名 <span class="required">*</span></label>
-        <input type="text" id="ev_title" class="form-input" placeholder="例：親子で遙ぶ自然体験">
-      </div>
-      <div class="form-group">
-        <label class="form-label">開催日</label>
-        <input type="date" id="ev_event_date" class="form-input">
-      </div>
-      <div class="form-group">
-        <label class="form-label">開催場所</label>
-        <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷公園">
-      </div>
-      <div class="form-group">
-        <label class="form-label">対象年齢・人数</label>
-        <input type="text" id="ev_target" class="form-input" placeholder="例：3～10歳、20名程度">
-      </div>
-      <div class="form-group">
-        <label class="form-label">イベント説明</label>
-        <textarea id="ev_description" class="form-input" rows="4" placeholder="どんなイベントですか？"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">参加費</label>
-        <input type="text" id="ev_price" class="form-input" placeholder="例：無料、500円/人">
-      </div>
-      <div id="ev_error" style="color:#C62828;font-size:13px;margin-bottom:10px;text-align:center;display:none;"></div>
-      <button class="btn-line" id="ev_submit_btn" onclick="saveEvent()" style="margin-top:4px">
-        🌱 イベントを公開する
-      </button>
-    </div>
   </div>
 
   <!-- PHASE SELECT: 企画者 or 支援者を選択 -->
@@ -548,7 +497,7 @@
   async function loadDashboard(org) {
     if (!org?.id) {
       document.getElementById('statEvents').textContent = '0'; document.getElementById('statRequests').textContent = '0'; document.getElementById('statNew').textContent = '0';
-      document.getElementById('events-list').innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>';
+      document.getElementById('events-list').innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを登録する」から登録してください</small></div>';
       document.getElementById('requests-list').innerHTML = '<div class="dash-empty">💭 まだ問い合わせはありません</div>';
       renderOrgInfo(org || {}); return;
     }
@@ -571,11 +520,33 @@
 
   function renderEvents(events, requests) {
     const el = document.getElementById('events-list');
-    if (events.length === 0) { el.innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを投稿する」から登録してください</small></div>'; return; }
+    if (events.length === 0) { el.innerHTML = '<div class="dash-empty">💭 まだイベントが登録されていません<br><small>「イベントを登録する」から登録してください</small></div>'; return; }
     const countMap = {}; requests.forEach(r => { countMap[r.event_id] = (countMap[r.event_id] || 0) + 1; });
-    const statusLabel = { active: '掲載中', pending: '審査中', closed: '終了' };
-    const statusClass = { active: 'status-active', pending: 'status-pending', closed: 'status-closed' };
-    const cards = events.map(ev => { const count = countMap[ev.id] || 0; const sLabel = statusLabel[ev.status] || '掲載中'; const sClass = statusClass[ev.status] || 'status-active'; const imgHtml = ev.image_url ? `<img src="${escHtml(ev.image_url)}" alt="">` : '🎦'; return `<div class="event-card"><div class="event-card-img">${imgHtml}</div><div class="event-card-body"><span class="event-card-status ${sClass}">${sLabel}</span><div class="event-card-title">${escHtml(ev.title)}</div><div class="event-card-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>${count > 0 ? `<div class="event-card-inquiry">📬 問い合わせ ${count}件</div>` : ''}</div></div>`; }).join('');
+    const statusLabel = { active: '掲載中', draft: '下書き', closed: '終了', published: '掲載中' };
+    const statusClass = { active: 'status-active', draft: 'status-pending', closed: 'status-closed', published: 'status-active' };
+    const cards = events.map(ev => {
+      const count = countMap[ev.id] || 0;
+      const sLabel = statusLabel[ev.status] || '掲載中';
+      const sClass = statusClass[ev.status] || 'status-active';
+      const imgHtml = ev.image_url ? `<img src="${escHtml(ev.image_url)}" alt="">` : '🎦';
+      const flags = [
+        ev.can_participate ? '✋ 参加OK' : '',
+        ev.can_help ? '🙌 手伝いOK' : '',
+        ev.can_inquiry ? '💬 問い合わせOK' : '',
+        ev.is_public ? '🌐 一般公開' : ''
+      ].filter(Boolean).join('　');
+      return `<div class="event-card">
+        <div class="event-card-img">${imgHtml}</div>
+        <div class="event-card-body">
+          <span class="event-card-status ${sClass}">${sLabel}</span>
+          <div class="event-card-title">${escHtml(ev.title)}</div>
+          <div class="event-card-meta">${ev.event_date ? '📅 ' + escHtml(ev.event_date) : ''}${ev.location ? ' 📍 ' + escHtml(ev.location) : ''}</div>
+          ${flags ? `<div style="font-size:11px;color:var(--gray);margin-top:4px;">${flags}</div>` : ''}
+          ${count > 0 ? `<div class="event-card-inquiry">📬 問い合わせ ${count}件</div>` : ''}
+          <a href="/event-manage.html?edit=${ev.id}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--green);text-decoration:none;padding:4px 0;">✏️ 編集する</a>
+        </div>
+      </div>`;
+    }).join('');
     el.innerHTML = `<div class="event-cards">${cards}</div>`;
   }
 
@@ -640,54 +611,6 @@
     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': file.type, 'x-upsert': 'true' }, body: file });
     if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || '画像のアップロードに失敗しました。'); }
     return `${SUPABASE_URL}/storage/v1/object/public/images/${path}`;
-  }
-
-  function previewEventImage(input) {
-    if (!input.files || !input.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = e => { const prev = document.getElementById('event_img_preview'); prev.src = e.target.result; prev.classList.add('has-img'); document.getElementById('event-img-placeholder').style.display = 'none'; };
-    reader.readAsDataURL(input.files[0]);
-  }
-
-  function showEventForm() {
-    ['ev_title','ev_event_date','ev_location','ev_target','ev_description','ev_price'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-    const prev = document.getElementById('event_img_preview');
-    if (prev) { prev.src = ''; prev.classList.remove('has-img'); }
-    const ph = document.getElementById('event-img-placeholder');
-    if (ph) ph.style.display = '';
-    const fileInput = document.getElementById('event_image_file');
-    if (fileInput) fileInput.value = '';
-    document.getElementById('ev_error').style.display = 'none';
-    document.querySelector('.page-wrap').classList.remove('dashboard-mode');
-    showPhase('phase6');
-  }
-
-  async function saveEvent() {
-    const title = document.getElementById('ev_title').value.trim();
-    if (!title) { document.getElementById('ev_error').textContent = 'イベント名は必須です。'; document.getElementById('ev_error').style.display = 'block'; return; }
-    const org = JSON.parse(sessionStorage.getItem('acp_org') || '{}');
-    if (!org.id) { showPhase('phase1'); return; }
-    const btn = document.getElementById('ev_submit_btn');
-    btn.disabled = true; btn.textContent = '投稿中...';
-    document.getElementById('ev_error').style.display = 'none';
-    try {
-      let image_url = null;
-      const fileInput = document.getElementById('event_image_file');
-      if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        const ext = file.name.split('.').pop();
-        const path = `events/${org.id}_${Date.now()}.${ext}`;
-        document.getElementById('event-img-progress').style.display = 'block';
-        image_url = await uploadImage(file, path);
-        document.getElementById('event-img-progress').style.display = 'none';
-      }
-      const body = { title, event_date: document.getElementById('ev_event_date').value || null, location: document.getElementById('ev_location').value.trim() || null, target: document.getElementById('ev_target').value.trim() || null, description: document.getElementById('ev_description').value.trim() || null, price: document.getElementById('ev_price').value.trim() || null, organization_id: org.id, organizer_name: org.org_name || '', status: 'active', image_url };
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/events`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=representation' }, body: JSON.stringify(body) });
-      if (!res.ok) { const err = await res.json(); throw new Error(err.message || '投稿に失敗しました。'); }
-      document.querySelector('.page-wrap').classList.add('dashboard-mode');
-      showPhase('phase4'); switchTab('events');
-      await loadDashboard(org);
-    } catch(e) { document.getElementById('ev_error').textContent = 'エラー: ' + e.message; document.getElementById('ev_error').style.display = 'block'; btn.disabled = false; btn.textContent = '🌱 イベントを公開する'; document.getElementById('event-img-progress').style.display = 'none'; }
   }
 
   function switchTab(tab) {
