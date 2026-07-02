@@ -38,10 +38,12 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 .img-placeholder-label { font-size: 12px; color: var(--gray); }
 .upload-progress { display: none; font-size: 13px; color: var(--green); text-align: center; margin-top: 8px; font-weight: 700; }
 
-/* チェックボックス設定 */
+/* チェックボックス・ラジオボタン設定 */
 .check-group { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 12px; border: 1.5px solid #E8E8E8; margin-bottom: 10px; cursor: pointer; transition: border-color .2s, background .2s; }
 .check-group:hover { border-color: var(--green); background: #F9FFF9; }
-.check-group input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--green); cursor: pointer; }
+.check-group.selected { border-color: var(--green); background: #F0FBF5; }
+.check-group input[type="checkbox"],
+.check-group input[type="radio"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--green); cursor: pointer; }
 .check-group-body { flex: 1; }
 .check-group-label { font-size: 14px; font-weight: 800; color: var(--navy); }
 .check-group-desc { font-size: 11px; color: var(--gray); margin-top: 2px; line-height: 1.5; }
@@ -67,6 +69,11 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 
 .em-error { display: none; background: #FFEBEE; border-radius: 12px; padding: 12px 16px; font-size: 13px; color: #C62828; font-weight: 700; margin-bottom: 16px; }
 .em-success { display: none; background: #E8F5E9; border-radius: 12px; padding: 16px; text-align: center; font-size: 15px; color: var(--green); font-weight: 800; margin-bottom: 16px; }
+
+/* Googleマップリンク */
+.maps-link { display: none; margin-top: 6px; }
+.maps-link a { font-size: 12px; color: var(--green); font-weight: 700; text-decoration: none; }
+.maps-link a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -124,7 +131,10 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 
     <div class="form-group">
       <label class="form-label">開催場所</label>
-      <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園">
+      <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園" oninput="updateMapsLink(this.value)">
+      <div class="maps-link" id="mapsLinkWrap">
+        <a id="mapsLinkA" href="" target="_blank" rel="noopener">📍 Googleマップで確認する →</a>
+      </div>
     </div>
 
     <div class="form-row">
@@ -182,13 +192,25 @@ textarea.form-input { min-height: 90px; resize: vertical; }
   <div class="em-card">
     <div class="em-section-title">🌐 公開設定</div>
 
-    <label class="check-group" id="grp_public">
-      <input type="checkbox" id="is_public" onchange="onPublicChange()">
-      <div class="check-group-body">
-        <div class="check-group-label">🌐 一般公開する</div>
-        <div class="check-group-desc">登録団体以外の一般ユーザーにも公開します。公開期間を設定できます。</div>
-      </div>
-    </label>
+    <div class="form-group">
+      <div class="form-label" style="margin-bottom:10px">公開範囲</div>
+
+      <label class="check-group" id="grp_public_open" onclick="onPublicChange()">
+        <input type="radio" name="is_public" id="is_public_open" value="open">
+        <div class="check-group-body">
+          <div class="check-group-label">🌐 オープン（一般公開）</div>
+          <div class="check-group-desc">誰でも見られます。イベント一覧に表示され、一般ユーザーも申し込みできます。公開期間を設定できます。</div>
+        </div>
+      </label>
+
+      <label class="check-group selected" id="grp_public_closed" onclick="onPublicChange()">
+        <input type="radio" name="is_public" id="is_public_closed" value="closed" checked>
+        <div class="check-group-body">
+          <div class="check-group-label">🔒 クローズド（関係者限定）</div>
+          <div class="check-group-desc">学校や企業など招待された方のみ。一般のイベント一覧には表示されません。</div>
+        </div>
+      </label>
+    </div>
 
     <div class="publish-dates" id="publishDates">
       <div class="form-row">
@@ -243,6 +265,19 @@ const HEADERS = {
 
 let currentOrg = null;
 
+// ── Googleマップリンク ──────────────────────────────
+function updateMapsLink(val) {
+  val = (val || '').trim();
+  const wrap = document.getElementById('mapsLinkWrap');
+  const link = document.getElementById('mapsLinkA');
+  if (val) {
+    link.href = 'https://maps.google.com/?q=' + encodeURIComponent(val);
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
 // ── 初期化 ──────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   const saved = sessionStorage.getItem('acp_org');
@@ -286,6 +321,7 @@ async function loadEvent(id) {
   document.getElementById('ev_event_date').value = ev.event_date || '';
   document.getElementById('ev_fee').value = ev.fee || '無料';
   document.getElementById('ev_location').value = ev.location || '';
+  updateMapsLink(ev.location || '');
   document.getElementById('ev_target_audience').value = ev.target_audience || ev.target || '';
   document.getElementById('ev_max_participants').value = ev.max_participants || '';
   document.getElementById('ev_description').value = ev.description || '';
@@ -293,7 +329,20 @@ async function loadEvent(id) {
   document.getElementById('can_participate').checked = !!ev.can_participate;
   document.getElementById('can_help').checked = !!ev.can_help;
   document.getElementById('can_inquiry').checked = !!ev.can_inquiry;
-  document.getElementById('is_public').checked = !!ev.is_public;
+
+  // is_public: ラジオボタン
+  const pubOpen = document.getElementById('is_public_open');
+  const pubClosed = document.getElementById('is_public_closed');
+  if (ev.is_public) {
+    pubOpen.checked = true;
+    document.getElementById('grp_public_open').classList.add('selected');
+    document.getElementById('grp_public_closed').classList.remove('selected');
+  } else {
+    pubClosed.checked = true;
+    document.getElementById('grp_public_closed').classList.add('selected');
+    document.getElementById('grp_public_open').classList.remove('selected');
+  }
+
   document.getElementById('currentImageUrl').value = ev.image_url || '';
   if (ev.image_url) {
     const prev = document.getElementById('imgPreview');
@@ -340,9 +389,15 @@ function onHelpChange() {
   }
 }
 
+// ── 公開設定ラジオ ──────────────────────────────
 function onPublicChange() {
-  const pub = document.getElementById('is_public').checked;
-  document.getElementById('publishDates').classList.toggle('visible', pub);
+  // setTimeout でクリック後の checked 状態を反映
+  setTimeout(() => {
+    const isOpen = document.getElementById('is_public_open').checked;
+    document.getElementById('publishDates').classList.toggle('visible', isOpen);
+    document.getElementById('grp_public_open').classList.toggle('selected', isOpen);
+    document.getElementById('grp_public_closed').classList.toggle('selected', !isOpen);
+  }, 0);
 }
 
 // ── ステータス選択 ──────────────────────────────
@@ -405,7 +460,7 @@ async function saveEvent() {
     const can_participate = document.getElementById('can_participate').checked;
     const can_help = document.getElementById('can_help').checked;
     const can_inquiry = can_participate ? true : document.getElementById('can_inquiry').checked;
-    const is_public = document.getElementById('is_public').checked;
+    const is_public = document.getElementById('is_public_open').checked;
     const start = document.getElementById('publish_start_at').value;
     const end = document.getElementById('publish_end_at').value;
 
