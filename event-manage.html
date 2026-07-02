@@ -48,16 +48,12 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 .check-group-body { flex: 1; }
 .check-group-label { font-size: 14px; font-weight: 800; color: var(--navy); }
 .check-group-desc { font-size: 11px; color: var(--gray); margin-top: 2px; line-height: 1.5; }
-.check-group.disabled { opacity: .5; cursor: not-allowed; }
-.check-group.disabled input { cursor: not-allowed; }
 
-/* オープン時のサブ設定 */
-.open-sub { display: none; margin-top: 12px; padding: 14px; background: #F5FDF8; border-radius: 14px; border: 1.5px dashed #B2DFC4; }
-.open-sub.visible { display: block; }
-.open-sub-title { font-size: 11px; font-weight: 800; color: var(--green); margin-bottom: 10px; }
+/* 区切り */
+.setting-divider { border: none; border-top: 1.5px dashed #E0E0E0; margin: 16px 0; }
 
 /* 公開期間 */
-.publish-dates { background: #EDF7F1; border-radius: 10px; padding: 12px; margin-top: 10px; }
+.publish-dates-box { background: #F5F5F5; border-radius: 12px; padding: 14px; }
 
 /* ステータス選択 */
 .status-row { display: flex; gap: 8px; margin-top: 16px; }
@@ -164,32 +160,49 @@ textarea.form-input { min-height: 90px; resize: vertical; }
     </div>
   </div>
 
-  <!-- 公開・申込設定（統合） -->
+  <!-- 公開・申込設定 -->
   <div class="em-card">
     <div class="em-section-title">🌐 公開・申込設定</div>
 
-    <label class="check-group" id="grp_public_open" onclick="onPublicChange()">
-      <input type="radio" name="is_public" id="is_public_open" value="open">
-      <div class="check-group-body">
-        <div class="check-group-label">🌐 オープン（一般公開・参加申し込み受付）</div>
-        <div class="check-group-desc">イベント一覧に表示され、誰でも参加・問い合わせを申し込めます。</div>
-      </div>
-    </label>
+    <!-- オープン/クローズド -->
+    <div class="form-group">
+      <div class="form-label" style="margin-bottom:10px">公開範囲</div>
+      <label class="check-group" id="grp_public_open" onclick="onPublicChange()">
+        <input type="radio" name="is_public" id="is_public_open" value="open">
+        <div class="check-group-body">
+          <div class="check-group-label">🌐 オープン（一般公開・参加申し込み受付）</div>
+          <div class="check-group-desc">イベント一覧に表示され、誰でも参加・問い合わせを申し込めます。</div>
+        </div>
+      </label>
+      <label class="check-group selected" id="grp_public_closed" onclick="onPublicChange()">
+        <input type="radio" name="is_public" id="is_public_closed" value="closed" checked>
+        <div class="check-group-body">
+          <div class="check-group-label">🔒 クローズド（関係者限定）</div>
+          <div class="check-group-desc">学校や企業など招待された方のみ。一般のイベント一覧には表示されません。</div>
+        </div>
+      </label>
+    </div>
 
-    <!-- オープン時サブ設定 -->
-    <div class="open-sub" id="openSubSettings">
-      <div class="open-sub-title">▼ 追加の受付設定（任意）</div>
+    <hr class="setting-divider">
 
+    <!-- 手伝い募集（常時表示） -->
+    <div class="form-group">
+      <div class="form-label" style="margin-bottom:10px">スタッフ・手伝い募集</div>
       <label class="check-group" id="grp_help">
         <input type="checkbox" id="can_help">
         <div class="check-group-body">
-          <div class="check-group-label">🙌 手伝い・スタッフも募集する</div>
-          <div class="check-group-desc">参加申し込みに加えて、運営スタッフやボランティアも募集します。</div>
+          <div class="check-group-label">🙌 手伝い・スタッフを募集する</div>
+          <div class="check-group-desc">運営スタッフやボランティアを募集します。オープン・クローズド問わず設定できます。</div>
         </div>
       </label>
+    </div>
 
-      <div class="publish-dates">
-        <div class="form-label" style="margin-bottom:8px">公開期間 <span class="hint">（未入力で無期限）</span></div>
+    <hr class="setting-divider">
+
+    <!-- 公開期間（常時表示） -->
+    <div class="form-group">
+      <div class="form-label" style="margin-bottom:10px">公開期間 <span class="hint">（未入力で無期限）</span></div>
+      <div class="publish-dates-box">
         <div class="form-row">
           <div class="form-group" style="margin-bottom:0">
             <label class="form-label">開始日時</label>
@@ -203,16 +216,10 @@ textarea.form-input { min-height: 90px; resize: vertical; }
       </div>
     </div>
 
-    <label class="check-group selected" id="grp_public_closed" onclick="onPublicChange()">
-      <input type="radio" name="is_public" id="is_public_closed" value="closed" checked>
-      <div class="check-group-body">
-        <div class="check-group-label">🔒 クローズド（関係者限定）</div>
-        <div class="check-group-desc">学校や企業など招待された方のみ。一般のイベント一覧には表示されません。</div>
-      </div>
-    </label>
+    <hr class="setting-divider">
 
     <!-- ステータス -->
-    <div style="margin-top:20px">
+    <div>
       <div class="form-label" style="margin-bottom:8px">掲載ステータス</div>
       <div class="status-row">
         <button type="button" class="status-btn" id="statusDraft" onclick="setStatus('draft')">📝 下書き</button>
@@ -318,9 +325,8 @@ async function loadEvent(id) {
   document.getElementById(isOpen ? 'is_public_open' : 'is_public_closed').checked = true;
   document.getElementById('grp_public_open').classList.toggle('selected', isOpen);
   document.getElementById('grp_public_closed').classList.toggle('selected', !isOpen);
-  document.getElementById('openSubSettings').classList.toggle('visible', isOpen);
 
-  // 手伝い
+  // 手伝い（独立）
   document.getElementById('can_help').checked = !!ev.can_help;
 
   // 公開期間
@@ -336,15 +342,12 @@ async function loadEvent(id) {
   setStatus(ev.status || 'active');
 }
 
-// ── オープン/クローズド切替 ──────────────────────────────
+// ── オープン/クローズド切替（ビジュアルのみ） ──────────────────────────────
 function onPublicChange() {
   setTimeout(() => {
     const isOpen = document.getElementById('is_public_open').checked;
-    document.getElementById('openSubSettings').classList.toggle('visible', isOpen);
     document.getElementById('grp_public_open').classList.toggle('selected', isOpen);
     document.getElementById('grp_public_closed').classList.toggle('selected', !isOpen);
-    // クローズドに切り替えたら手伝いをリセット
-    if (!isOpen) document.getElementById('can_help').checked = false;
   }, 0);
 }
 
@@ -406,9 +409,9 @@ async function saveEvent() {
     }
 
     const is_public = document.getElementById('is_public_open').checked;
-    const can_participate = is_public;           // オープン = 参加申込OK
-    const can_help = is_public && document.getElementById('can_help').checked;
-    const can_inquiry = is_public && !can_help;  // オープンかつ手伝い募集なし = 問い合わせOK
+    const can_participate = is_public;                     // オープン = 参加申込OK
+    const can_help = document.getElementById('can_help').checked; // 独立設定
+    const can_inquiry = is_public && !can_help;            // オープン＋手伝いなし = 問い合わせOK
     const start = document.getElementById('publish_start_at').value;
     const end = document.getElementById('publish_end_at').value;
 
@@ -426,8 +429,8 @@ async function saveEvent() {
       can_participate,
       can_help,
       can_inquiry,
-      publish_start_at: (is_public && start) ? new Date(start).toISOString() : null,
-      publish_end_at: (is_public && end) ? new Date(end).toISOString() : null,
+      publish_start_at: start ? new Date(start).toISOString() : null,
+      publish_end_at: end ? new Date(end).toISOString() : null,
       status: document.getElementById('currentStatus').value,
       image_url,
       organization_id: currentOrg.id,
