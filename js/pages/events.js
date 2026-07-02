@@ -14,13 +14,16 @@ const THUMB_GRADIENTS = [
 ];
 
 let client, allEvents = [], allCategories = [], allOrgs = [];
-let activeCat = 'all', activeTab = 'all', currentRequestType = 'participate';
+let activeCat = 'all', currentRequestType = 'participate';
 
 window.addEventListener('DOMContentLoaded', async () => {
   client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   const [catsRes, eventsRes, orgsRes] = await Promise.all([
     client.from('event_categories').select('*').order('id'),
-    client.from('events').select('*, event_categories(name, emoji)').eq('status', 'active').order('id'),
+    client.from('events').select('*, event_categories(name, emoji)')
+      .eq('status', 'active')
+      .eq('is_public', true)
+      .order('id'),
     client.from('organizations').select('*')
   ]);
   allCategories = catsRes.data || [];
@@ -39,8 +42,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     chips.appendChild(btn);
   });
 
-  if (new URLSearchParams(location.search).get('tab') === 'staff') switchTab('help');
-  else applyFilters();
+  applyFilters();
 });
 
 function filterCat(el, cat) {
@@ -50,39 +52,18 @@ function filterCat(el, cat) {
   applyFilters();
 }
 
-function filterType(el, type) {
-  document.querySelectorAll('[data-type]').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  if (type === 'all') switchTab('all');
-  else if (type === 'join') switchTab('join');
-  else switchTab('help');
-}
-
-function switchTab(tab) {
-  activeTab = tab;
-  ['tabAll','tabJoin','tabHelp'].forEach(id => document.getElementById(id).classList.remove('active'));
-  document.getElementById(tab === 'all' ? 'tabAll' : tab === 'join' ? 'tabJoin' : 'tabHelp').classList.add('active');
-  applyFilters();
-}
-
 function resetFilters() {
   activeCat = 'all';
-  activeTab = 'all';
   document.getElementById('searchInput').value = '';
   document.querySelectorAll('#catChips .filter-chip').forEach(c => c.classList.remove('active'));
   document.querySelector('#catChips .filter-chip[data-cat="all"]').classList.add('active');
-  document.getElementById('tabAll').classList.add('active');
-  document.getElementById('tabJoin').classList.remove('active');
-  document.getElementById('tabHelp').classList.remove('active');
   applyFilters();
 }
 
 function applyFilters() {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  let filtered = allEvents.filter(ev => {
+  const filtered = allEvents.filter(ev => {
     if (activeCat !== 'all' && ev.category_id != activeCat) return false;
-    if (activeTab === 'join' && !ev.can_participate) return false;
-    if (activeTab === 'help' && !ev.can_help) return false;
     if (q && !ev.title.toLowerCase().includes(q) && !(ev.organizer_name||'').toLowerCase().includes(q)) return false;
     return true;
   });
@@ -109,7 +90,7 @@ function renderCards(events) {
       <div class="card-thumb" style="background:${grad}">
         <span style="font-size:52px">${emoji}</span>
         <div class="card-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
-        ${ev.can_help ? '<div class="card-type-badge">🙌 スタッフ募集</div>' : (ev.can_participate ? '<div class="card-type-badge">✋ 参加者募集</div>' : '')}
+        ${ev.can_help ? '<div class="card-type-badge">🙌 スタッフも募集</div>' : ''}
       </div>
       <div class="card-body">
         <div class="card-title">${ev.title}</div>
@@ -122,8 +103,6 @@ function renderCards(events) {
       <div class="card-footer">
         ${ev.target_audience ? `<span class="card-tag">${ev.target_audience}</span>` : ''}
         ${ev.fee ? `<span class="card-tag">💴 ${ev.fee}</span>` : '<span class="card-tag">💴 無料</span>'}
-        ${ev.can_participate ? '<span class="card-tag can-join">✋ 参加OK</span>' : ''}
-        ${ev.can_help ? '<span class="card-tag can-help">🙌 手伝いOK</span>' : ''}
       </div>
     </div>`;
   }).join('');
@@ -158,7 +137,6 @@ function openModal(id) {
     <div class="modal-title">${ev.title}</div>
     <div class="modal-organizer">📍 ${ev.organizer_name || ''}　${ev.organizer_type ? '｜ ' + ev.organizer_type : ''}</div>`;
 
-  // フォーム表示判定
   const showForm = ev.can_participate || ev.can_help || ev.can_inquiry;
   const tabCount = [ev.can_participate, ev.can_help, ev.can_inquiry].filter(Boolean).length;
 
@@ -181,9 +159,6 @@ function openModal(id) {
       ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 定員</div><div class="info-value">${ev.max_participants}名</div></div>` : ''}
     </div>
     ${ev.event_url ? `<a href="${ev.event_url}" target="_blank" rel="noopener" style="display:block;background:var(--green);color:white;text-align:center;padding:13px;border-radius:14px;font-size:14px;font-weight:800;text-decoration:none;margin-bottom:16px;">🔗 イベント詳細ページを見る</a>` : ''}
-    ${ev.knowhow_summary ? `<div style="background:#F0FBF5;border-radius:14px;padding:16px;margin-bottom:16px"><div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px">💡 ノウハウ・ポイント</div><div style="font-size:14px;color:#444;line-height:1.9">${ev.knowhow_summary}</div></div>` : ''}
-    ${ev.tools_needed ? `<div style="background:#FFF8E1;border-radius:14px;padding:16px;margin-bottom:16px"><div style="font-size:13px;font-weight:800;color:#F57F17;margin-bottom:8px">🛠️ 必要な道具・準備物</div><div style="font-size:14px;color:#444;line-height:1.9">${ev.tools_needed}</div></div>` : ''}
-    ${org && org.contact_email ? `<div class="contact-box"><div class="contact-title">📧 このあそびについて問い合わせる</div><a href="mailto:${org.contact_email}" class="contact-email">${org.contact_email}</a></div>` : ''}
     ${showForm ? `
     <div class="form-section">
       <div class="form-title">このイベントに関わる</div>
@@ -208,11 +183,9 @@ function setTab(btn, type) {
   currentRequestType = type;
   document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  // 送信ボタンラベルを更新
   document.querySelectorAll('[id^="sbtn-"]').forEach(b => {
     b.textContent = getSubmitLabel(type);
   });
-  // textarea のplaceholderを更新
   document.querySelectorAll('[id^="msgTextarea-"]').forEach(t => {
     t.placeholder = getMsgPlaceholder(type);
   });
