@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イベント登録 | ASOBI CREATE PARK</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<style>
+body { background: #F8F9FA; }
+.em-wrap { max-width: 600px; margin: 0 auto; padding: 24px 16px 80px; }
+.em-header { margin-bottom: 24px; }
+.em-title { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
+.em-org { font-size: 13px; color: var(--gray); font-weight: 600; }
+
+.em-card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,.06); margin-bottom: 16px; }
+.em-section-title { font-size: 13px; font-weight: 800; color: var(--green); letter-spacing: .05em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #E8F5E9; }
+
+.form-group { margin-bottom: 18px; }
+.form-group:last-child { margin-bottom: 0; }
+.form-label { display: block; font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+.form-label .req { color: #E53935; margin-left: 3px; }
+.form-label .hint { font-size: 11px; font-weight: 600; color: var(--gray); margin-left: 6px; }
+.form-input { width: 100%; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 10px 14px; font-size: 14px; outline: none; transition: border-color .2s; font-family: inherit; box-sizing: border-box; }
+.form-input:focus { border-color: var(--green); }
+textarea.form-input { min-height: 90px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-hint { font-size: 11px; color: var(--gray); margin-top: 4px; line-height: 1.5; }
+
+/* 画像アップロード */
+.img-upload-area { border: 2px dashed #D0D0D0; border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; min-height: 140px; display: flex; align-items: center; justify-content: center; background: #FAFAFA; transition: border-color .2s; }
+.img-upload-area:hover { border-color: var(--green); }
+.img-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.img-preview { width: 100%; max-height: 200px; object-fit: cover; display: none; }
+.img-preview.has-img { display: block; }
+.img-placeholder { text-align: center; padding: 24px; }
+.img-placeholder-icon { font-size: 36px; margin-bottom: 8px; }
+.img-placeholder-label { font-size: 12px; color: var(--gray); }
+.upload-progress { display: none; font-size: 13px; color: var(--green); text-align: center; margin-top: 8px; font-weight: 700; }
+
+/* チェックボックス設定 */
+.check-group { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 12px; border: 1.5px solid #E8E8E8; margin-bottom: 10px; cursor: pointer; transition: border-color .2s, background .2s; }
+.check-group:hover { border-color: var(--green); background: #F9FFF9; }
+.check-group input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--green); cursor: pointer; }
+.check-group-body { flex: 1; }
+.check-group-label { font-size: 14px; font-weight: 800; color: var(--navy); }
+.check-group-desc { font-size: 11px; color: var(--gray); margin-top: 2px; line-height: 1.5; }
+.check-group.disabled { opacity: .5; cursor: not-allowed; }
+.check-group.disabled input { cursor: not-allowed; }
+
+/* 公開日時フィールド */
+.publish-dates { background: #F0FBF5; border-radius: 12px; padding: 14px; margin-top: 4px; display: none; }
+.publish-dates.visible { display: block; }
+
+/* ステータス選択 */
+.status-row { display: flex; gap: 8px; }
+.status-btn { flex: 1; padding: 10px; border: 1.5px solid #E0E0E0; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; background: white; color: #666; transition: all .2s; text-align: center; }
+.status-btn.active { background: var(--green); border-color: var(--green); color: white; }
+
+/* 送信ボタン */
+.em-actions { display: flex; gap: 12px; margin-top: 20px; }
+.btn-save { flex: 1; background: var(--green); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 900; cursor: pointer; transition: opacity .2s; }
+.btn-save:hover { opacity: .9; }
+.btn-save:disabled { background: #ccc; cursor: not-allowed; }
+.btn-back { background: none; border: 1.5px solid #ddd; padding: 16px 20px; border-radius: 16px; font-size: 14px; font-weight: 700; color: var(--gray); cursor: pointer; }
+.btn-back:hover { border-color: var(--gray); }
+
+.em-error { display: none; background: #FFEBEE; border-radius: 12px; padding: 12px 16px; font-size: 13px; color: #C62828; font-weight: 700; margin-bottom: 16px; }
+.em-success { display: none; background: #E8F5E9; border-radius: 12px; padding: 16px; text-align: center; font-size: 15px; color: var(--green); font-weight: 800; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="em-wrap" id="mainWrap" style="display:none">
+  <div class="em-header">
+    <div class="em-title" id="pageTitle">📅 イベントを登録する</div>
+    <div class="em-org" id="orgName"></div>
+  </div>
+
+  <div class="em-error" id="emError"></div>
+  <div class="em-success" id="emSuccess">🎉 保存しました！</div>
+
+  <!-- 基本情報 -->
+  <div class="em-card">
+    <div class="em-section-title">📋 基本情報</div>
+
+    <div class="form-group">
+      <label class="form-label">イベント画像</label>
+      <div class="img-upload-area" id="imgArea">
+        <input type="file" id="imgFile" accept="image/*" onchange="previewImage(this)">
+        <img id="imgPreview" class="img-preview" src="" alt="">
+        <div id="imgPlaceholder" class="img-placeholder">
+          <div class="img-placeholder-icon">🖼️</div>
+          <div class="img-placeholder-label">タップして画像を選択（JPEG/PNG・5MBまで）</div>
+        </div>
+      </div>
+      <div class="upload-progress" id="imgProgress">📤 アップロード中...</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">イベント名 <span class="req">*</span></label>
+      <input type="text" id="ev_title" class="form-input" placeholder="例：親子で楽しむ自然体験" maxlength="80">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">カテゴリ</label>
+      <select id="ev_category_id" class="form-input">
+        <option value="">選択してください</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">開催日</label>
+        <input type="date" id="ev_event_date" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">参加費</label>
+        <input type="text" id="ev_fee" class="form-input" placeholder="例：無料、500円/人" value="無料">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">開催場所</label>
+      <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">対象</label>
+        <input type="text" id="ev_target_audience" class="form-input" placeholder="例：3〜10歳">
+      </div>
+      <div class="form-group">
+        <label class="form-label">定員</label>
+        <input type="number" id="ev_max_participants" class="form-input" placeholder="例：30" min="1">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">イベント説明</label>
+      <textarea id="ev_description" class="form-input" rows="4" placeholder="どんなイベントですか？楽しみ方や魅力を伝えてください。"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">外部イベントページURL <span class="hint">（任意）</span></label>
+      <input type="url" id="ev_event_url" class="form-input" placeholder="https://example.com/event">
+    </div>
+  </div>
+
+  <!-- 申込・問い合わせ設定 -->
+  <div class="em-card">
+    <div class="em-section-title">✉️ 申込・問い合わせ設定</div>
+
+    <label class="check-group" id="grp_participate">
+      <input type="checkbox" id="can_participate" onchange="onParticipateChange()">
+      <div class="check-group-body">
+        <div class="check-group-label">✋ 参加申込を受け付ける</div>
+        <div class="check-group-desc">参加希望者がフォームから申込できるようになります。ONにすると「お問い合わせ」も自動的に有効になります。</div>
+      </div>
+    </label>
+
+    <label class="check-group" id="grp_help">
+      <input type="checkbox" id="can_help" onchange="onHelpChange()">
+      <div class="check-group-body">
+        <div class="check-group-label">🙌 手伝い・スタッフを募集する</div>
+        <div class="check-group-desc">当日のお手伝いや運営スタッフを募集できます。</div>
+      </div>
+    </label>
+
+    <label class="check-group" id="grp_inquiry">
+      <input type="checkbox" id="can_inquiry">
+      <div class="check-group-body">
+        <div class="check-group-label">💬 お問い合わせを受け付ける</div>
+        <div class="check-group-desc">一般的な質問や問い合わせを受け付けます。「手伝い募集」をONにすると選択できなくなります（参加申込から受付）。</div>
+      </div>
+    </label>
+  </div>
+
+  <!-- 公開設定 -->
+  <div class="em-card">
+    <div class="em-section-title">🌐 公開設定</div>
+
+    <label class="check-group" id="grp_public">
+      <input type="checkbox" id="is_public" onchange="onPublicChange()">
+      <div class="check-group-body">
+        <div class="check-group-label">🌐 一般公開する</div>
+        <div class="check-group-desc">登録団体以外の一般ユーザーにも公開します。公開期間を設定できます。</div>
+      </div>
+    </label>
+
+    <div class="publish-dates" id="publishDates">
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">公開開始日時</label>
+          <input type="datetime-local" id="publish_start_at" class="form-input">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">公開終了日時</label>
+          <input type="datetime-local" id="publish_end_at" class="form-input">
+        </div>
+      </div>
+      <div class="form-hint" style="margin-top:8px">未入力の場合は制限なしで公開されます</div>
+    </div>
+
+    <div style="margin-top:16px">
+      <div class="form-label" style="margin-bottom:8px">掲載ステータス</div>
+      <div class="status-row">
+        <button type="button" class="status-btn" id="statusDraft" onclick="setStatus('draft')">📝 下書き</button>
+        <button type="button" class="status-btn active" id="statusActive" onclick="setStatus('active')">✅ 掲載中</button>
+        <button type="button" class="status-btn" id="statusClosed" onclick="setStatus('closed')">🔒 終了</button>
+      </div>
+      <div class="form-hint" style="margin-top:6px">「掲載中」にするとイベント一覧に表示されます</div>
+    </div>
+  </div>
+
+  <input type="hidden" id="editEventId">
+  <input type="hidden" id="currentStatus" value="active">
+  <input type="hidden" id="currentImageUrl" value="">
+
+  <div class="em-actions">
+    <button type="button" class="btn-back" onclick="goBack()">← 戻る</button>
+    <button type="button" class="btn-save" id="btnSave" onclick="saveEvent()">💾 保存する</button>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script>
+  loadHeaderMember();
+  loadFooter();
+</script>
+<script>
+const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+const HEADERS = {
+  'apikey': SUPABASE_ANON_KEY,
+  'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+  'Content-Type': 'application/json'
+};
+
+let currentOrg = null;
+
+// ── 初期化 ──────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  const saved = sessionStorage.getItem('acp_org');
+  if (!saved) { window.location.href = '/login.html'; return; }
+  try { currentOrg = JSON.parse(saved); } catch(e) { window.location.href = '/login.html'; return; }
+
+  document.getElementById('orgName').textContent = '🏢 ' + (currentOrg.org_name || '');
+  document.getElementById('mainWrap').style.display = '';
+
+  await loadCategories();
+
+  const editId = new URLSearchParams(location.search).get('edit');
+  if (editId) {
+    document.getElementById('pageTitle').textContent = '✏️ イベントを編集する';
+    document.getElementById('editEventId').value = editId;
+    await loadEvent(editId);
+  }
+});
+
+async function loadCategories() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/event_categories?order=id`, { headers: HEADERS });
+  if (!res.ok) return;
+  const cats = await res.json();
+  const sel = document.getElementById('ev_category_id');
+  cats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = (c.emoji || '') + ' ' + c.name;
+    sel.appendChild(opt);
+  });
+}
+
+async function loadEvent(id) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${id}&limit=1`, { headers: HEADERS });
+  if (!res.ok) return;
+  const [ev] = await res.json();
+  if (!ev) return;
+
+  document.getElementById('ev_title').value = ev.title || '';
+  document.getElementById('ev_category_id').value = ev.category_id || '';
+  document.getElementById('ev_event_date').value = ev.event_date || '';
+  document.getElementById('ev_fee').value = ev.fee || '無料';
+  document.getElementById('ev_location').value = ev.location || '';
+  document.getElementById('ev_target_audience').value = ev.target_audience || ev.target || '';
+  document.getElementById('ev_max_participants').value = ev.max_participants || '';
+  document.getElementById('ev_description').value = ev.description || '';
+  document.getElementById('ev_event_url').value = ev.event_url || '';
+  document.getElementById('can_participate').checked = !!ev.can_participate;
+  document.getElementById('can_help').checked = !!ev.can_help;
+  document.getElementById('can_inquiry').checked = !!ev.can_inquiry;
+  document.getElementById('is_public').checked = !!ev.is_public;
+  document.getElementById('currentImageUrl').value = ev.image_url || '';
+  if (ev.image_url) {
+    const prev = document.getElementById('imgPreview');
+    prev.src = ev.image_url; prev.classList.add('has-img');
+    document.getElementById('imgPlaceholder').style.display = 'none';
+  }
+  if (ev.publish_start_at) document.getElementById('publish_start_at').value = ev.publish_start_at.slice(0, 16);
+  if (ev.publish_end_at) document.getElementById('publish_end_at').value = ev.publish_end_at.slice(0, 16);
+  setStatus(ev.status || 'active');
+  onParticipateChange();
+  onHelpChange();
+  onPublicChange();
+}
+
+// ── チェックボックスロジック ──────────────────────────────
+function onParticipateChange() {
+  const participate = document.getElementById('can_participate').checked;
+  const inqEl = document.getElementById('can_inquiry');
+  const grp = document.getElementById('grp_inquiry');
+  if (participate) {
+    inqEl.checked = true;
+    grp.classList.add('disabled');
+    inqEl.disabled = true;
+  } else {
+    grp.classList.remove('disabled');
+    inqEl.disabled = false;
+  }
+}
+
+function onHelpChange() {
+  const help = document.getElementById('can_help').checked;
+  const inqEl = document.getElementById('can_inquiry');
+  const grp = document.getElementById('grp_inquiry');
+  if (help) {
+    inqEl.checked = false;
+    inqEl.disabled = true;
+    grp.classList.add('disabled');
+  } else {
+    const participate = document.getElementById('can_participate').checked;
+    if (!participate) {
+      inqEl.disabled = false;
+      grp.classList.remove('disabled');
+    }
+  }
+}
+
+function onPublicChange() {
+  const pub = document.getElementById('is_public').checked;
+  document.getElementById('publishDates').classList.toggle('visible', pub);
+}
+
+// ── ステータス選択 ──────────────────────────────
+function setStatus(st) {
+  document.getElementById('currentStatus').value = st;
+  ['draft','active','closed'].forEach(s => {
+    document.getElementById('status' + s.charAt(0).toUpperCase() + s.slice(1)).classList.toggle('active', s === st);
+  });
+}
+
+// ── 画像 ──────────────────────────────
+function previewImage(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('imgPreview');
+    prev.src = e.target.result; prev.classList.add('has-img');
+    document.getElementById('imgPlaceholder').style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+async function uploadImage(file, path) {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${path}`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': file.type,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || '画像のアップロードに失敗しました'); }
+  return `${SUPABASE_URL}/storage/v1/object/public/images/${path}`;
+}
+
+// ── 保存 ──────────────────────────────
+async function saveEvent() {
+  const title = document.getElementById('ev_title').value.trim();
+  if (!title) { showError('イベント名は必須です。'); return; }
+  if (!currentOrg?.id) { window.location.href = '/login.html'; return; }
+
+  const btn = document.getElementById('btnSave');
+  btn.disabled = true; btn.textContent = '保存中...';
+  hideError();
+
+  try {
+    let image_url = document.getElementById('currentImageUrl').value || null;
+    const fileInput = document.getElementById('imgFile');
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      const ext = file.name.split('.').pop();
+      const path = `events/${currentOrg.id}_${Date.now()}.${ext}`;
+      document.getElementById('imgProgress').style.display = 'block';
+      image_url = await uploadImage(file, path);
+      document.getElementById('imgProgress').style.display = 'none';
+    }
+
+    const can_participate = document.getElementById('can_participate').checked;
+    const can_help = document.getElementById('can_help').checked;
+    const can_inquiry = can_participate ? true : document.getElementById('can_inquiry').checked;
+    const is_public = document.getElementById('is_public').checked;
+    const start = document.getElementById('publish_start_at').value;
+    const end = document.getElementById('publish_end_at').value;
+
+    const payload = {
+      title,
+      category_id: document.getElementById('ev_category_id').value ? parseInt(document.getElementById('ev_category_id').value) : null,
+      description: document.getElementById('ev_description').value.trim() || null,
+      event_date: document.getElementById('ev_event_date').value || null,
+      location: document.getElementById('ev_location').value.trim() || null,
+      target_audience: document.getElementById('ev_target_audience').value.trim() || null,
+      fee: document.getElementById('ev_fee').value.trim() || '無料',
+      max_participants: document.getElementById('ev_max_participants').value ? parseInt(document.getElementById('ev_max_participants').value) : null,
+      event_url: document.getElementById('ev_event_url').value.trim() || null,
+      can_participate,
+      can_help,
+      can_inquiry,
+      is_public,
+      publish_start_at: (is_public && start) ? new Date(start).toISOString() : null,
+      publish_end_at: (is_public && end) ? new Date(end).toISOString() : null,
+      status: document.getElementById('currentStatus').value,
+      image_url,
+      organization_id: currentOrg.id,
+      organizer_name: currentOrg.org_name || ''
+    };
+
+    const editId = document.getElementById('editEventId').value;
+    let res;
+    if (editId) {
+      res = await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${editId}`, {
+        method: 'PATCH',
+        headers: { ...HEADERS, 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      res = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+        method: 'POST',
+        headers: { ...HEADERS, 'Prefer': 'return=representation' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const [created] = await res.json();
+        document.getElementById('editEventId').value = created.id;
+        document.getElementById('pageTitle').textContent = '✏️ イベントを編集する';
+        history.replaceState({}, '', `?edit=${created.id}`);
+      }
+    }
+    if (!res.ok) { const err = await res.json(); throw new Error(err.message || '保存に失敗しました'); }
+    document.getElementById('emSuccess').style.display = 'block';
+    setTimeout(() => { document.getElementById('emSuccess').style.display = 'none'; }, 3000);
+  } catch(e) {
+    showError('エラー: ' + e.message);
+    document.getElementById('imgProgress').style.display = 'none';
+  } finally {
+    btn.disabled = false; btn.textContent = '💾 保存する';
+  }
+}
+
+function showError(msg) { const el = document.getElementById('emError'); el.textContent = msg; el.style.display = 'block'; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function hideError() { document.getElementById('emError').style.display = 'none'; }
+function goBack() { window.location.href = '/login.html'; }
+</script>
+</body>
+</html>
