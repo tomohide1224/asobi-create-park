@@ -24,7 +24,7 @@
   <div class="page-hero-inner">
     <div class="hero-left">
       <h1>🎪 あそびを探す</h1>
-      <p>地域のあそびやイベントを探して、参加しよう。手伝おう。</p>
+      <p>地域のあそびやイベントを探して、参加しよう！</p>
     </div>
     <div class="hero-count">
       <div class="hero-count-num" id="heroCount">—</div>
@@ -45,15 +45,6 @@
       </div>
     </div>
 
-    <div class="filter-section">
-      <div class="filter-label">募集種別</div>
-      <div class="filter-chips">
-        <button class="filter-chip active" data-type="all" onclick="filterType(this,'all')">すべて</button>
-        <button class="filter-chip" data-type="join" onclick="filterType(this,'join')">✋ 参加者募集</button>
-        <button class="filter-chip" data-type="help" onclick="filterType(this,'help')">🙌 スタッフ募集</button>
-      </div>
-    </div>
-
     <button class="filter-reset" onclick="resetFilters()">絞り込みをリセット</button>
   </aside>
 
@@ -61,12 +52,6 @@
     <div class="search-bar">
       <input type="text" class="search-input" id="searchInput" placeholder="🔍 イベント名・団体名で検索…" oninput="applyFilters()">
       <button class="search-btn" onclick="applyFilters()">検索</button>
-    </div>
-
-    <div class="tab-bar">
-      <button class="tab-btn active" id="tabAll" onclick="switchTab('all')">🎪 すべてのあそび</button>
-      <button class="tab-btn" id="tabJoin" onclick="switchTab('join')">✋ 参加できるあそび</button>
-      <button class="tab-btn" id="tabHelp" onclick="switchTab('help')">🙌 手伝えるあそび</button>
     </div>
 
     <div class="result-info" id="resultInfo">読み込み中...</div>
