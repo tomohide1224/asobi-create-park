@@ -14,7 +14,7 @@ const THUMB_GRADIENTS = [
 ];
 
 let client, allEvents = [], allCategories = [], allOrgs = [];
-let activeCat = 'all', activeTab = 'all', currentRequestType = '参加したい';
+let activeCat = 'all', activeTab = 'all', currentRequestType = 'participate';
 
 window.addEventListener('DOMContentLoaded', async () => {
   client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -129,6 +129,18 @@ function renderCards(events) {
   }).join('');
 }
 
+function getSubmitLabel(type) {
+  return type === 'participate' ? '✋ 参加を申し込む'
+    : type === 'help' ? '🙌 手伝いを申し込む'
+    : '💬 問い合わせを送る';
+}
+
+function getMsgPlaceholder(type) {
+  return type === 'inquiry'
+    ? '聞きたいことや質問をどうぞ'
+    : '気になることや質問があれば';
+}
+
 function openModal(id) {
   const ev = allEvents.find(e => e.id === id);
   if (!ev) return;
@@ -136,10 +148,28 @@ function openModal(id) {
   const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
   const org = allOrgs.find(o => o.org_name === ev.organizer_name);
 
+  // 初期リクエストタイプを決定（優先: 参加 > 手伝い > 問い合わせ）
+  if (ev.can_participate) currentRequestType = 'participate';
+  else if (ev.can_help) currentRequestType = 'help';
+  else if (ev.can_inquiry) currentRequestType = 'inquiry';
+
   document.getElementById('modalHeader').innerHTML = `
     <div class="modal-category-badge ${catClass}">${cat ? cat.emoji + ' ' + cat.name : ''}</div>
     <div class="modal-title">${ev.title}</div>
     <div class="modal-organizer">📍 ${ev.organizer_name || ''}　${ev.organizer_type ? '｜ ' + ev.organizer_type : ''}</div>`;
+
+  // フォーム表示判定
+  const showForm = ev.can_participate || ev.can_help || ev.can_inquiry;
+  const tabCount = [ev.can_participate, ev.can_help, ev.can_inquiry].filter(Boolean).length;
+
+  let tabsHtml = '';
+  if (tabCount > 1) {
+    tabsHtml = `<div class="form-tabs">
+      ${ev.can_participate ? `<button class="form-tab${currentRequestType === 'participate' ? ' active' : ''}" onclick="setTab(this,'participate')">✋ 参加する</button>` : ''}
+      ${ev.can_help ? `<button class="form-tab${currentRequestType === 'help' ? ' active' : ''}" onclick="setTab(this,'help')">🙌 手伝う</button>` : ''}
+      ${ev.can_inquiry ? `<button class="form-tab${currentRequestType === 'inquiry' ? ' active' : ''}" onclick="setTab(this,'inquiry')">💬 お問い合わせ</button>` : ''}
+    </div>`;
+  }
 
   document.getElementById('modalBody').innerHTML = `
     <p class="modal-desc">${ev.description || ''}</p>
@@ -154,21 +184,17 @@ function openModal(id) {
     ${ev.knowhow_summary ? `<div style="background:#F0FBF5;border-radius:14px;padding:16px;margin-bottom:16px"><div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:8px">💡 ノウハウ・ポイント</div><div style="font-size:14px;color:#444;line-height:1.9">${ev.knowhow_summary}</div></div>` : ''}
     ${ev.tools_needed ? `<div style="background:#FFF8E1;border-radius:14px;padding:16px;margin-bottom:16px"><div style="font-size:13px;font-weight:800;color:#F57F17;margin-bottom:8px">🛠️ 必要な道具・準備物</div><div style="font-size:14px;color:#444;line-height:1.9">${ev.tools_needed}</div></div>` : ''}
     ${org && org.contact_email ? `<div class="contact-box"><div class="contact-title">📧 このあそびについて問い合わせる</div><a href="mailto:${org.contact_email}" class="contact-email">${org.contact_email}</a></div>` : ''}
-    ${(ev.can_participate || ev.can_help) ? `
+    ${showForm ? `
     <div class="form-section">
       <div class="form-title">このイベントに関わる</div>
       <div class="form-sub">仕掛け人になろう！自ら動いてコンタクトする</div>
-      ${ev.can_participate && ev.can_help ? `
-      <div class="form-tabs">
-        <button class="form-tab active" onclick="setTab(this,'参加したい')">✋ 参加したい</button>
-        <button class="form-tab" onclick="setTab(this,'お手伝いしたい')">🙌 お手伝いしたい</button>
-      </div>` : ''}
+      ${tabsHtml}
       <form id="reqForm-${ev.id}" onsubmit="submitRequest(event,${ev.id})">
         <div class="form-group"><label>お名前</label><input type="text" name="name" placeholder="山田 太郎" required></div>
         <div class="form-group"><label>メールアドレス</label><input type="email" name="email" placeholder="example@mail.com" required></div>
         <div class="form-group"><label>所属（学校・団体名）</label><input type="text" name="school_name" placeholder="○○小おやじの会"></div>
-        <div class="form-group"><label>メッセージ・質問</label><textarea name="message" placeholder="気になることや質問があれば"></textarea></div>
-        <button type="submit" class="submit-btn" id="sbtn-${ev.id}">送信する →</button>
+        <div class="form-group"><label>メッセージ・質問</label><textarea name="message" id="msgTextarea-${ev.id}" placeholder="${getMsgPlaceholder(currentRequestType)}"></textarea></div>
+        <button type="submit" class="submit-btn" id="sbtn-${ev.id}">${getSubmitLabel(currentRequestType)}</button>
         <div class="success-msg" id="smsg-${ev.id}">🎉 送信しました！後ほどご連絡します。</div>
       </form>
     </div>` : ''}`;
@@ -182,6 +208,14 @@ function setTab(btn, type) {
   currentRequestType = type;
   document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  // 送信ボタンラベルを更新
+  document.querySelectorAll('[id^="sbtn-"]').forEach(b => {
+    b.textContent = getSubmitLabel(type);
+  });
+  // textarea のplaceholderを更新
+  document.querySelectorAll('[id^="msgTextarea-"]').forEach(t => {
+    t.placeholder = getMsgPlaceholder(type);
+  });
 }
 
 async function submitRequest(e, eventId) {
@@ -190,11 +224,21 @@ async function submitRequest(e, eventId) {
   const btn = document.getElementById(`sbtn-${eventId}`);
   btn.disabled = true; btn.textContent = '送信中...';
   const { error } = await client.from('participation_requests').insert({
-    event_id: eventId, name: form.name.value, email: form.email.value,
-    school_name: form.school_name.value, request_type: currentRequestType, message: form.message.value
+    event_id: eventId,
+    name: form.name.value,
+    email: form.email.value,
+    school_name: form.school_name.value,
+    request_type: currentRequestType,
+    message: form.message.value
   });
-  if (!error) { form.style.display = 'none'; document.getElementById(`smsg-${eventId}`).style.display = 'block'; }
-  else { btn.disabled = false; btn.textContent = '送信する →'; alert('送信に失敗しました。'); }
+  if (!error) {
+    form.style.display = 'none';
+    document.getElementById(`smsg-${eventId}`).style.display = 'block';
+  } else {
+    btn.disabled = false;
+    btn.textContent = getSubmitLabel(currentRequestType);
+    alert('送信に失敗しました。');
+  }
 }
 
 function closeModal() {
