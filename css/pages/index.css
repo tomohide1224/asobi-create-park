@@ -4,11 +4,13 @@
 body { background: var(--bg); }
 
 /* ─── ヒーロー：テキスト左＋画像右のブロックを「ページ中央」に収める ───
-   ポイント：セクション自体に max-width を付けて margin:auto で中央配置。
-   画像は幅100%・高さ自動（クロップなし）。左側に白グラデ＋テキストを重ねる。 */
+   ファーストビュー設計（2026-07-04確定）：
+   ・幅1480px＝下のカード群と同じ幅基準で統一感を出す
+   ・画像高さ約577px → フルHD(1080)でヘッダー64px+ヒーロー+カードの頭が見える
+   ・ヒーローで画面を埋めきらず、次の導線（企画/支援カード）をチラ見せする設計 */
 .hero {
   position: relative;
-  max-width: 1200px;
+  max-width: 1480px;
   margin: 0 auto;
   overflow: hidden;
   background: #fff;
@@ -53,10 +55,10 @@ body { background: var(--bg); }
   justify-content: flex-start;
   align-items: flex-start;
   text-align: left;
-  padding: 36px 20px 36px 40px;
+  padding: 44px 20px 44px 48px;
 }
 .hero-text h1 {
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1.6;
   font-weight: 900;
   letter-spacing: -1px;
@@ -67,29 +69,29 @@ body { background: var(--bg); }
 .o { color: var(--orange); }
 .g { color: var(--green); }
 .hero-text p {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.9;
   font-weight: 700;
   color: #354158;
-  margin: 0 0 18px;
+  margin: 0 0 20px;
 }
 .cta-row {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 14px;
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
 }
 .cta {
   border-radius: 16px;
   color: #fff;
-  padding: 14px 20px;
+  padding: 15px 22px;
   display: flex;
   align-items: center;
   text-align: left;
   gap: 12px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 900;
   box-shadow: 0 10px 24px rgba(17,25,54,.15);
   text-decoration: none;
@@ -98,9 +100,16 @@ body { background: var(--bg); }
 .cta small { display: block; font-size: 11px; margin-top: 3px; }
 .cta.plan { background: var(--green); }
 .cta.support { background: var(--orange); }
-.free-note { font-size: 12px; font-weight: 800; color: var(--gray); }
+.free-note { font-size: 13px; font-weight: 800; color: var(--gray); }
 
 /* 中間幅：テキストが窮屈になるので少し縮める */
+@media (max-width: 1200px) {
+  .hero-text { padding: 30px 16px 30px 32px; }
+  .hero-text h1 { font-size: 28px; line-height: 1.55; }
+  .hero-text p { font-size: 12px; line-height: 1.8; margin-bottom: 14px; }
+  .cta { font-size: 14px; padding: 12px 18px; }
+  .cta small { font-size: 10px; }
+}
 @media (max-width: 1000px) {
   .hero-text { padding: 22px 16px 22px 24px; }
   .hero-text h1 { font-size: 24px; line-height: 1.5; }
