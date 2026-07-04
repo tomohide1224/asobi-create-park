@@ -62,6 +62,7 @@ body { background: var(--bg); }
   letter-spacing: -1px;
   margin-bottom: auto;
   color: var(--navy);
+  min-width: max-content; /* 46%枠で3行に折り返さない（brの2行を維持） */
 }
 .o { color: var(--orange); }
 .g { color: var(--green); }
@@ -77,6 +78,7 @@ body { background: var(--bg); }
   flex-direction: column;
   gap: 10px;
   margin-bottom: 12px;
+  width: 100%;
   max-width: 300px;
 }
 .cta {
@@ -91,6 +93,7 @@ body { background: var(--bg); }
   font-weight: 900;
   box-shadow: 0 10px 24px rgba(17,25,54,.15);
   text-decoration: none;
+  width: 100%;
 }
 .cta small { display: block; font-size: 11px; margin-top: 3px; }
 .cta.plan { background: var(--green); }
@@ -206,6 +209,7 @@ body { background: var(--bg); }
     font-size: 18px;
     line-height: 1.4;
     margin-bottom: 4px;
+    min-width: 0;
   }
   .hero-text p {
     font-size: 11px;
