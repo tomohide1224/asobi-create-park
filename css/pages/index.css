@@ -3,7 +3,13 @@
 
 body { background: var(--bg); }
 
-/* ─── ヒーロー（PC） ─── */
+/* ─── ヒーロー（PC） ─────────────────────────────────────────
+   aspect-ratio で画像の比率(2600:1014)を保持。
+   ・min-height: 560px → テキストが収まる最小高さを保証
+   ・max-height: 700px → 超広モニターで大きくなりすぎるのを防止
+   height を固定値にしないことで、他ファイルを変更しても
+   このブロックが壊れなくなります。
+──────────────────────────────────────────────────────────── */
 .hero {
   position: relative;
   width: 100%;
@@ -15,7 +21,9 @@ body { background: var(--bg); }
   position: relative;
   z-index: 0;
   line-height: 0;
-  height: 560px;
+  aspect-ratio: 2600 / 1014;
+  min-height: 560px;
+  max-height: 700px;
   overflow: hidden;
 }
 .hero-img img {
@@ -42,7 +50,6 @@ body { background: var(--bg); }
   pointer-events: none;
 }
 
-/* PC: h1を上、その他を下に分ける */
 .hero-text {
   position: absolute;
   top: 0;
@@ -161,6 +168,9 @@ body { background: var(--bg); }
   .hero-img {
     position: relative;
     width: 100%;
+    aspect-ratio: unset;
+    min-height: unset;
+    max-height: unset;
     height: 48vh;
     overflow: hidden;
     line-height: 0;
