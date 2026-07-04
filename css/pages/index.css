@@ -28,7 +28,7 @@ body { background: var(--bg); }
   display: block;
 }
 
-/* グラデーション：左側（テキストエリア）を白くする */
+/* グラデーション：女の子が透けて見える元の値 */
 .hero::before {
   content: '';
   position: absolute;
@@ -37,8 +37,9 @@ body { background: var(--bg); }
   background: linear-gradient(
     to right,
     rgba(255,255,255,0.97) 0%,
-    rgba(255,255,255,0.95) 42%,
-    rgba(255,255,255,0.20) 58%,
+    rgba(255,255,255,0.92) 20%,
+    rgba(255,255,255,0.70) 38%,
+    rgba(255,255,255,0.20) 55%,
     rgba(255,255,255,0.00) 68%
   );
   pointer-events: none;
