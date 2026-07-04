@@ -28,7 +28,7 @@ body { background: var(--bg); }
   display: block;
 }
 
-/* グラデーション：右側（テキストエリア）をしっかり白くする */
+/* グラデーション：右70%をしっかり白くして吹き出しを隠す */
 .hero::before {
   content: '';
   position: absolute;
@@ -37,8 +37,7 @@ body { background: var(--bg); }
   background: linear-gradient(
     to left,
     rgba(255,255,255,0.97) 0%,
-    rgba(255,255,255,0.95) 62%,
-    rgba(255,255,255,0.10) 76%,
+    rgba(255,255,255,0.95) 70%,
     rgba(255,255,255,0.00) 82%
   );
   pointer-events: none;
