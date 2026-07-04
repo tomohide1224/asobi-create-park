@@ -243,6 +243,7 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 <div id="site-footer"></div>
 
 <script src="/js/common.js"></script>
+<script src="/js/utils.js"></script>
 <script>
   loadHeaderMember();
   loadFooter();
@@ -395,6 +396,7 @@ async function saveEvent() {
   const btn = document.getElementById('btnSave');
   btn.disabled = true; btn.textContent = '保存中...';
   hideError();
+  let saved = false;
 
   try {
     let image_url = document.getElementById('currentImageUrl').value || null;
@@ -459,13 +461,22 @@ async function saveEvent() {
       }
     }
     if (!res.ok) { const err = await res.json(); throw new Error(err.message || '保存に失敗しました'); }
+    // 保存完了を画面のどこにいても分かるように：画面下トースト＋ボタン表示切替
+    saved = true;
+    showToast(editId ? '✅ 更新しました！' : '🎉 登録しました！', 'success');
     document.getElementById('emSuccess').style.display = 'block';
     setTimeout(() => { document.getElementById('emSuccess').style.display = 'none'; }, 3000);
   } catch(e) {
     showError('エラー: ' + e.message);
     document.getElementById('imgProgress').style.display = 'none';
   } finally {
-    btn.disabled = false; btn.textContent = '💾 保存する';
+    btn.disabled = false;
+    if (saved) {
+      btn.textContent = '✅ 保存しました';
+      setTimeout(() => { btn.textContent = '💾 保存する'; }, 2000);
+    } else {
+      btn.textContent = '💾 保存する';
+    }
   }
 }
 
