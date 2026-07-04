@@ -1,0 +1,48 @@
+/* ============================================================
+   ASOBI CREATE PARK — 企画カード共有スタイル
+   supporter.css から抽出した企画一覧UI一式。
+   団体ダッシュボード「企画をさがす」タブ（Phase A）で使用。
+   ============================================================ */
+:root { --card-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+/* 企画一覧グリッド */
+.plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.plan-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); transition: transform 0.2s; }
+.plan-card:hover { transform: translateY(-4px); }
+.plan-img { width: 100%; height: 160px; object-fit: cover; background: linear-gradient(135deg, #f0faf5, #e8f5ee); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+.plan-body { padding: 16px; }
+.plan-status { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.plan-status.recruiting { background: #e8f5ee; color: var(--green); }
+.plan-status.closed { background: #f0f0f0; color: var(--gray); }
+.plan-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+.plan-org { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+.plan-meta { font-size: 12px; color: var(--gray); display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
+.plan-actions { display: flex; gap: 8px; }
+.btn-fav { flex: 1; background: white; border: 2px solid #eee; border-radius: 8px; padding: 8px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.btn-fav.active { border-color: #ff4d6d; color: #ff4d6d; }
+.btn-fav:hover { border-color: #ff4d6d; color: #ff4d6d; }
+.btn-hand { flex: 2; background: var(--green); color: white; border: none; border-radius: 8px; padding: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-hand.active { background: var(--gray); cursor: default; }
+.btn-hand:hover:not(.active) { background: var(--green-light); }
+
+/* 空状態 */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { color: var(--gray); font-size: 15px; }
+
+/* 手を上げるモーダル */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 20px; padding: 28px; max-width: 440px; width: 100%; }
+.modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.modal p { font-size: 14px; color: var(--gray); margin-bottom: 20px; }
+.modal textarea { width: 100%; border: 2px solid #eee; border-radius: 10px; padding: 12px; font-size: 14px; resize: vertical; min-height: 100px; margin-bottom: 16px; font-family: inherit; }
+.modal textarea:focus { outline: none; border-color: var(--green); }
+.modal-actions { display: flex; gap: 10px; }
+.btn-modal-cancel { flex: 1; background: white; border: 2px solid #eee; border-radius: 10px; padding: 12px; font-size: 14px; cursor: pointer; }
+.btn-modal-submit { flex: 2; background: var(--green); color: white; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-modal-submit:hover { background: var(--green-light); }
+
+@media (max-width: 600px) {
+  .plans-grid { grid-template-columns: 1fr; }
+}
