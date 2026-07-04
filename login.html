@@ -7,6 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/pages/login.css">
+  <link rel="stylesheet" href="/css/pages/plans-shared.css?v=20260705">
 </head>
 <body>
 
@@ -149,6 +150,7 @@
 
     <div class="dash-tabs">
       <button class="dash-tab active" data-tab="events" onclick="switchTab('events')">📅 イベント</button>
+      <button class="dash-tab" data-tab="plans" onclick="switchTab('plans')">📋 企画をさがす</button>
       <button class="dash-tab" data-tab="requests" onclick="switchTab('requests')">📬 問い合わせ</button>
       <button class="dash-tab" data-tab="orginfo" onclick="switchTab('orginfo')">🏢 団体情報</button>
     </div>
@@ -157,6 +159,11 @@
       <div class="dash-section-title">自分が登録したイベント</div>
       <div id="events-list"><div class="dash-loading">⚙️ 読み込み中...</div></div>
       <a href="/event-manage.html" class="btn-line dash-post-btn">&#xFF0B; イベントを登録する</a>
+    </div>
+
+    <div class="dash-pane" id="pane-plans">
+      <div class="dash-section-title">支援者を募集中の企画</div>
+      <div id="plansList"><div class="dash-loading">⚙️ 読み込み中...</div></div>
     </div>
 
     <div class="dash-pane" id="pane-requests">
@@ -250,6 +257,19 @@
   </div>
 </div>
 
+<!-- 手を上げるモーダル（企画をさがすタブ用） -->
+<div class="modal-overlay" id="handModal">
+  <div class="modal">
+    <h3>🙋 手を上げる</h3>
+    <p>この企画への参加意向を伝えます。企画者からメッセージが届くことがあります。</p>
+    <textarea id="handMessage" placeholder="メッセージ（任意）：どんな形で参加したいか、得意なことなど"></textarea>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeHandModal()">キャンセル</button>
+      <button class="btn-modal-submit" onclick="submitHand()">手を上げる！</button>
+    </div>
+  </div>
+</div>
+
 <div id="site-footer"></div>
 
 <script src="/js/common.js"></script>
@@ -285,6 +305,7 @@
       if (data.success) {
         sessionStorage.setItem('acp_org', JSON.stringify(data.organization));
         sessionStorage.setItem('acp_line_name', data.line_display_name);
+        if (data.line_user_id) sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         showDashboard(data.organization, data.line_display_name);
       } else if (data.line_user_id) {
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
@@ -618,6 +639,7 @@
     document.querySelectorAll('.dash-pane').forEach(p => p.classList.remove('active'));
     document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     document.getElementById(`pane-${tab}`).classList.add('active');
+    if (tab === 'plans') loadPlansTab();
   }
 
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -654,5 +676,6 @@
     }
   });
 </script>
+<script src="/js/pages/login-plans.js?v=20260705"></script>
 </body>
 </html>
