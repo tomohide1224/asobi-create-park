@@ -3,64 +3,17 @@
 
 body { background: var(--bg); }
 
-/* ─── ヒーロー：テキスト上（中央）＋画像は切らずに全体表示 ─── */
+/* ─── ヒーロー：テキスト左＋画像右のブロックを「ページ中央」に収める ───
+   ポイント：セクション自体に max-width を付けて margin:auto で中央配置。
+   画像は幅100%・高さ自動（クロップなし）。左側に白グラデ＋テキストを重ねる。 */
 .hero {
-  width: 100%;
-  background: #fff;
-  text-align: center;
-}
-
-.hero-text {
-  max-width: 920px;
+  position: relative;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 44px 24px 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  overflow: hidden;
+  background: #fff;
 }
-.hero-text h1 {
-  font-size: 38px;
-  line-height: 1.6;
-  font-weight: 900;
-  letter-spacing: -1px;
-  color: var(--navy);
-  margin-bottom: 14px;
-}
-.o { color: var(--orange); }
-.g { color: var(--green); }
-.hero-text p {
-  font-size: 14px;
-  line-height: 2;
-  font-weight: 700;
-  color: #354158;
-  margin: 0 0 22px;
-}
-.cta-row {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 14px;
-}
-.cta {
-  border-radius: 16px;
-  color: #fff;
-  padding: 16px 22px;
-  display: flex;
-  align-items: center;
-  text-align: left;
-  gap: 12px;
-  font-size: 16px;
-  font-weight: 900;
-  box-shadow: 0 10px 24px rgba(17,25,54,.15);
-  text-decoration: none;
-}
-.cta small { display: block; font-size: 11px; margin-top: 3px; }
-.cta.plan { background: var(--green); }
-.cta.support { background: var(--orange); }
-.free-note { font-size: 13px; font-weight: 800; color: var(--gray); }
 
-/* 画像：object-fitやaspect-ratioでのクロップは一切しない。
-   幅100%・高さ自動＝元画像の縦横比のまま全体が中央に表示される */
 .hero-img {
   line-height: 0;
 }
@@ -68,6 +21,89 @@ body { background: var(--bg); }
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* 左→右の白グラデーション（女の子が見える位置＝約50%で透明に） */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    rgba(255,255,255,0.97) 0%,
+    rgba(255,255,255,0.94) 22%,
+    rgba(255,255,255,0.72) 34%,
+    rgba(255,255,255,0.18) 43%,
+    rgba(255,255,255,0.00) 50%
+  );
+  pointer-events: none;
+}
+
+/* テキストを左側に配置 */
+.hero-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 46%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+  padding: 36px 20px 36px 40px;
+}
+.hero-text h1 {
+  font-size: 32px;
+  line-height: 1.6;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: auto;
+  color: var(--navy);
+}
+.o { color: var(--orange); }
+.g { color: var(--green); }
+.hero-text p {
+  font-size: 13px;
+  line-height: 1.9;
+  font-weight: 700;
+  color: #354158;
+  margin: 0 0 18px;
+}
+.cta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+  max-width: 300px;
+}
+.cta {
+  border-radius: 16px;
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(17,25,54,.15);
+  text-decoration: none;
+}
+.cta small { display: block; font-size: 11px; margin-top: 3px; }
+.cta.plan { background: var(--green); }
+.cta.support { background: var(--orange); }
+.free-note { font-size: 12px; font-weight: 800; color: var(--gray); }
+
+/* 中間幅：テキストが窮屈になるので少し縮める */
+@media (max-width: 1000px) {
+  .hero-text { padding: 22px 16px 22px 24px; }
+  .hero-text h1 { font-size: 24px; line-height: 1.5; }
+  .hero-text p { font-size: 11px; line-height: 1.7; margin-bottom: 10px; }
+  .cta { font-size: 13px; padding: 10px 14px; }
+  .cta small { font-size: 10px; }
 }
 
 /* カード */
@@ -126,27 +162,60 @@ body { background: var(--bg); }
   .trust-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* ─── スマホ（768px以下） ─── */
+/* ─── スマホ（768px以下）：画像上・テキスト下 ─── */
 @media (max-width: 768px) {
+  .hero { max-width: 100%; }
+  .hero::before { display: none; }
+
+  .hero-img {
+    position: relative;
+    width: 100%;
+    height: 48vh;
+    overflow: hidden;
+    line-height: 0;
+  }
+  .hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .hero-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    pointer-events: none;
+  }
+
   .hero-text {
-    padding: 20px 16px 16px;
+    position: relative;
+    top: unset;
+    left: unset;
+    width: 100%;
+    height: auto;
+    margin-top: -44px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0px, rgba(255,255,255,1) 44px);
+    padding: 8px 16px 12px;
+    justify-content: flex-start;
   }
   .hero-text h1 {
-    font-size: 20px;
-    line-height: 1.5;
-    margin-bottom: 8px;
+    font-size: 18px;
+    line-height: 1.4;
+    margin-bottom: 4px;
   }
   .hero-text p {
     font-size: 11px;
-    line-height: 1.7;
-    margin-bottom: 12px;
+    line-height: 1.6;
+    margin-bottom: 6px;
   }
   .cta-row {
-    flex-direction: column;
-    width: 100%;
-    max-width: 420px;
-    gap: 8px;
-    margin-bottom: 8px;
+    max-width: 100%;
+    gap: 6px;
+    margin-bottom: 6px;
   }
   .cta {
     font-size: 13px;
