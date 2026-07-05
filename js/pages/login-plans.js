@@ -132,8 +132,8 @@ function showSupporterDashboard(supporter) {
   if (evList) evList.innerHTML = `
     <div class="empty-state">
       <div class="empty-icon">🎪</div>
-      <p>イベントの登録・公開は「団体登録」をした方ができます。<br>あなたの「やってみたい」を、イベントにしませんか？</p>
-      <button class="btn-line" style="max-width:320px;margin:20px auto 0;" onclick="startOrgRegister()">🏢 団体として登録する</button>
+      <p>イベントの登録・公開は「企画者登録」をした方ができます（団体・個人どちらでもOK）。<br>あなたの「やってみたい」を、イベントにしませんか？</p>
+      <button class="btn-line" style="max-width:320px;margin:20px auto 0;" onclick="startOrgRegister()">🏢 企画者として登録する</button>
     </div>`;
   const postBtn = document.querySelector('.dash-post-btn'); if (postBtn) postBtn.style.display = 'none';
   const reqTitle = document.querySelector('#pane-requests .dash-section-title'); if (reqTitle) reqTitle.textContent = '自分が申し込んだ参加申請・問い合わせ';
