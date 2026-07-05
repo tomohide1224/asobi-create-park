@@ -181,7 +181,9 @@ async function handleLineCallback(code, state) {
     const supporters = await supRes.json();
     if (supporters.length > 0) {
       sessionStorage.setItem('acp_supporter', JSON.stringify(supporters[0]));
-      showDashboard(supporters[0], data.line_profile_image);
+      sessionStorage.setItem('acp_line_user_id', data.line_user_id);
+      sessionStorage.setItem('acp_line_name', data.line_display_name || '');
+      window.location.href = '/login.html';
     } else {
       showRegistrationForm(data.line_display_name, data.line_profile_image);
     }
@@ -212,7 +214,9 @@ async function registerSupporter() {
     const data = await res.json();
     if (!Array.isArray(data) || !data.length) throw new Error('登録に失敗しました。');
     sessionStorage.setItem('acp_supporter', JSON.stringify(data[0]));
-    showDashboard(data[0], lineImg);
+    sessionStorage.setItem('acp_line_user_id', lineUid);
+    sessionStorage.setItem('acp_line_name', sessionStorage.getItem('acp_sup_line_name') || '');
+    window.location.href = '/login.html';
   } catch (e) { alert('エラー：' + e.message); btn.disabled = false; btn.textContent = '🙋 支援者として登録する'; }
 }
 
@@ -329,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const code = params.get('code'), state = params.get('state');
   if (code) { handleLineCallback(code, state); return; }
   const saved = sessionStorage.getItem('acp_supporter');
-  if (saved) { try { showDashboard(JSON.parse(saved), null); return; } catch(e) {} }
+  if (saved) { window.location.href = '/login.html'; return; }
   showPhase('phase1');
 });
 </script>
