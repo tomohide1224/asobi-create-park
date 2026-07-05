@@ -78,6 +78,39 @@ function initMobileHeader() {
   }, { passive: true });
 }
 
+// ---------- ヘッダーのログインユーザー表示 ----------
+
+/**
+ * ログイン中なら、ヘッダー右上をアイコン＋名前＋役割バッジ（企画者/支援者）に置き換える。
+ * 未ログインなら何もしない（従来のログインボタンのまま）。
+ */
+function applyHeaderUser() {
+  let user = null;
+  try {
+    const org = JSON.parse(sessionStorage.getItem('acp_org') || 'null');
+    if (org && org.id) {
+      user = { name: org.org_name || '企画者', img: org.logo_url || null, role: 'org' };
+    } else {
+      const sup = JSON.parse(sessionStorage.getItem('acp_supporter') || 'null');
+      if (sup && sup.id) user = { name: sup.display_name || '支援者', img: sup.profile_image || null, role: 'sup' };
+    }
+  } catch (e) {}
+  if (!user) return;
+  if (!document.getElementById('hu-style')) {
+    const l = document.createElement('link');
+    l.id = 'hu-style'; l.rel = 'stylesheet'; l.href = '/css/header-user.css?v=20260706';
+    document.head.appendChild(l);
+  }
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const roleLabel = user.role === 'org' ? '🏢 企画者' : '🤝 支援者';
+  const badgeClass = user.role === 'org' ? 'hu-org' : 'hu-sup';
+  const imgHtml = user.img
+    ? `<img src="${esc(user.img)}" alt="" class="hu-avatar">`
+    : `<span class="hu-avatar hu-avatar-emoji">${user.role === 'org' ? '🏢' : '🤝'}</span>`;
+  const html = `<a href="/login.html" class="header-user" title="マイページへ">${imgHtml}<span class="hu-name">${esc(user.name)}</span><span class="hu-badge ${badgeClass}">${roleLabel}</span></a>`;
+  document.querySelectorAll('.header-actions, .sp-nav-actions').forEach(el => { el.innerHTML = html; });
+}
+
 // ---------- ヘッダー・フッター読み込み ----------
 
 /**
@@ -88,6 +121,7 @@ function loadHeader() {
     setActiveNav();
     initHamburger();
     initMobileHeader();
+    applyHeaderUser();
   });
 }
 
@@ -100,6 +134,7 @@ function loadHeaderMember() {
     setActiveNav();
     initHamburger();
     initMobileHeader();
+    applyHeaderUser();
   });
 }
 
