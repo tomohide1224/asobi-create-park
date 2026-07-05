@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/pages/login.css">
-  <link rel="stylesheet" href="/css/pages/plans-shared.css?v=20260705">
+  <link rel="stylesheet" href="/css/pages/plans-shared.css?v=20260705b">
 </head>
 <body>
 
@@ -313,7 +313,7 @@
         const supporter = await checkSupporter(data.line_user_id);
         if (supporter) {
           sessionStorage.setItem('acp_supporter', JSON.stringify(supporter));
-          window.location.href = '/supporter-dashboard.html';
+          showSupporterDashboard(supporter);
         } else {
           showPhase('phase_select');
         }
@@ -377,7 +377,7 @@
       if (!res.ok) { const err = await res.json(); throw new Error(err.message || '登録に失敗しました。'); }
       const [supporter] = await res.json();
       sessionStorage.setItem('acp_supporter', JSON.stringify(supporter));
-      window.location.href = '/supporter-dashboard.html';
+      showSupporterDashboard(supporter);
     } catch(e) {
       document.getElementById('sup_error').textContent = e.message;
       document.getElementById('sup_error').style.display = 'block';
@@ -668,7 +668,7 @@
       } else {
         const supporterStr = sessionStorage.getItem('acp_supporter');
         if (supporterStr) {
-          window.location.href = '/supporter-dashboard.html';
+          try { showSupporterDashboard(JSON.parse(supporterStr)); } catch(e) { showPhase('phase1'); }
         } else {
           showPhase('phase1');
         }
@@ -676,6 +676,6 @@
     }
   });
 </script>
-<script src="/js/pages/login-plans.js?v=20260705"></script>
+<script src="/js/pages/login-plans.js?v=20260705b"></script>
 </body>
 </html>
