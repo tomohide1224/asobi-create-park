@@ -1,0 +1,13 @@
+/* ヘッダーのログインユーザー表示（企画者/支援者バッジ） */
+.header-user { display: flex; align-items: center; gap: 8px; text-decoration: none; padding: 4px 12px 4px 5px; border-radius: 24px; border: 1.5px solid #eee; background: white; transition: border-color .2s, box-shadow .2s; }
+.header-user:hover { border-color: var(--green); box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.hu-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: block; flex-shrink: 0; }
+.hu-avatar-emoji { display: flex; align-items: center; justify-content: center; background: #e8f5ee; font-size: 16px; }
+.hu-name { font-size: 13px; font-weight: 700; color: var(--navy); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hu-badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 12px; white-space: nowrap; }
+.hu-badge.hu-org { background: #E8F5E9; color: var(--green); }
+.hu-badge.hu-sup { background: #FFF3E0; color: var(--orange); }
+@media (max-width: 900px) {
+  .hu-name { max-width: 80px; }
+}
+.sp-nav-actions .header-user { justify-content: center; }
