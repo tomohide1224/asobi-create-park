@@ -15,7 +15,7 @@ async function loadComponent(id, path, callback) {
   const el = document.getElementById(id);
   if (!el) return;
   try {
-    const res = await fetch(path);
+    const res = await fetch(path, { cache: 'no-cache' });
     if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
     el.innerHTML = await res.text();
     if (callback) callback();
