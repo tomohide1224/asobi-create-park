@@ -1,0 +1,9 @@
+/* あそびの状態切替タブ（🎪開催予定 ⇄ 📚やってみた記録） */
+.asobi-switch { display: flex; justify-content: center; gap: 10px; padding: 18px 24px 0; max-width: 1200px; margin: 0 auto; }
+.asobi-switch-btn { flex: 1; max-width: 280px; text-align: center; padding: 12px 20px; border-radius: 999px; border: 1.5px solid #ddd; background: white; color: var(--gray); font-size: 14px; font-weight: 800; text-decoration: none; transition: all .2s; }
+.asobi-switch-btn:hover { border-color: var(--green); color: var(--green); }
+.asobi-switch-btn.active { background: var(--green); border-color: var(--green); color: white; }
+@media (max-width: 600px) {
+  .asobi-switch { padding: 14px 16px 0; }
+  .asobi-switch-btn { font-size: 12px; padding: 10px 12px; }
+}
