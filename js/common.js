@@ -32,11 +32,13 @@ async function loadComponent(id, path, callback) {
 function setActiveNav() {
   const page = window.location.pathname.split('/').pop() || 'index.html';
   const aboutGroup = ['concept.html', 'safety.html', 'guidelines.html', 'about.html'];
+  const asobiGroup = ['events.html', 'cases.html'];
   document.querySelectorAll('.nav-link[data-page], .sp-nav-link[data-page]').forEach(link => {
     const targetPage = link.getAttribute('data-page');
     if (
       targetPage === page ||
-      (targetPage === 'about.html' && aboutGroup.includes(page))
+      (targetPage === 'about.html' && aboutGroup.includes(page)) ||
+      (targetPage === 'events.html' && asobiGroup.includes(page))
     ) {
       link.classList.add('active');
     }
