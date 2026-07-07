@@ -1,4 +1,5 @@
-/* messages.js — チャットUI */
+/* messages.js — チャットUI
+   ※Phase C Step1: 企画は events テーブルに統合。support_hands / messages は event_id 参照。 */
 const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 
@@ -68,7 +69,7 @@ async function loadThread() {
     }
 
     const planRes = await fetch(
-      SUPABASE_URL + '/rest/v1/plans?id=eq.' + supportHand.plan_id + '&select=id,title,organization_id',
+      SUPABASE_URL + '/rest/v1/events?id=eq.' + supportHand.event_id + '&select=id,title,organization_id',
       { headers: HEADERS }
     );
     const planData = await planRes.json();
@@ -217,7 +218,7 @@ async function sendMessage() {
       headers: Object.assign({}, HEADERS, { 'Prefer': 'return=representation' }),
       body: JSON.stringify({
         support_hand_id: parseInt(handId),
-        plan_id: plan.id,
+        event_id: plan.id,
         sender_type: currentUser.type,
         sender_id: currentUser.id,
         content: content,
