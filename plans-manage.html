@@ -57,14 +57,6 @@
         <label>カテゴリ</label>
         <select id="planCategory">
           <option value="">選択してください</option>
-          <option value="食事・屋台">🍜 食事・屋台</option>
-          <option value="あそび">🎮 あそび</option>
-          <option value="防災">🚒 防災</option>
-          <option value="工作">✂️ 工作</option>
-          <option value="水遊び">💧 水遊び</option>
-          <option value="音楽">🎵 音楽</option>
-          <option value="スポーツ">⚽ スポーツ</option>
-          <option value="その他">その他</option>
         </select>
       </div>
       <div class="form-group">
@@ -96,10 +88,12 @@
 </div>
 
 <script>
+// Phase C Step1: 企画は events テーブル(status=draft/recruiting/closed)に統合。
+// カテゴリは event_categories を参照(category_id)。
 const SUPABASE_URL      = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 const HEADERS = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' };
-let currentOrg = null, allPlans = [];
+let currentOrg = null, allPlans = [], allCategories = [], catMap = {};
 
 document.addEventListener('DOMContentLoaded', () => {
   const saved = sessionStorage.getItem('acp_org');
@@ -108,9 +102,25 @@ document.addEventListener('DOMContentLoaded', () => {
     currentOrg = JSON.parse(saved);
     document.getElementById('orgBadge').textContent = `🏢 ${currentOrg.org_name}`;
     document.getElementById('mainContent').style.display = 'block';
-    loadPlans();
+    loadCategories().then(loadPlans);
   } catch(e) { document.getElementById('authGuard').style.display = 'block'; }
 });
+
+async function loadCategories() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/event_categories?order=id`, { headers: HEADERS });
+    allCategories = res.ok ? await res.json() : [];
+  } catch(e) { allCategories = []; }
+  catMap = {};
+  const sel = document.getElementById('planCategory');
+  allCategories.forEach(c => {
+    catMap[c.id] = c;
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = (c.emoji || '') + ' ' + c.name;
+    sel.appendChild(opt);
+  });
+}
 
 function switchTab(status, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -123,13 +133,13 @@ function switchTab(status, btn) {
 async function loadPlans() {
   document.getElementById('pane-all').innerHTML = '<div class="loading-state"><div class="spinner"></div><p>読み込み中...</p></div>';
   try {
-    const plansRes = await fetch(`${SUPABASE_URL}/rest/v1/plans?organization_id=eq.${currentOrg.id}&order=created_at.desc`, { headers: HEADERS });
+    const plansRes = await fetch(`${SUPABASE_URL}/rest/v1/events?organization_id=eq.${currentOrg.id}&status=in.(draft,recruiting,closed)&select=*,event_categories(name,emoji)&order=created_at.desc`, { headers: HEADERS });
     allPlans = await plansRes.json();
     if (allPlans.length > 0) {
-      const planIds = allPlans.map(p => p.id).join(',');
-      const handsRes = await fetch(`${SUPABASE_URL}/rest/v1/support_hands?plan_id=in.(${planIds})&select=plan_id,id,status,message`, { headers: HEADERS });
+      const eventIds = allPlans.map(p => p.id).join(',');
+      const handsRes = await fetch(`${SUPABASE_URL}/rest/v1/support_hands?event_id=in.(${eventIds})&select=event_id,id,status,message`, { headers: HEADERS });
       const hands = await handsRes.json();
-      allPlans = allPlans.map(plan => ({ ...plan, _hands: hands.filter(h => h.plan_id === plan.id) }));
+      allPlans = allPlans.map(plan => ({ ...plan, _hands: hands.filter(h => h.event_id === plan.id) }));
     }
     renderPlans('all');
   } catch(e) { document.getElementById('pane-all').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー：${e.message}</p></div>`; }
@@ -148,7 +158,9 @@ function renderPlans(status) {
 function buildPlanCard(plan) {
   const card = document.createElement('div');
   card.className = 'plan-card';
-  const catEmoji = {'食事・屋台':'🍜','あそび':'🎮','防災':'🚒','工作':'✂️','水遊び':'💧','音楽':'🎵','スポーツ':'⚽'}[plan.category]||'🎪';
+  const cat = plan.event_categories || catMap[plan.category_id] || null;
+  const catEmoji = (cat && cat.emoji) ? cat.emoji : '🎪';
+  const catName = cat ? cat.name : '';
   const statusLabel = {draft:'下書き',recruiting:'🟢 募集中',closed:'🔒 締め切り'}[plan.status]||plan.status;
   const hands = plan._hands||[];
   const pendingCount = hands.filter(h=>h.status==='pending').length;
@@ -165,8 +177,8 @@ function buildPlanCard(plan) {
         <span class="plan-status-badge ${plan.status}">${statusLabel}</span>
       </div>
       <div class="plan-meta">
-        ${plan.category?`<span>${catEmoji} ${esc(plan.category)}</span>`:''}
-        ${plan.target_date?`<span>📅 ${plan.target_date}</span>`:''}
+        ${catName?`<span>${catEmoji} ${esc(catName)}</span>`:''}
+        ${plan.event_date?`<span>📅 ${esc(plan.event_date)}</span>`:''}
         ${plan.location?`<span>📍 ${esc(plan.location)}</span>`:''}
         <span>🕐 ${new Date(plan.created_at).toLocaleDateString('ja-JP')}</span>
       </div>
@@ -200,7 +212,7 @@ function toggleHands(planId, btn) {
 
 async function updatePlanStatus(planId, newStatus) {
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/plans?id=eq.${planId}`, { method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify({ status: newStatus }) });
+    await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${planId}`, { method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify({ status: newStatus }) });
     await loadPlans();
   } catch(e) { alert('エラー：' + e.message); }
 }
@@ -218,11 +230,11 @@ function openPlanForm(planId) {
       document.getElementById('editPlanId').value = plan.id;
       document.getElementById('formTitle').textContent = '✏️ 企画を編集する';
       document.getElementById('planTitle').value = plan.title||'';
-      document.getElementById('planCategory').value = plan.category||'';
-      document.getElementById('planDate').value = plan.target_date||'';
+      document.getElementById('planCategory').value = plan.category_id||'';
+      document.getElementById('planDate').value = plan.event_date||'';
       document.getElementById('planLocation').value = plan.location||'';
       document.getElementById('planDescription').value = plan.description||'';
-      document.getElementById('planStatus').value = plan.status||'draft';
+      document.getElementById('planStatus').value = (plan.status==='closed'?'recruiting':plan.status)||'draft';
     }
   }
   document.getElementById('planFormOverlay').classList.add('open');
@@ -236,13 +248,24 @@ async function savePlan() {
   if (!currentOrg?.id) { alert('ログイン情報が見つかりません。再ログインしてください。'); return; }
   const btn = document.getElementById('btnSavePlan');
   btn.disabled = true; btn.textContent = '保存中…';
-  const payload = { organization_id: currentOrg.id, title, category: document.getElementById('planCategory').value||null, target_date: document.getElementById('planDate').value||null, location: document.getElementById('planLocation').value.trim()||null, description: document.getElementById('planDescription').value.trim()||null, status: document.getElementById('planStatus').value };
+  const catVal = document.getElementById('planCategory').value;
+  const payload = {
+    organization_id: currentOrg.id,
+    title,
+    category_id: catVal ? parseInt(catVal) : null,
+    event_date: document.getElementById('planDate').value||null,
+    location: document.getElementById('planLocation').value.trim()||null,
+    description: document.getElementById('planDescription').value.trim()||null,
+    status: document.getElementById('planStatus').value,
+    organizer_name: currentOrg.org_name||'',
+    is_public: false
+  };
   const editId = document.getElementById('editPlanId').value;
   try {
     if (editId) {
-      await fetch(`${SUPABASE_URL}/rest/v1/plans?id=eq.${editId}`, { method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });
+      await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${editId}`, { method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });
     } else {
-      await fetch(`${SUPABASE_URL}/rest/v1/plans`, { method: 'POST', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });
+      await fetch(`${SUPABASE_URL}/rest/v1/events`, { method: 'POST', headers: { ...HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });
     }
     closePlanForm();
     await loadPlans();
