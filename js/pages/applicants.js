@@ -1,4 +1,6 @@
-/* applicants.js — 支援申込の管理 */
+/* applicants.js — 支援申込の管理
+   ※Phase C Step1: 企画は events テーブルに統合。support_hands は event_id 参照。
+     URLパラメータは event_id を主とし、旧 plan_id もフォールバックで受け付ける。 */
 const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 const HEADERS = {
@@ -8,7 +10,7 @@ const HEADERS = {
 };
 
 var org = null;
-var planId = null;
+var eventId = null;
 var allHands = [];
 var currentFilter = 'all';
 
@@ -21,9 +23,9 @@ window.addEventListener('DOMContentLoaded', async function() {
   org = JSON.parse(orgStr);
 
   var params = new URLSearchParams(window.location.search);
-  planId = params.get('plan_id');
-  if (!planId) {
-    showEmpty('URLが正しくありません（plan_id が必要です）');
+  eventId = params.get('event_id') || params.get('plan_id');
+  if (!eventId) {
+    showEmpty('URLが正しくありません（event_id が必要です）');
     return;
   }
 
@@ -37,9 +39,9 @@ function goBack() {
 
 async function loadData() {
   try {
-    // 企画情報
+    // 企画（イベント）情報
     var planRes = await fetch(
-      SUPABASE_URL + '/rest/v1/plans?id=eq.' + planId + '&select=id,title,organization_id',
+      SUPABASE_URL + '/rest/v1/events?id=eq.' + eventId + '&select=id,title,organization_id',
       { headers: HEADERS }
     );
     var plans = await planRes.json();
@@ -51,7 +53,7 @@ async function loadData() {
 
     // support_hands 取得
     var shRes = await fetch(
-      SUPABASE_URL + '/rest/v1/support_hands?plan_id=eq.' + planId + '&order=created_at.desc',
+      SUPABASE_URL + '/rest/v1/support_hands?event_id=eq.' + eventId + '&order=created_at.desc',
       { headers: HEADERS }
     );
     var hands = await shRes.json();
