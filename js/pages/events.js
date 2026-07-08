@@ -1,4 +1,8 @@
-/* events.html 固有スクリプト */
+/* events.html — あそびを探す（🎪開催予定 ⇄ 📚やってみた記録 統合版）
+   Phase C Step3: 1ページで状態タブ切替。
+   ・開催予定  = status=active & is_public & 開催日(event_on)が未設定 or まだ過ぎていない
+   ・やってみた記録 = status=published（事例）
+   開催日が過ぎた開催予定は自動的に一覧から外れる。 */
 const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 const CAT_COLORS = ['','cat-1','cat-2','cat-3','cat-4','cat-5','cat-6','cat-7','cat-8'];
@@ -13,24 +17,23 @@ const THUMB_GRADIENTS = [
   'linear-gradient(135deg,#bcaaa4,#8d6e63)',
 ];
 
-let client, allEvents = [], allCategories = [], allOrgs = [];
-let activeCat = 'all', currentRequestType = 'participate';
+let client, allEvents = [], allRecords = [], allCategories = [], allOrgs = [];
+let currentTab = 'upcoming';
+let activeCat = 'all', knowhowOnly = false, currentRequestType = 'participate';
 
 window.addEventListener('DOMContentLoaded', async () => {
   client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  const [catsRes, eventsRes, orgsRes] = await Promise.all([
+  const [catsRes, evRes, orgsRes] = await Promise.all([
     client.from('event_categories').select('*').order('id'),
-    client.from('events').select('*, event_categories(name, emoji)')
-      .eq('status', 'active')
-      .eq('is_public', true)
-      .order('id'),
+    client.from('events').select('*, event_categories(name, emoji)').in('status', ['active', 'published']).order('id'),
     client.from('organizations').select('*')
   ]);
   allCategories = catsRes.data || [];
-  allEvents = eventsRes.data || [];
   allOrgs = orgsRes.data || [];
-
-  document.getElementById('heroCount').textContent = allEvents.length;
+  const rows = evRes.data || [];
+  const today = new Date().toISOString().slice(0, 10);
+  allEvents = rows.filter(ev => ev.status === 'active' && ev.is_public === true && (!ev.event_on || ev.event_on >= today));
+  allRecords = rows.filter(ev => ev.status === 'published');
 
   const chips = document.getElementById('catChips');
   allCategories.forEach(cat => {
@@ -42,8 +45,24 @@ window.addEventListener('DOMContentLoaded', async () => {
     chips.appendChild(btn);
   });
 
-  applyFilters();
+  const p = new URLSearchParams(location.search).get('tab');
+  switchTab((p === 'cases' || p === 'records') ? 'records' : 'upcoming');
 });
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.asobi-switch-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const up = document.getElementById('upcomingWrap');
+  const rec = document.getElementById('recordsWrap');
+  if (up) up.style.display = tab === 'upcoming' ? '' : 'none';
+  if (rec) rec.style.display = tab === 'records' ? '' : 'none';
+  const kw = document.getElementById('knowhowFilter');
+  if (kw) kw.style.display = tab === 'records' ? '' : 'none';
+  document.getElementById('heroCount').textContent = tab === 'upcoming' ? allEvents.length : allRecords.length;
+  const label = document.getElementById('heroCountLabel');
+  if (label) label.textContent = tab === 'upcoming' ? '件のあそびを掲載中' : '件の事例を掲載中';
+  applyFilters();
+}
 
 function filterCat(el, cat) {
   activeCat = cat;
@@ -52,32 +71,51 @@ function filterCat(el, cat) {
   applyFilters();
 }
 
+function toggleKnowhow(btn) {
+  knowhowOnly = !knowhowOnly;
+  btn.classList.toggle('active', knowhowOnly);
+  applyFilters();
+}
+
 function resetFilters() {
-  activeCat = 'all';
+  activeCat = 'all'; knowhowOnly = false;
   document.getElementById('searchInput').value = '';
   document.querySelectorAll('#catChips .filter-chip').forEach(c => c.classList.remove('active'));
-  document.querySelector('#catChips .filter-chip[data-cat="all"]').classList.add('active');
+  const allChip = document.querySelector('#catChips .filter-chip[data-cat="all"]');
+  if (allChip) allChip.classList.add('active');
+  const kc = document.getElementById('chipKnowhow'); if (kc) kc.classList.remove('active');
   applyFilters();
 }
 
 function applyFilters() {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = allEvents.filter(ev => {
-    if (activeCat !== 'all' && ev.category_id != activeCat) return false;
-    if (q && !ev.title.toLowerCase().includes(q) && !(ev.organizer_name||'').toLowerCase().includes(q)) return false;
-    return true;
-  });
-  renderCards(filtered);
+  if (currentTab === 'upcoming') {
+    const filtered = allEvents.filter(ev => {
+      if (activeCat !== 'all' && ev.category_id != activeCat) return false;
+      if (q && !ev.title.toLowerCase().includes(q) && !(ev.organizer_name || '').toLowerCase().includes(q)) return false;
+      return true;
+    });
+    renderUpcoming(filtered);
+  } else {
+    const filtered = allRecords.filter(ev => {
+      if (activeCat !== 'all' && ev.category_id != activeCat) return false;
+      if (knowhowOnly && !ev.knowhow_summary) return false;
+      if (q && !ev.title.toLowerCase().includes(q) && !(ev.organizer_name || '').toLowerCase().includes(q)) return false;
+      return true;
+    });
+    renderRecords(filtered);
+  }
 }
 
-function renderCards(events) {
+/* ---------- 開催予定（参加・手伝い・問い合わせ） ---------- */
+function renderUpcoming(events) {
   const grid = document.getElementById('eventsGrid');
   document.getElementById('resultInfo').textContent = `${events.length}件のあそびを表示中`;
   if (!events.length) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
       <div class="empty-icon">🌿</div>
-      <div class="empty-title">あそびが見つかりませんでした</div>
-      <div class="empty-desc">絞り込み条件を変えて探してみてください</div>
+      <div class="empty-title">開催予定のあそびはありません</div>
+      <div class="empty-desc">「📚 やってみた記録」から過去のあそびを見てみてください</div>
     </div>`;
     return;
   }
@@ -86,6 +124,7 @@ function renderCards(events) {
     const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
     const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
     const emoji = cat ? cat.emoji : '🎪';
+    const dateStr = ev.event_date || ev.event_on || '';
     return `<div class="event-card" onclick="openModal(${ev.id})">
       <div class="card-thumb" style="background:${grad}">
         <span style="font-size:52px">${emoji}</span>
@@ -95,7 +134,7 @@ function renderCards(events) {
       <div class="card-body">
         <div class="card-title">${ev.title}</div>
         <div class="card-meta">
-          ${ev.event_date ? `<div class="card-meta-item">🗓️ ${ev.event_date}</div>` : ''}
+          ${dateStr ? `<div class="card-meta-item">🗓️ ${dateStr}</div>` : ''}
           ${ev.location ? `<div class="card-meta-item">📍 ${ev.location}</div>` : ''}
           <div class="card-meta-item">👤 ${ev.organizer_name || ''}</div>
         </div>
@@ -108,26 +147,62 @@ function renderCards(events) {
   }).join('');
 }
 
-function getSubmitLabel(type) {
-  return type === 'participate' ? '✋ 参加を申し込む'
-    : type === 'help' ? '🙌 手伝いを申し込む'
-    : '💬 問い合わせを送る';
+/* ---------- やってみた記録（事例・ノウハウ） ---------- */
+function renderRecords(events) {
+  const grid = document.getElementById('casesGrid');
+  document.getElementById('resultInfo').textContent = `${events.length}件の事例を表示中`;
+  if (!events.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📚</div><div class="empty-title">事例が見つかりませんでした</div><div class="empty-desc">絞り込みを変えて探してみてください</div></div>`;
+    return;
+  }
+  grid.innerHTML = events.map(ev => {
+    const cat = ev.event_categories;
+    const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
+    const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
+    const emoji = cat ? cat.emoji : '📚';
+    const dateStr = ev.event_date || ev.event_on || '';
+    return `<div class="case-card" onclick="openModal(${ev.id})">
+      <div class="case-thumb" style="background:${grad}">
+        <span>${emoji}</span>
+        <div class="case-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
+      </div>
+      <div class="case-body">
+        <div class="case-title">${ev.title}</div>
+        <div class="case-org">📍 ${ev.organizer_name || ''}　${ev.organizer_type ? '｜ ' + ev.organizer_type : ''}</div>
+        <div class="case-tags">
+          ${ev.target_audience ? `<span class="case-tag">👥 ${ev.target_audience}</span>` : ''}
+          ${dateStr ? `<span class="case-tag">📅 ${dateStr}</span>` : ''}
+          ${ev.fee ? `<span class="case-tag">💴 ${ev.fee}</span>` : '<span class="case-tag">💴 無料</span>'}
+          ${ev.knowhow_summary ? '<span class="case-tag" style="background:#F0FBF5;color:var(--green)">💡 ノウハウあり</span>' : ''}
+        </div>
+        <div class="case-desc">${ev.description || ''}</div>
+      </div>
+      <div class="case-arrow">›</div>
+    </div>`;
+  }).join('');
 }
 
-function getMsgPlaceholder(type) {
-  return type === 'inquiry'
-    ? '聞きたいことや質問をどうぞ'
-    : '気になることや質問があれば';
-}
-
+/* ---------- モーダル（タブで出し分け） ---------- */
 function openModal(id) {
+  if (currentTab === 'upcoming') openEventModal(id);
+  else openCaseModal(id);
+}
+
+function getSubmitLabel(type) {
+  return type === 'participate' ? '✋ 参加を申し込む' : type === 'help' ? '🙌 手伝いを申し込む' : '💬 問い合わせを送る';
+}
+function getMsgPlaceholder(type) {
+  return type === 'inquiry' ? '聞きたいことや質問をどうぞ' : '気になることや質問があれば';
+}
+
+function openEventModal(id) {
   const ev = allEvents.find(e => e.id === id);
   if (!ev) return;
   const cat = ev.event_categories;
   const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
   const org = allOrgs.find(o => o.org_name === ev.organizer_name);
+  const dateStr = ev.event_date || ev.event_on || '';
 
-  // 初期リクエストタイプを決定（優先: 参加 > 手伝い > 問い合わせ）
   if (ev.can_participate) currentRequestType = 'participate';
   else if (ev.can_help) currentRequestType = 'help';
   else if (ev.can_inquiry) currentRequestType = 'inquiry';
@@ -152,7 +227,7 @@ function openModal(id) {
   document.getElementById('modalBody').innerHTML = `
     <p class="modal-desc">${ev.description || ''}</p>
     <div class="info-grid">
-      ${ev.event_date ? `<div class="info-item"><div class="info-label">🗓️ 開催時期</div><div class="info-value">${ev.event_date}</div></div>` : ''}
+      ${dateStr ? `<div class="info-item"><div class="info-label">🗓️ 開催時期</div><div class="info-value">${dateStr}</div></div>` : ''}
       ${ev.location ? `<div class="info-item"><div class="info-label">📍 場所</div><div class="info-value">${ev.location}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--green);font-weight:700;">🗺️ Googleマップで見る</a></div></div>` : ''}
       ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${ev.target_audience}</div></div>` : ''}
       <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${ev.fee || '無料'}</div></div>
@@ -183,12 +258,8 @@ function setTab(btn, type) {
   currentRequestType = type;
   document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('[id^="sbtn-"]').forEach(b => {
-    b.textContent = getSubmitLabel(type);
-  });
-  document.querySelectorAll('[id^="msgTextarea-"]').forEach(t => {
-    t.placeholder = getMsgPlaceholder(type);
-  });
+  document.querySelectorAll('[id^="sbtn-"]').forEach(b => { b.textContent = getSubmitLabel(type); });
+  document.querySelectorAll('[id^="msgTextarea-"]').forEach(t => { t.placeholder = getMsgPlaceholder(type); });
 }
 
 async function submitRequest(e, eventId) {
@@ -212,6 +283,47 @@ async function submitRequest(e, eventId) {
     btn.textContent = getSubmitLabel(currentRequestType);
     alert('送信に失敗しました。');
   }
+}
+
+function openCaseModal(id) {
+  const ev = allRecords.find(e => e.id === id);
+  if (!ev) return;
+  const cat = ev.event_categories;
+  const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
+  const org = allOrgs.find(o => o.org_name === ev.organizer_name);
+  const dateStr = ev.event_date || ev.event_on || '';
+
+  document.getElementById('modalHeader').innerHTML = `
+    <div class="modal-cat-badge ${catClass}">${cat ? cat.emoji + ' ' + cat.name : ''}</div>
+    <div class="modal-title">${ev.title}</div>
+    <div class="modal-org">📍 ${ev.organizer_name || ''}　${ev.organizer_type ? '｜ ' + ev.organizer_type : ''}</div>`;
+
+  document.getElementById('modalBody').innerHTML = `
+    <p class="modal-desc">${ev.description || ''}</p>
+    <div class="info-grid">
+      ${dateStr ? `<div class="info-item"><div class="info-label">📅 実施時期</div><div class="info-value">${dateStr}</div></div>` : ''}
+      ${ev.location ? `<div class="info-item"><div class="info-label">📍 実施場所</div><div class="info-value">${ev.location}</div></div>` : ''}
+      ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${ev.target_audience}</div></div>` : ''}
+      <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${ev.fee || '無料'}</div></div>
+      ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 参加人数</div><div class="info-value">約${ev.max_participants}名</div></div>` : ''}
+      ${ev.tools_needed ? `<div class="info-item" style="grid-column:1/-1"><div class="info-label">🛠️ 必要な道具・準備物</div><div class="info-value" style="font-weight:400;font-size:13px">${ev.tools_needed}</div></div>` : ''}
+    </div>
+    ${ev.knowhow_summary ? `
+    <div style="margin-bottom:16px">
+      <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:12px">💡 ノウハウ・ポイント</div>
+      <div class="knowhow-grid">
+        <div class="knowhow-box good"><div class="knowhow-title">✅ よかった点</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>
+        <div class="knowhow-box memo"><div class="knowhow-title">📝 企画したい人へのメモ</div><div class="knowhow-text">${ev.tips ? ev.tips : '詳細は主催団体へお問い合わせください。'}</div></div>
+      </div>
+    </div>` : ''}
+    ${org && org.contact_email ? `<div class="contact-box"><div class="contact-title">📧 この事例について問い合わせる</div><a href="mailto:${org.contact_email}" class="contact-email">${org.contact_email}</a></div>` : ''}
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid #f0f0f0">
+      <a href="#" onclick="switchTab('upcoming');closeModal();return false;" style="color:var(--green);font-weight:700;font-size:14px;text-decoration:none">→ 開催予定のあそびを見る</a>
+    </div>`;
+
+  document.getElementById('modalOverlay').classList.add('show');
+  document.getElementById('modalCloseBtn').classList.add('show');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {

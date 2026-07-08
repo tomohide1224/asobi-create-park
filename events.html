@@ -7,7 +7,8 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/pages/events.css">
-  <link rel="stylesheet" href="/css/asobi-switch.css?v=20260706">
+  <link rel="stylesheet" href="/css/pages/cases.css">
+  <link rel="stylesheet" href="/css/asobi-switch.css?v=20260708">
 </head>
 <body>
 
@@ -29,15 +30,15 @@
     </div>
     <div class="hero-count">
       <div class="hero-count-num" id="heroCount">—</div>
-      <div class="hero-count-label">件のあそびを掲載中</div>
+      <div class="hero-count-label" id="heroCountLabel">件のあそびを掲載中</div>
     </div>
   </div>
 </div>
 
-<!-- あそびの状態切替（イベント ⇄ やってみた記録） -->
+<!-- あそびの状態切替（ページ内タブ：開催予定 ⇄ やってみた記録） -->
 <div class="asobi-switch">
-  <a href="/events.html" class="asobi-switch-btn active">🎪 開催予定のあそび</a>
-  <a href="/cases.html" class="asobi-switch-btn">📚 やってみた記録（事例）</a>
+  <button type="button" class="asobi-switch-btn active" data-tab="upcoming" onclick="switchTab('upcoming')">🎪 開催予定のあそび</button>
+  <button type="button" class="asobi-switch-btn" data-tab="records" onclick="switchTab('records')">📚 やってみた記録（事例）</button>
 </div>
 
 <div class="page-layout">
@@ -52,22 +53,35 @@
       </div>
     </div>
 
+    <div class="filter-section" id="knowhowFilter" style="display:none">
+      <div class="filter-label">ノウハウ共有</div>
+      <div class="filter-chips">
+        <button class="filter-chip" id="chipKnowhow" onclick="toggleKnowhow(this)">💡 ポイントあり</button>
+      </div>
+    </div>
+
     <button class="filter-reset" onclick="resetFilters()">絞り込みをリセット</button>
   </aside>
 
   <main>
     <div class="search-bar">
-      <input type="text" class="search-input" id="searchInput" placeholder="🔍 イベント名・団体名で検索…" oninput="applyFilters()">
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 名前・団体名で検索…" oninput="applyFilters()">
       <button class="search-btn" onclick="applyFilters()">検索</button>
     </div>
 
     <div class="result-info" id="resultInfo">読み込み中...</div>
 
-    <div class="events-grid" id="eventsGrid">
-      <div class="loading-wrap" style="grid-column:1/-1">
-        <div class="spinner"></div>
-        <div style="font-size:14px;color:var(--gray);">あそびを読み込み中...</div>
+    <div id="upcomingWrap">
+      <div class="events-grid" id="eventsGrid">
+        <div class="loading-wrap" style="grid-column:1/-1">
+          <div class="spinner"></div>
+          <div style="font-size:14px;color:var(--gray);">あそびを読み込み中...</div>
+        </div>
       </div>
+    </div>
+
+    <div id="recordsWrap" style="display:none">
+      <div class="cases-grid" id="casesGrid"></div>
     </div>
   </main>
 </div>
@@ -85,9 +99,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/common.js"></script>
-<script src="/js/pages/events.js"></script>
+<script src="/js/pages/events.js?v=20260708"></script>
 <script>
-  loadHeader();
+  loadHeaderMember();
   loadFooter();
 </script>
 </body>
