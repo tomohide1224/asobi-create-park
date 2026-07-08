@@ -56,8 +56,8 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 .publish-dates-box { background: #F5F5F5; border-radius: 12px; padding: 14px; }
 
 /* ステータス選択 */
-.status-row { display: flex; gap: 8px; margin-top: 16px; }
-.status-btn { flex: 1; padding: 10px; border: 1.5px solid #E0E0E0; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; background: white; color: #666; transition: all .2s; text-align: center; }
+.status-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.status-btn { flex: 1; min-width: 90px; padding: 10px; border: 1.5px solid #E0E0E0; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; background: white; color: #666; transition: all .2s; text-align: center; }
 .status-btn.active { background: var(--green); border-color: var(--green); color: white; }
 
 /* 送信ボタン */
@@ -225,8 +225,30 @@ textarea.form-input { min-height: 90px; resize: vertical; }
         <button type="button" class="status-btn" id="statusDraft" onclick="setStatus('draft')">📝 下書き</button>
         <button type="button" class="status-btn active" id="statusActive" onclick="setStatus('active')">✅ 掲載中</button>
         <button type="button" class="status-btn" id="statusClosed" onclick="setStatus('closed')">🔒 終了</button>
+        <button type="button" class="status-btn" id="statusPublished" onclick="setStatus('published')">📚 事例</button>
       </div>
-      <div class="form-hint" style="margin-top:6px">「掲載中」にするとイベント一覧に表示されます</div>
+      <div class="form-hint" style="margin-top:6px">「掲載中」でイベント一覧に表示。「📚 事例」にすると、やってみた記録として事例ページに載ります。</div>
+    </div>
+  </div>
+
+  <!-- ノウハウ・やってみた記録（任意） -->
+  <div class="em-card">
+    <div class="em-section-title">💡 ノウハウ・やってみた記録（任意）</div>
+    <div class="form-hint" style="margin-bottom:14px">開催後に記入すると「事例（やってみた記録）」として他の企画者の参考になります。ステータスを「📚 事例」にすると事例ページに載ります。</div>
+
+    <div class="form-group">
+      <label class="form-label">よかった点・成功のポイント</label>
+      <textarea id="ev_knowhow_summary" class="form-input" rows="3" placeholder="うまくいったこと、盛り上がったポイントなど"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">必要な道具・準備物</label>
+      <textarea id="ev_tools_needed" class="form-input" rows="2" placeholder="例：ブルーシート、軍手、スコップ…"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">これから企画したい人へのメモ</label>
+      <textarea id="ev_tips" class="form-input" rows="2" placeholder="注意点、次にやるならこうする、など"></textarea>
     </div>
   </div>
 
@@ -259,7 +281,7 @@ const HEADERS = {
 
 let currentOrg = null;
 
-// ── Googleマップリンク ──────────────────────────────
+// ── Googleマップリンク ──────────────────────
 function updateMapsLink(val) {
   val = (val || '').trim();
   const wrap = document.getElementById('mapsLinkWrap');
@@ -272,7 +294,7 @@ function updateMapsLink(val) {
   }
 }
 
-// ── 初期化 ──────────────────────────────
+// ── 初期化 ──────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   const saved = sessionStorage.getItem('acp_org');
   if (!saved) { window.location.href = '/login.html'; return; }
@@ -321,6 +343,11 @@ async function loadEvent(id) {
   document.getElementById('ev_description').value = ev.description || '';
   document.getElementById('ev_event_url').value = ev.event_url || '';
 
+  // ノウハウ・やってみた記録
+  document.getElementById('ev_knowhow_summary').value = ev.knowhow_summary || '';
+  document.getElementById('ev_tools_needed').value = ev.tools_needed || '';
+  document.getElementById('ev_tips').value = ev.tips || '';
+
   // オープン/クローズド
   const isOpen = !!ev.is_public || !!ev.can_participate;
   document.getElementById(isOpen ? 'is_public_open' : 'is_public_closed').checked = true;
@@ -343,7 +370,7 @@ async function loadEvent(id) {
   setStatus(ev.status || 'active');
 }
 
-// ── オープン/クローズド切替（ビジュアルのみ） ──────────────────────────────
+// ── オープン/クローズド切替（ビジュアルのみ） ──────────────────────
 function onPublicChange() {
   setTimeout(() => {
     const isOpen = document.getElementById('is_public_open').checked;
@@ -352,15 +379,15 @@ function onPublicChange() {
   }, 0);
 }
 
-// ── ステータス選択 ──────────────────────────────
+// ── ステータス選択 ──────────────────────
 function setStatus(st) {
   document.getElementById('currentStatus').value = st;
-  ['draft','active','closed'].forEach(s => {
+  ['draft','active','closed','published'].forEach(s => {
     document.getElementById('status' + s.charAt(0).toUpperCase() + s.slice(1)).classList.toggle('active', s === st);
   });
 }
 
-// ── 画像 ──────────────────────────────
+// ── 画像 ──────────────────────
 function previewImage(input) {
   if (!input.files || !input.files[0]) return;
   const reader = new FileReader();
@@ -387,7 +414,7 @@ async function uploadImage(file, path) {
   return `${SUPABASE_URL}/storage/v1/object/public/images/${path}`;
 }
 
-// ── 保存 ──────────────────────────────
+// ── 保存 ──────────────────────
 async function saveEvent() {
   const title = document.getElementById('ev_title').value.trim();
   if (!title) { showError('イベント名は必須です。'); return; }
@@ -427,6 +454,9 @@ async function saveEvent() {
       fee: document.getElementById('ev_fee').value.trim() || '無料',
       max_participants: document.getElementById('ev_max_participants').value ? parseInt(document.getElementById('ev_max_participants').value) : null,
       event_url: document.getElementById('ev_event_url').value.trim() || null,
+      knowhow_summary: document.getElementById('ev_knowhow_summary').value.trim() || null,
+      tools_needed: document.getElementById('ev_tools_needed').value.trim() || null,
+      tips: document.getElementById('ev_tips').value.trim() || null,
       is_public,
       can_participate,
       can_help,
