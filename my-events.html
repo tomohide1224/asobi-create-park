@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あそび一覧（管理） | ASOBI CREATE PARK</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/pages/plans-manage.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div id="authGuard" style="display:none;">
+  <div class="auth-required">
+    <div class="icon">🔒</div>
+    <h2>企画者ログインが必要です</h2>
+    <p>この画面は登録団体（企画者）専用の「あそび管理」画面です。<br>支援者の方は「あそびを探す」から公開中のあそびをご覧いただけます。</p>
+    <a href="/events.html" class="btn-to-login">🎪 あそびを探すへ</a>
+  </div>
+</div>
+
+<div id="mainContent" style="display:none;">
+  <div class="main-wrap">
+    <div class="page-header">
+      <div>
+        <div class="page-title">📋 <span>あそび一覧</span></div>
+        <div class="org-badge" id="orgBadge">読み込み中…</div>
+      </div>
+      <button class="btn-new-plan" onclick="location.href='/event-manage.html'">＋ 新しいあそびを作る</button>
+    </div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('all', this)">すべて</button>
+      <button class="tab-btn" onclick="switchTab('planning', this)">🌱 企画中</button>
+      <button class="tab-btn" onclick="switchTab('active', this)">🎪 開催予定</button>
+      <button class="tab-btn" onclick="switchTab('closed', this)">🔒 終了</button>
+      <button class="tab-btn" onclick="switchTab('published', this)">📚 事例</button>
+    </div>
+    <div id="listPane" class="tab-pane active"><div class="loading-state"><div class="spinner"></div><p>読み込み中...</p></div></div>
+  </div>
+</div>
+
+<script>
+// 管理用「あそび一覧」：企画者が自分のイベントを全ステータスで見る画面。
+// フロント用「あそびを探す」(events.html) とは別画面。
+const SUPABASE_URL      = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+const HEADERS = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' };
+let currentOrg = null, allItems = [], allCats = {}, currentFilter = 'all';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem('acp_org');
+  if (!saved) { document.getElementById('authGuard').style.display = 'block'; return; }
+  try {
+    currentOrg = JSON.parse(saved);
+    document.getElementById('orgBadge').textContent = `🏢 ${currentOrg.org_name}`;
+    document.getElementById('mainContent').style.display = 'block';
+    loadCategories().then(loadItems);
+  } catch(e) { document.getElementById('authGuard').style.display = 'block'; }
+});
+
+async function loadCategories() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/event_categories?order=id`, { headers: HEADERS });
+    const cats = res.ok ? await res.json() : [];
+    cats.forEach(c => allCats[c.id] = c);
+  } catch(e) {}
+}
+
+async function loadItems() {
+  document.getElementById('listPane').innerHTML = '<div class="loading-state"><div class="spinner"></div><p>読み込み中...</p></div>';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/events?organization_id=eq.${currentOrg.id}&select=*,event_categories(name,emoji)&order=created_at.desc`, { headers: HEADERS });
+    allItems = await res.json();
+    renderItems();
+  } catch(e) { document.getElementById('listPane').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー：${e.message}</p></div>`; }
+}
+
+function statusGroup(st) {
+  if (st === 'draft' || st === 'recruiting') return 'planning';
+  return st;
+}
+
+function switchTab(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderItems();
+}
+
+function renderItems() {
+  const pane = document.getElementById('listPane');
+  const items = currentFilter === 'all' ? allItems : allItems.filter(it => statusGroup(it.status) === currentFilter);
+  if (!items.length) {
+    pane.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>該当するあそびはありません。</p><button class="btn-new-plan" onclick="location.href='/event-manage.html'" style="display:inline-block;padding:10px 20px;">＋ 新しいあそびを作る</button></div>`;
+    return;
+  }
+  pane.innerHTML = '<div class="plans-list"></div>';
+  const list = pane.querySelector('.plans-list');
+  items.forEach(it => list.appendChild(buildCard(it)));
+}
+
+function buildCard(it) {
+  const card = document.createElement('div');
+  card.className = 'plan-card';
+  const cat = it.event_categories || allCats[it.category_id] || null;
+  const catEmoji = (cat && cat.emoji) ? cat.emoji : '🎪';
+  const catName = cat ? cat.name : '';
+  const statusMap = { draft:'📝 下書き', recruiting:'🌱 企画中', active:'🎪 開催予定', closed:'🔒 終了', published:'📚 事例' };
+  const statusLabel = statusMap[it.status] || it.status;
+  const dateStr = it.event_date || it.event_on || '';
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const canApplicants = (it.status === 'recruiting' || it.status === 'draft');
+  card.innerHTML = `
+    <div class="plan-card-emoji">${catEmoji}</div>
+    <div class="plan-card-body">
+      <div class="plan-card-head">
+        <div class="plan-title">${esc(it.title)}</div>
+        <span class="plan-status-badge ${it.status}">${statusLabel}</span>
+      </div>
+      <div class="plan-meta">
+        ${catName?`<span>${catEmoji} ${esc(catName)}</span>`:''}
+        ${dateStr?`<span>📅 ${esc(dateStr)}</span>`:''}
+        ${it.location?`<span>📍 ${esc(it.location)}</span>`:''}
+        <span>🕐 ${new Date(it.created_at).toLocaleDateString('ja-JP')}</span>
+      </div>
+      ${it.description?`<div style="font-size:13px;color:var(--gray);margin-bottom:10px;line-height:1.5;">${esc(it.description).substring(0,120)}${it.description.length>120?'…':''}</div>`:''}
+      <div class="plan-actions">
+        <button class="btn-sm edit" onclick="location.href='/event-manage.html?edit=${it.id}'">✏️ 編集</button>
+        ${canApplicants?`<button class="btn-sm view-hands" onclick="location.href='/applicants.html?event_id=${it.id}'">🙋 申込者</button>`:''}
+      </div>
+    </div>`;
+  return card;
+}
+</script>
+<script src="/js/common.js"></script>
+<script>
+  loadHeaderMember();
+</script>
+</body>
+</html>
