@@ -15,8 +15,8 @@
 <div id="authGuard" style="display:none;">
   <div class="auth-required">
     <div class="icon">🔒</div>
-    <h2>企画者ログインが必要です</h2>
-    <p>この画面は登録団体（企画者）専用の「あそび管理」画面です。<br>支援者の方は「あそびを探す」から公開中のあそびをご覧いただけます。</p>
+    <h2>ログインが必要です</h2>
+    <p>「あそび一覧」は、企画者・支援者としてログインした方の画面です。</p>
     <a href="/events.html" class="btn-to-login">🎪 あそびを探すへ</a>
   </div>
 </div>
@@ -28,36 +28,31 @@
         <div class="page-title">📋 <span>あそび一覧</span></div>
         <div class="org-badge" id="orgBadge">読み込み中…</div>
       </div>
-      <button class="btn-new-plan" onclick="location.href='/event-manage.html'">＋ 新しいあそびを作る</button>
+      <button class="btn-new-plan" id="newBtn" onclick="location.href='/event-manage.html'">＋ 新しいあそびを作る</button>
     </div>
-    <div class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('all', this)">すべて</button>
-      <button class="tab-btn" onclick="switchTab('planning', this)">🌱 企画中</button>
-      <button class="tab-btn" onclick="switchTab('active', this)">🎪 開催予定</button>
-      <button class="tab-btn" onclick="switchTab('closed', this)">🔒 終了</button>
-      <button class="tab-btn" onclick="switchTab('published', this)">📚 事例</button>
-    </div>
+    <div class="tab-nav" id="tabNav"></div>
     <div id="listPane" class="tab-pane active"><div class="loading-state"><div class="spinner"></div><p>読み込み中...</p></div></div>
   </div>
 </div>
 
 <script>
-// 管理用「あそび一覧」：企画者が自分のイベントを全ステータスで見る画面。
-// フロント用「あそびを探す」(events.html) とは別画面。
+// 管理用「あそび一覧」：企画者と支援者で表示が変わる。フロント用「あそびを探す」(events.html)とは別画面。
+// ・企画者(acp_org)  = 自分が作成したあそび（すべて/企画中/公開中/終了/事例）＋新規作成
+// ・支援者(acp_supporter) = 手を上げた/お気に入り/募集中を探す（新規作成なし）
+// 1ユーザーが両方の顔を持てる（organizationを持てば企画者）。ここでは acp_org を優先。
 const SUPABASE_URL      = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
 const HEADERS = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' };
-let currentOrg = null, allItems = [], allCats = {}, currentFilter = 'all';
+let mode = null, currentOrg = null, currentSup = null, allCats = {}, currentFilter = '', orgItems = [], supData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  const saved = sessionStorage.getItem('acp_org');
-  if (!saved) { document.getElementById('authGuard').style.display = 'block'; return; }
-  try {
-    currentOrg = JSON.parse(saved);
-    document.getElementById('orgBadge').textContent = `🏢 ${currentOrg.org_name}`;
-    document.getElementById('mainContent').style.display = 'block';
-    loadCategories().then(loadItems);
-  } catch(e) { document.getElementById('authGuard').style.display = 'block'; }
+  const orgStr = sessionStorage.getItem('acp_org');
+  const supStr = sessionStorage.getItem('acp_supporter');
+  if (orgStr) { try { currentOrg = JSON.parse(orgStr); if (currentOrg && currentOrg.id) mode = 'org'; } catch(e){} }
+  if (!mode && supStr) { try { currentSup = JSON.parse(supStr); if (currentSup && currentSup.id) mode = 'sup'; } catch(e){} }
+  if (!mode) { document.getElementById('authGuard').style.display = 'block'; return; }
+  document.getElementById('mainContent').style.display = 'block';
+  loadCategories().then(() => mode === 'org' ? initOrg() : initSup());
 });
 
 async function loadCategories() {
@@ -68,50 +63,120 @@ async function loadCategories() {
   } catch(e) {}
 }
 
-async function loadItems() {
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+const STATUS_MAP = { draft:'📝 下書き', recruiting:'🌱 企画中', active:'🎪 公開中', closed:'🔒 終了', published:'📚 事例' };
+
+/* ========== 企画者モード ========== */
+function initOrg() {
+  document.getElementById('orgBadge').textContent = `🏢 ${currentOrg.org_name}（企画者）`;
+  const nb = document.getElementById('newBtn'); nb.style.display = ''; nb.textContent = '＋ 新しいあそびを作る'; nb.onclick = () => location.href = '/event-manage.html';
+  document.getElementById('tabNav').innerHTML = `
+    <button class="tab-btn active" onclick="setFilter('all',this)">すべて</button>
+    <button class="tab-btn" onclick="setFilter('planning',this)">🌱 企画中</button>
+    <button class="tab-btn" onclick="setFilter('active',this)">🎪 公開中</button>
+    <button class="tab-btn" onclick="setFilter('closed',this)">🔒 終了</button>
+    <button class="tab-btn" onclick="setFilter('published',this)">📚 事例</button>`;
+  currentFilter = 'all';
+  loadOrgItems();
+}
+
+async function loadOrgItems() {
   document.getElementById('listPane').innerHTML = '<div class="loading-state"><div class="spinner"></div><p>読み込み中...</p></div>';
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/events?organization_id=eq.${currentOrg.id}&select=*,event_categories(name,emoji)&order=created_at.desc`, { headers: HEADERS });
-    allItems = await res.json();
-    renderItems();
+    orgItems = await res.json();
+    renderOrg();
   } catch(e) { document.getElementById('listPane').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー：${e.message}</p></div>`; }
 }
 
-function statusGroup(st) {
-  if (st === 'draft' || st === 'recruiting') return 'planning';
-  return st;
+function orgGroup(st) { if (st === 'draft' || st === 'recruiting') return 'planning'; return st; }
+
+function renderOrg() {
+  const items = currentFilter === 'all' ? orgItems : orgItems.filter(it => orgGroup(it.status) === currentFilter);
+  renderCards(items, 'org');
 }
 
-function switchTab(filter, btn) {
-  currentFilter = filter;
+/* ========== 支援者モード ========== */
+function initSup() {
+  document.getElementById('orgBadge').textContent = `🤝 ${currentSup.display_name || '支援者'}（支援者）`;
+  const nb = document.getElementById('newBtn'); nb.textContent = '🏢 企画者になる'; nb.onclick = () => location.href = '/login.html';
+  document.getElementById('tabNav').innerHTML = `
+    <button class="tab-btn active" onclick="setFilter('hands',this)">🙋 手を上げた</button>
+    <button class="tab-btn" onclick="setFilter('favs',this)">❤️ お気に入り</button>
+    <button class="tab-btn" onclick="setFilter('find',this)">🎪 募集中を探す</button>`;
+  currentFilter = 'hands';
+  loadSupItems();
+}
+
+async function loadSupItems() {
+  document.getElementById('listPane').innerHTML = '<div class="loading-state"><div class="spinner"></div><p>読み込み中...</p></div>';
+  try {
+    const [handRes, favRes, recRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/support_hands?supporter_id=eq.${currentSup.id}&select=event_id`, { headers: HEADERS }),
+      fetch(`${SUPABASE_URL}/rest/v1/favorite_plans?supporter_id=eq.${currentSup.id}&select=event_id`, { headers: HEADERS }),
+      fetch(`${SUPABASE_URL}/rest/v1/events?status=eq.recruiting&select=*,event_categories(name,emoji)&order=created_at.desc`, { headers: HEADERS }),
+    ]);
+    const hands = handRes.ok ? await handRes.json() : [];
+    const favs = favRes.ok ? await favRes.json() : [];
+    const recs = recRes.ok ? await recRes.json() : [];
+    const handIds = [...new Set(hands.map(h => h.event_id))];
+    const favIds = [...new Set(favs.map(f => f.event_id))];
+    const relIds = [...new Set([...handIds, ...favIds])];
+    let relEvents = [];
+    if (relIds.length) {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/events?id=in.(${relIds.join(',')})&select=*,event_categories(name,emoji)`, { headers: HEADERS });
+      relEvents = r.ok ? await r.json() : [];
+    }
+    supData = { handIds, favIds, relEvents, recs };
+    renderSup();
+  } catch(e) { document.getElementById('listPane').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>読み込みエラー：${e.message}</p></div>`; }
+}
+
+function renderSup() {
+  const d = supData || { handIds:[], favIds:[], relEvents:[], recs:[] };
+  let items = [];
+  if (currentFilter === 'hands') items = d.relEvents.filter(e => d.handIds.includes(e.id));
+  else if (currentFilter === 'favs') items = d.relEvents.filter(e => d.favIds.includes(e.id));
+  else items = d.recs;
+  renderCards(items, 'sup');
+}
+
+/* ========== 共通描画 ========== */
+function setFilter(f, btn) {
+  currentFilter = f;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderItems();
+  mode === 'org' ? renderOrg() : renderSup();
 }
 
-function renderItems() {
+function renderCards(items, kind) {
   const pane = document.getElementById('listPane');
-  const items = currentFilter === 'all' ? allItems : allItems.filter(it => statusGroup(it.status) === currentFilter);
   if (!items.length) {
-    pane.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>該当するあそびはありません。</p><button class="btn-new-plan" onclick="location.href='/event-manage.html'" style="display:inline-block;padding:10px 20px;">＋ 新しいあそびを作る</button></div>`;
+    pane.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>該当するあそびはありません。</p></div>`;
     return;
   }
   pane.innerHTML = '<div class="plans-list"></div>';
   const list = pane.querySelector('.plans-list');
-  items.forEach(it => list.appendChild(buildCard(it)));
+  items.forEach(it => list.appendChild(buildCard(it, kind)));
 }
 
-function buildCard(it) {
+function buildCard(it, kind) {
   const card = document.createElement('div');
   card.className = 'plan-card';
   const cat = it.event_categories || allCats[it.category_id] || null;
   const catEmoji = (cat && cat.emoji) ? cat.emoji : '🎪';
   const catName = cat ? cat.name : '';
-  const statusMap = { draft:'📝 下書き', recruiting:'🌱 企画中', active:'🎪 開催予定', closed:'🔒 終了', published:'📚 事例' };
-  const statusLabel = statusMap[it.status] || it.status;
+  const statusLabel = STATUS_MAP[it.status] || it.status;
   const dateStr = it.event_date || it.event_on || '';
-  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const canApplicants = (it.status === 'recruiting' || it.status === 'draft');
+  let actions = '';
+  if (kind === 'org') {
+    const canApplicants = (it.status === 'recruiting' || it.status === 'draft' || it.status === 'active');
+    actions = `
+      <button class="btn-sm edit" onclick="location.href='/event-manage.html?edit=${it.id}'">✏️ 編集</button>
+      ${canApplicants ? `<button class="btn-sm view-hands" onclick="location.href='/applicants.html?event_id=${it.id}'">🙋 申込者</button>` : ''}`;
+  } else {
+    actions = `<button class="btn-sm edit" onclick="location.href='/events.html'">🎪 あそびを探すで見る</button>`;
+  }
   card.innerHTML = `
     <div class="plan-card-emoji">${catEmoji}</div>
     <div class="plan-card-body">
@@ -123,13 +188,11 @@ function buildCard(it) {
         ${catName?`<span>${catEmoji} ${esc(catName)}</span>`:''}
         ${dateStr?`<span>📅 ${esc(dateStr)}</span>`:''}
         ${it.location?`<span>📍 ${esc(it.location)}</span>`:''}
-        <span>🕐 ${new Date(it.created_at).toLocaleDateString('ja-JP')}</span>
+        ${(kind!=='org' && it.organizer_name)?`<span>👤 ${esc(it.organizer_name)}</span>`:''}
+        ${kind==='org'?`<span>🕐 ${new Date(it.created_at).toLocaleDateString('ja-JP')}</span>`:''}
       </div>
       ${it.description?`<div style="font-size:13px;color:var(--gray);margin-bottom:10px;line-height:1.5;">${esc(it.description).substring(0,120)}${it.description.length>120?'…':''}</div>`:''}
-      <div class="plan-actions">
-        <button class="btn-sm edit" onclick="location.href='/event-manage.html?edit=${it.id}'">✏️ 編集</button>
-        ${canApplicants?`<button class="btn-sm view-hands" onclick="location.href='/applicants.html?event_id=${it.id}'">🙋 申込者</button>`:''}
-      </div>
+      <div class="plan-actions">${actions}</div>
     </div>`;
   return card;
 }
