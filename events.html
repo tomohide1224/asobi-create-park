@@ -9,6 +9,26 @@
   <link rel="stylesheet" href="/css/pages/events.css">
   <link rel="stylesheet" href="/css/pages/cases.css">
   <link rel="stylesheet" href="/css/asobi-switch.css?v=20260708">
+  <style>
+    /* 募集中の企画：応援ボタン（お気に入り／手を上げる） */
+    .recruit-actions { display:flex; gap:8px; }
+    .recruit-actions button { flex:1; padding:9px 6px; border-radius:10px; border:1.5px solid #e0e0e0; background:#fff; font-size:12px; font-weight:700; cursor:pointer; transition:.15s; }
+    .recruit-actions button:hover { background:#fafafa; }
+    .recruit-actions .btn-fav.active { border-color:#e91e63; color:#e91e63; background:#fff0f5; }
+    .recruit-actions .btn-hand.active { border-color:var(--green); color:var(--green); background:#f0fbf5; }
+    .recruit-actions .btn-hand:disabled { cursor:default; opacity:.9; }
+    /* 手を上げるモーダル */
+    .hand-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:1000; padding:20px; }
+    .hand-modal-overlay.open { display:flex; }
+    .hand-modal-card { background:#fff; border-radius:18px; padding:24px; max-width:420px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,.2); }
+    .hand-modal-card h3 { margin:0 0 6px; font-size:18px; }
+    .hand-modal-card p { margin:0 0 14px; font-size:13px; color:var(--gray); }
+    .hand-modal-card textarea { width:100%; min-height:90px; border:1.5px solid #e0e0e0; border-radius:12px; padding:12px; font-size:14px; font-family:inherit; box-sizing:border-box; resize:vertical; }
+    .hand-modal-actions { display:flex; gap:10px; margin-top:16px; }
+    .hand-modal-actions button { flex:1; padding:12px; border-radius:12px; border:none; font-size:14px; font-weight:800; cursor:pointer; }
+    .hand-modal-actions button:not(.primary) { background:#f0f0f0; color:#555; }
+    .hand-modal-actions button.primary { background:var(--green); color:#fff; }
+  </style>
 </head>
 <body>
 
@@ -35,10 +55,11 @@
   </div>
 </div>
 
-<!-- あそびの状態切替（ページ内タブ：開催予定 ⇄ やってみた記録） -->
+<!-- あそびの状態切替（ページ内タブ：開催予定 ⇄ やってみた記録 ⇄ 募集中の企画） -->
 <div class="asobi-switch">
   <button type="button" class="asobi-switch-btn active" data-tab="upcoming" onclick="switchTab('upcoming')">🎪 開催予定のあそび</button>
   <button type="button" class="asobi-switch-btn" data-tab="records" onclick="switchTab('records')">📚 やってみた記録（事例）</button>
+  <button type="button" class="asobi-switch-btn" id="recruitTabBtn" data-tab="recruit" onclick="switchTab('recruit')" style="display:none">🌱 募集中の企画</button>
 </div>
 
 <div class="page-layout">
@@ -83,6 +104,10 @@
     <div id="recordsWrap" style="display:none">
       <div class="cases-grid" id="casesGrid"></div>
     </div>
+
+    <div id="recruitWrap" style="display:none">
+      <div class="events-grid" id="recruitGrid"></div>
+    </div>
   </main>
 </div>
 
@@ -95,13 +120,26 @@
 </div>
 <button class="modal-close-btn" id="modalCloseBtn" onclick="closeModal()">✕</button>
 
+<!-- 手を上げるモーダル（募集中の企画を応援） -->
+<div class="hand-modal-overlay" id="handModal">
+  <div class="hand-modal-card">
+    <h3>🙋 この企画に手を上げる</h3>
+    <p>主催者へ「手伝いたい・応援したい」気持ちを届けます。ひとことメッセージを添えられます（任意）。</p>
+    <textarea id="handMessage" placeholder="例：ぜひお手伝いさせてください！こんなことができます…"></textarea>
+    <div class="hand-modal-actions">
+      <button type="button" onclick="closeHandModal()">キャンセル</button>
+      <button type="button" class="primary" onclick="submitHand()">🙋 手を上げる</button>
+    </div>
+  </div>
+</div>
+
 <div id="site-footer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/common.js"></script>
-<script src="/js/pages/events.js?v=20260708"></script>
+<script src="/js/pages/events.js?v=20260717"></script>
 <script>
-  loadHeader();
+  loadHeaderMember();
   loadFooter();
 </script>
 </body>
