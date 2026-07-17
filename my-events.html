@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const supStr = sessionStorage.getItem('acp_supporter');
   if (orgStr) { try { currentOrg = JSON.parse(orgStr); if (currentOrg && currentOrg.id) mode = 'org'; } catch(e){} }
   if (!mode && supStr) { try { currentSup = JSON.parse(supStr); if (currentSup && currentSup.id) mode = 'sup'; } catch(e){} }
-  if (!mode) { document.getElementById('authGuard').style.display = 'block'; return; }
+  if (!mode) { window.location.href = '/login.html'; return; }
   document.getElementById('mainContent').style.display = 'block';
   loadCategories().then(() => mode === 'org' ? initOrg() : initSup());
 });

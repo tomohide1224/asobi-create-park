@@ -274,7 +274,12 @@
 
 <script src="/js/common.js"></script>
 <script>
-  loadHeaderMember();
+  // 未ログインは会員ナビを出さない（ログイン後 or 認証コールバック時のみフルナビ）
+  if (sessionStorage.getItem('acp_org') || sessionStorage.getItem('acp_supporter') || new URLSearchParams(location.search).get('code')) {
+    loadHeaderMember();
+  } else {
+    loadHeaderMemberSimple();
+  }
   loadFooter();
 </script>
 <script>
