@@ -9,7 +9,7 @@
 .btn-download-all:hover { opacity: 0.85; }
 
 /* フィルター */
-.filter-wrap { background: white; border-bottom: 1px solid #EEE; padding: 12px 24px; display: flex; gap: 8px; overflow-x: auto; }
+.filter-wrap { background: white; border-bottom: 1px solid #EEE; padding: 12px 24px; display: flex; gap: 8px; overflow-x: auto; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 .filter-chip { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; border: 1.5px solid #E0E0E0; background: white; color: var(--gray); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
 .filter-chip.active { background: var(--green); border-color: var(--green); color: white; }
 
