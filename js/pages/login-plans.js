@@ -185,25 +185,14 @@ async function loadSupporterRequests(supporter) {
 /* ============================================================
    マイページ整理（Phase 3 / 一本化）
    マイページの「イベント」「企画をさがす」タブは、あそび一覧(my-events)と
-   あそびを探す(events)に統合済み。ここではダッシュボードから該当タブ・ペインを
-   隠し、代わりに両ページへの入口ボタン（クイックリンク）を差し込む。
+   あそびを探す(events)に統合済み。ダッシュボードから該当タブ・ペインを隠す。
+   ※あそび系ページへの導線はグロナビにあるので、マイページには入口を置かない
+     （＝重複を避ける）。マイページは「統計＋問い合わせ＋団体情報」に専念。
    ・login.html 本体は変更せず、このスクリプトだけで整形する（安全策）。
    ============================================================ */
 function setupMypageHub() {
   const dash = document.getElementById('phase4');
   if (!dash) return;
-
-  // スタイル（1回だけ）
-  if (!document.getElementById('mypageHubStyle')) {
-    const st = document.createElement('style');
-    st.id = 'mypageHubStyle';
-    st.textContent = '.dash-quicklinks{display:flex;gap:12px;margin:0 0 16px;flex-wrap:wrap}'
-      + '.dash-quicklink{flex:1;min-width:150px;display:flex;flex-direction:column;gap:2px;padding:16px;border-radius:14px;background:#fff;border:1.5px solid #e3efe8;text-decoration:none;color:var(--navy);box-shadow:0 2px 10px rgba(0,0,0,.04);transition:.15s}'
-      + '.dash-quicklink b{font-size:15px}'
-      + '.dash-quicklink:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(0,0,0,.08)}'
-      + '.dash-quicklink span{font-size:11px;font-weight:600;color:var(--gray)}';
-    document.head.appendChild(st);
-  }
 
   // 「イベント」「企画をさがす」タブ＆ペインを隠す（統合済みのため）
   ['events', 'plans'].forEach(t => {
@@ -213,26 +202,18 @@ function setupMypageHub() {
     if (pane) { pane.classList.remove('active'); pane.style.display = 'none'; }
   });
 
-  // クイックリンク（あそび一覧／あそびを探す）を1回だけ差し込む
-  if (!document.getElementById('dashQuicklinks')) {
+  // 支援者（団体を持たない人）だけ「企画者として登録」ボタンを1つ出す
+  const isSupporter = !sessionStorage.getItem('acp_org') && sessionStorage.getItem('acp_supporter');
+  if (isSupporter && !document.getElementById('supUpgradeWrap')) {
     const header = dash.querySelector('.dash-header');
     if (header) {
       const div = document.createElement('div');
-      div.id = 'dashQuicklinks';
-      div.className = 'dash-quicklinks';
-      div.innerHTML = '<a href="/my-events.html" class="dash-quicklink"><b>📋 あそび一覧</b><span>自分のあそび・応援を管理</span></a>'
-        + '<a href="/events.html?tab=recruit" class="dash-quicklink"><b>🌱 あそびを探す</b><span>募集中の企画を応援</span></a>'
-        + '<button id="supUpgradeBtn" class="dash-quicklink" style="display:none;cursor:pointer;text-align:left;font:inherit"><b>🏢 企画者として登録</b><span>自分のあそびを作る</span></button>';
+      div.id = 'supUpgradeWrap';
+      div.style.cssText = 'margin:0 0 16px';
+      div.innerHTML = '<button class="btn-line" style="width:100%" onclick="startOrgRegister()">🏢 企画者として登録する</button>';
       header.insertAdjacentElement('afterend', div);
-      const upg = document.getElementById('supUpgradeBtn');
-      if (upg) upg.addEventListener('click', () => startOrgRegister());
     }
   }
-
-  // 支援者（団体を持たない人）には「企画者として登録」ボタンを見せる
-  const isSupporter = !sessionStorage.getItem('acp_org') && sessionStorage.getItem('acp_supporter');
-  const upgBtn = document.getElementById('supUpgradeBtn');
-  if (upgBtn) upgBtn.style.display = isSupporter ? '' : 'none';
 
   // 既定タブが隠したタブのままなら「問い合わせ」に寄せる
   const active = dash.querySelector('.dash-pane.active');
