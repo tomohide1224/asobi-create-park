@@ -164,9 +164,11 @@ function renderUpcoming(events) {
     const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
     const emoji = cat ? cat.emoji : '🎪';
     const dateStr = ev.event_date || ev.event_on || '';
+    const thumbInner = ev.image_url ? `<img src="${ev.image_url}" alt="" loading="lazy">` : `<span style="font-size:52px">${emoji}</span>`;
+    const thumbBg = ev.image_url ? '#eef1ee' : grad;
     return `<div class="event-card" onclick="openModal(${ev.id})">
-      <div class="card-thumb" style="background:${grad}">
-        <span style="font-size:52px">${emoji}</span>
+      <div class="card-thumb" style="background:${thumbBg}">
+        ${thumbInner}
         <div class="card-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
         ${ev.can_help ? '<div class="card-type-badge">🙌 スタッフも募集</div>' : ''}
       </div>
@@ -206,9 +208,11 @@ function renderRecruiting(events) {
     const dateStr = ev.event_date || ev.event_on || '';
     const isFav = favSet.has(ev.id);
     const isHand = handSet.has(ev.id);
+    const thumbInner = ev.image_url ? `<img src="${ev.image_url}" alt="" loading="lazy">` : `<span style="font-size:52px">${emoji}</span>`;
+    const thumbBg = ev.image_url ? '#eef1ee' : grad;
     return `<div class="event-card">
-      <div class="card-thumb" style="background:${grad}" onclick="openModal(${ev.id})">
-        <span style="font-size:52px">${emoji}</span>
+      <div class="card-thumb" style="background:${thumbBg}" onclick="openModal(${ev.id})">
+        ${thumbInner}
         <div class="card-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
         <div class="card-type-badge">🌱 企画中</div>
       </div>
