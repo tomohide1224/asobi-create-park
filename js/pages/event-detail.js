@@ -1,8 +1,9 @@
 /* event.html — ACP内の企画・あそびの詳細ページ（独立URL /event.html?id=NNN）
-   status別に出し分け：
-   ・active     = 開催予定（参加/手伝い/問い合わせフォーム）
-   ・recruiting = 募集中の企画（応援＝お気に入り/手を上げる。ログイン者のみ操作可）
-   ・published  = やってみた記録（事例・ノウハウ・問い合わせ）
+   フロント（見る人）向けビュー。status別に出し分け：
+   ・active     = 開催予定（情報＋地図＋「気になる」）
+   ・recruiting = 募集中の企画（情報＋地図＋応援＝お気に入り/手を上げる）
+   ・published  = やってみた記録（情報＋地図＋ノウハウ＋「気になる」）
+   ※フロントには参加/手伝い/問い合わせフォームは置かない（管理は event-manage 側）。
    一覧(events.html)の内部イベントカードから遷移してくる。外部イベントは対象外。 */
 const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
@@ -21,7 +22,6 @@ const THUMB_GRADIENTS = [
 let client, ev = null, cat = null, org = null;
 let viewer = 'guest', currentOrg = null, currentSup = null, mySupporterId = null;
 let favSet = new Set(), handSet = new Set();
-let currentRequestType = 'participate';
 
 function detectViewer() {
   try { const o = sessionStorage.getItem('acp_org'); if (o) { currentOrg = JSON.parse(o); if (currentOrg && currentOrg.id) viewer = 'org'; } } catch (e) {}
@@ -57,7 +57,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     org = (orgs && orgs[0]) || null;
   }
 
-  if (ev.status === 'recruiting' && viewer !== 'guest') { await loadMarks(id); }
+  if (viewer !== 'guest') { await loadMarks(id); }
 
   document.title = `${ev.title} | ASOBI CREATE PARK`;
   const crumb = document.getElementById('crumbTitle');
@@ -85,7 +85,6 @@ function statusBadge(status) {
 function buildHero() {
   const grad = THUMB_GRADIENTS[((ev.category_id || 1) - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
   const emoji = cat ? cat.emoji : '🎪';
-  const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
   const catColorMap = ['', '#66bb6a', '#42a5f5', '#ab47bc', '#ffca28', '#e91e63', '#00acc1', '#ff5722', '#8d6e63'];
   const badgeColor = catColorMap[ev.category_id] || '#66bb6a';
   const inner = ev.image_url
@@ -103,11 +102,26 @@ function buildInfoGrid() {
   const dateStr = ev.event_date || ev.event_on || '';
   return `<div class="info-grid">
     ${dateStr ? `<div class="info-item"><div class="info-label">🗓️ 開催時期</div><div class="info-value">${dateStr}</div></div>` : ''}
-    ${ev.location ? `<div class="info-item"><div class="info-label">📍 場所</div><div class="info-value">${ev.location}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ev.location)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--green);font-weight:700;">🗺️ Googleマップで見る</a></div></div>` : ''}
+    ${ev.location ? `<div class="info-item"><div class="info-label">📍 場所</div><div class="info-value">${ev.location}</div></div>` : ''}
     ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${ev.target_audience}</div></div>` : ''}
     <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${ev.fee || '無料'}</div></div>
     ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 定員</div><div class="info-value">${ev.max_participants}名</div></div>` : ''}
   </div>`;
+}
+
+/* Googleマップ埋め込み（APIキー不要）＋ 地図の補足情報 */
+function buildMap() {
+  if (!ev.location) return '';
+  const q = encodeURIComponent(ev.location);
+  const note = ev.location_note
+    ? `<div class="detail-map-note">📝 ${ev.location_note}</div>`
+    : '';
+  return `<div class="detail-section-title">📍 場所・アクセス</div>
+    <div class="detail-map-wrap">
+      <iframe class="detail-map" src="https://www.google.com/maps?q=${q}&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+    <a class="detail-map-link" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">🗺️ Googleマップで大きく見る →</a>
+    ${note}`;
 }
 
 function render() {
@@ -116,93 +130,32 @@ function render() {
     <h1 class="detail-title">${ev.title}</h1>
     <div class="detail-org">📍 ${ev.organizer_name || ''}${ev.organizer_type ? '　｜ ' + ev.organizer_type : ''}</div>
     ${ev.description ? `<div class="detail-desc">${ev.description}</div>` : ''}
-    ${buildInfoGrid()}`;
+    ${buildInfoGrid()}
+    ${buildMap()}`;
 
   let action = '';
   if (ev.status === 'published') action = buildCaseAction();
   else if (ev.status === 'recruiting') action = buildRecruitAction();
-  else action = buildUpcomingAction();
+  else action = buildInterestAction();
 
   const back = `<a href="/events.html" class="detail-back">← あそびを探すに戻る</a>`;
   document.getElementById('detailContent').innerHTML = head + action + back;
 }
 
-/* ---------- 開催予定：参加/手伝い/問い合わせフォーム ---------- */
-function getSubmitLabel(type) {
-  return type === 'participate' ? '✋ 参加を申し込む' : type === 'help' ? '🙌 手伝いを申し込む' : '💬 問い合わせを送る';
-}
-function getMsgPlaceholder(type) {
-  return type === 'inquiry' ? '聞きたいことや質問をどうぞ' : '気になることや質問があれば';
-}
-
-function buildUpcomingAction() {
-  if (ev.can_participate) currentRequestType = 'participate';
-  else if (ev.can_help) currentRequestType = 'help';
-  else if (ev.can_inquiry) currentRequestType = 'inquiry';
-
-  const showForm = ev.can_participate || ev.can_help || ev.can_inquiry;
-  const tabCount = [ev.can_participate, ev.can_help, ev.can_inquiry].filter(Boolean).length;
-
-  let tabsHtml = '';
-  if (tabCount > 1) {
-    tabsHtml = `<div class="form-tabs">
-      ${ev.can_participate ? `<button class="form-tab${currentRequestType === 'participate' ? ' active' : ''}" onclick="setTab(this,'participate')">✋ 参加する</button>` : ''}
-      ${ev.can_help ? `<button class="form-tab${currentRequestType === 'help' ? ' active' : ''}" onclick="setTab(this,'help')">🙌 手伝う</button>` : ''}
-      ${ev.can_inquiry ? `<button class="form-tab${currentRequestType === 'inquiry' ? ' active' : ''}" onclick="setTab(this,'inquiry')">💬 お問い合わせ</button>` : ''}
-    </div>`;
-  }
-
-  const linkBtn = ev.event_url
-    ? `<a href="${ev.event_url}" target="_blank" rel="noopener" style="display:block;background:var(--green);color:white;text-align:center;padding:13px;border-radius:14px;font-size:14px;font-weight:800;text-decoration:none;margin:8px 0 16px;">🔗 イベント詳細ページを見る</a>`
+/* ---------- 「気になる」（開催予定・事例の応援） ---------- */
+function buildInterestAction() {
+  const isFav = favSet.has(ev.id);
+  const note = viewer === 'guest'
+    ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると「気になる」に登録できます</div>`
     : '';
-
-  if (!showForm) return linkBtn;
-
-  return `${linkBtn}
-    <div class="form-section">
-      <div class="form-title">このイベントに関わる</div>
-      <div class="form-sub">仕掛け人になろう！自ら動いてコンタクトする</div>
-      ${tabsHtml}
-      <form id="reqForm" onsubmit="submitRequest(event)">
-        <div class="form-group"><label>お名前</label><input type="text" name="name" placeholder="山田 太郎" required></div>
-        <div class="form-group"><label>メールアドレス</label><input type="email" name="email" placeholder="example@mail.com" required></div>
-        <div class="form-group"><label>所属（学校・団体名）</label><input type="text" name="school_name" placeholder="○○小おやじの会"></div>
-        <div class="form-group"><label>メッセージ・質問</label><textarea name="message" id="msgTextarea" placeholder="${getMsgPlaceholder(currentRequestType)}"></textarea></div>
-        <button type="submit" class="submit-btn" id="sbtn">${getSubmitLabel(currentRequestType)}</button>
-        <div class="success-msg" id="smsg">🎉 送信しました！後ほどご連絡します。</div>
-      </form>
+  return `<div class="form-section">
+      <div class="form-title">🌱 このあそびを応援する</div>
+      <div class="form-sub">気になったら登録しておこう。あなたの「気になる」が主催者の励みになります。</div>
+      <div class="recruit-actions" style="margin-top:12px">
+        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(this)">${isFav ? '❤️ 気になる登録済み' : '🤍 気になる'}</button>
+      </div>
+      ${note}
     </div>`;
-}
-
-function setTab(btn, type) {
-  currentRequestType = type;
-  document.querySelectorAll('.form-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const sbtn = document.getElementById('sbtn'); if (sbtn) sbtn.textContent = getSubmitLabel(type);
-  const ta = document.getElementById('msgTextarea'); if (ta) ta.placeholder = getMsgPlaceholder(type);
-}
-
-async function submitRequest(e) {
-  e.preventDefault();
-  const form = e.target;
-  const btn = document.getElementById('sbtn');
-  btn.disabled = true; btn.textContent = '送信中...';
-  const { error } = await client.from('participation_requests').insert({
-    event_id: ev.id,
-    name: form.name.value,
-    email: form.email.value,
-    school_name: form.school_name.value,
-    request_type: currentRequestType,
-    message: form.message.value
-  });
-  if (!error) {
-    form.style.display = 'none';
-    document.getElementById('smsg').style.display = 'block';
-  } else {
-    btn.disabled = false;
-    btn.textContent = getSubmitLabel(currentRequestType);
-    alert('送信に失敗しました。');
-  }
 }
 
 /* ---------- 募集中の企画：応援（お気に入り／手を上げる） ---------- */
@@ -216,13 +169,28 @@ function buildRecruitAction() {
       <div class="form-title">🌱 この企画を応援する</div>
       <div class="form-sub">お気に入り登録や、手を上げて主催者に気持ちを届けよう</div>
       <div class="recruit-actions" style="margin-top:12px">
-        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(this)">${isFav ? '❤️' : '🤍'} お気に入り</button>
+        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(this)">${isFav ? '❤️ 気になる登録済み' : '🤍 気になる'}</button>
         <button class="btn-hand ${isHand ? 'active' : ''}" ${isHand ? 'disabled' : 'onclick="openHandModal()"'}>${isHand ? '✅ 手を上げた' : '🙋 手を上げる'}</button>
       </div>
       ${note}
     </div>`;
 }
 
+/* ---------- やってみた記録：ノウハウ ---------- */
+function buildCaseAction() {
+  const tools = ev.tools_needed ? `
+    <div class="detail-section-title">🛠️ 必要な道具・準備物</div>
+    <div class="detail-desc" style="margin-bottom:8px;">${ev.tools_needed}</div>` : '';
+  const knowhow = ev.knowhow_summary ? `
+    <div class="detail-section-title">💡 ノウハウ・ポイント</div>
+    <div class="knowhow-grid">
+      <div class="knowhow-box good"><div class="knowhow-title">✅ よかった点</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>
+      <div class="knowhow-box memo"><div class="knowhow-title">📝 企画したい人へのメモ</div><div class="knowhow-text">${ev.tips ? ev.tips : '詳細は主催団体へお問い合わせください。'}</div></div>
+    </div>` : '';
+  return tools + knowhow + buildInterestAction();
+}
+
+/* ---------- 応援：supporter名寄せ・お気に入り・手を上げる ---------- */
 async function loadMarks(id) {
   if (!mySupporterId) mySupporterId = await ensureSupporterId();
   if (!mySupporterId) return;
@@ -253,11 +221,11 @@ async function toggleFav(btn) {
   if (favSet.has(ev.id)) {
     await client.from('favorite_plans').delete().eq('supporter_id', mySupporterId).eq('event_id', ev.id);
     favSet.delete(ev.id);
-    btn.classList.remove('active'); btn.innerHTML = '🤍 お気に入り';
+    btn.classList.remove('active'); btn.innerHTML = '🤍 気になる';
   } else {
     await client.from('favorite_plans').insert({ supporter_id: mySupporterId, event_id: ev.id });
     favSet.add(ev.id);
-    btn.classList.add('active'); btn.innerHTML = '❤️ お気に入り';
+    btn.classList.add('active'); btn.innerHTML = '❤️ 気になる登録済み';
   }
 }
 
@@ -277,21 +245,4 @@ async function submitHand() {
   closeHandModal();
   const hb = document.querySelector('.btn-hand');
   if (hb) { hb.classList.add('active'); hb.disabled = true; hb.innerHTML = '✅ 手を上げた'; hb.onclick = null; }
-}
-
-/* ---------- やってみた記録：ノウハウ・問い合わせ ---------- */
-function buildCaseAction() {
-  const knowhow = ev.knowhow_summary ? `
-    <div class="detail-section-title">💡 ノウハウ・ポイント</div>
-    <div class="knowhow-grid">
-      <div class="knowhow-box good"><div class="knowhow-title">✅ よかった点</div><div class="knowhow-text">${ev.knowhow_summary}</div></div>
-      <div class="knowhow-box memo"><div class="knowhow-title">📝 企画したい人へのメモ</div><div class="knowhow-text">${ev.tips ? ev.tips : '詳細は主催団体へお問い合わせください。'}</div></div>
-    </div>` : '';
-  const tools = ev.tools_needed ? `
-    <div class="detail-section-title">🛠️ 必要な道具・準備物</div>
-    <div class="detail-desc" style="margin-bottom:8px;">${ev.tools_needed}</div>` : '';
-  const contactEmail = (org && org.contact_email) || ev.contact_email;
-  const contact = contactEmail ? `
-    <div class="contact-box" style="margin-top:20px;"><div class="contact-title">📧 この事例について問い合わせる</div><a href="mailto:${contactEmail}" class="contact-email">${contactEmail}</a></div>` : '';
-  return tools + knowhow + contact;
 }
