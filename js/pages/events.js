@@ -206,8 +206,8 @@ function externalCardHtml(ex) {
   const grad = THUMB_GRADIENTS[((ex.category_id || 1) - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
   const emoji = c.emoji || '🎪';
   const catName = c.name || ex.category || '';
-  const thumbInner = ex.image_url ? `<img src="${ex.image_url}" alt="" loading="lazy">` : `<span style="font-size:52px">${emoji}</span>`;
-  const thumbBg = ex.image_url ? '#eef1ee' : grad;
+  const thumbInner = ex.image_url ? `<img src="${ex.image_url}" alt="" loading="lazy" onerror="this.style.display='none'">` : `<span style="font-size:52px">${emoji}</span>`;
+  const thumbBg = grad;
   const url = (ex.url || '#').replace(/'/g, '%27');
   return `<div class="event-card" onclick="openExternal('${url}')">
     <div class="card-thumb" style="background:${thumbBg}">
