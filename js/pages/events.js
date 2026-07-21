@@ -20,6 +20,7 @@ const THUMB_GRADIENTS = [
 ];
 
 let client, allEvents = [], allRecords = [], allRecruiting = [], allCategories = [], allOrgs = [];
+let allExternal = [];
 let currentTab = 'upcoming';
 let activeCat = 'all', knowhowOnly = false, currentRequestType = 'participate';
 
@@ -53,6 +54,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   allEvents = rows.filter(ev => ev.status === 'active' && ev.is_public === true && (!ev.event_on || ev.event_on >= today));
   allRecords = rows.filter(ev => ev.status === 'published');
   allRecruiting = rows.filter(ev => ev.status === 'recruiting');
+
+  try { const exr = await fetch('/data/external-events.json', { cache: 'no-cache' }); allExternal = exr.ok ? await exr.json() : []; } catch (e) { allExternal = []; }
 
   // 募集中の企画タブは、ログインしている人にだけ見せる
   if (viewer !== 'guest') {
@@ -88,7 +91,7 @@ function switchTab(tab) {
   if (rcr) rcr.style.display = tab === 'recruit' ? '' : 'none';
   const kw = document.getElementById('knowhowFilter');
   if (kw) kw.style.display = tab === 'records' ? '' : 'none';
-  const count = tab === 'upcoming' ? allEvents.length : tab === 'records' ? allRecords.length : allRecruiting.length;
+  const count = tab === 'upcoming' ? (allEvents.length + allExternal.length) : tab === 'records' ? allRecords.length : allRecruiting.length;
   document.getElementById('heroCount').textContent = count;
   const label = document.getElementById('heroCountLabel');
   if (label) label.textContent = tab === 'records' ? '件の事例を掲載中' : tab === 'recruit' ? '件の募集中の企画' : '件のあそびを掲載中';
@@ -127,7 +130,12 @@ function applyFilters() {
       if (q && !ev.title.toLowerCase().includes(q) && !(ev.organizer_name || '').toLowerCase().includes(q)) return false;
       return true;
     });
-    renderUpcoming(filtered);
+    const filteredEx = allExternal.filter(ex => {
+      if (activeCat !== 'all' && ex.category_id != activeCat) return false;
+      if (q && !(ex.title || '').toLowerCase().includes(q) && !(ex.venue || '').toLowerCase().includes(q) && !(ex.source_name || '').toLowerCase().includes(q)) return false;
+      return true;
+    });
+    renderUpcoming(filtered, filteredEx);
   } else if (currentTab === 'recruit') {
     const filtered = allRecruiting.filter(ev => {
       if (activeCat !== 'all' && ev.category_id != activeCat) return false;
@@ -147,10 +155,12 @@ function applyFilters() {
 }
 
 /* ---------- 開催予定（参加・手伝い・問い合わせ） ---------- */
-function renderUpcoming(events) {
+function renderUpcoming(events, externals) {
+  externals = externals || [];
   const grid = document.getElementById('eventsGrid');
-  document.getElementById('resultInfo').textContent = `${events.length}件のあそびを表示中`;
-  if (!events.length) {
+  const total = events.length + externals.length;
+  document.getElementById('resultInfo').textContent = `${total}件のあそびを表示中`;
+  if (!total) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
       <div class="empty-icon">🌿</div>
       <div class="empty-title">開催予定のあそびはありません</div>
@@ -185,7 +195,39 @@ function renderUpcoming(events) {
         ${ev.fee ? `<span class="card-tag">💴 ${ev.fee}</span>` : '<span class="card-tag">💴 無料</span>'}
       </div>
     </div>`;
-  }).join('');
+  }).join('') + externals.map(externalCardHtml).join('');
+}
+
+/* ---------- 外部イベント（地域の遊び・イベント。カードから元サイトへ直リンク） ---------- */
+function openExternal(url) { if (url && url !== '#') window.open(url, '_blank', 'noopener'); }
+function externalCardHtml(ex) {
+  const c = allCategories.find(x => x.id == ex.category_id) || {};
+  const catClass = CAT_COLORS[ex.category_id] || 'cat-1';
+  const grad = THUMB_GRADIENTS[((ex.category_id || 1) - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
+  const emoji = c.emoji || '🎪';
+  const catName = c.name || ex.category || '';
+  const thumbInner = ex.image_url ? `<img src="${ex.image_url}" alt="" loading="lazy">` : `<span style="font-size:52px">${emoji}</span>`;
+  const thumbBg = ex.image_url ? '#eef1ee' : grad;
+  const url = (ex.url || '#').replace(/'/g, '%27');
+  return `<div class="event-card" onclick="openExternal('${url}')">
+    <div class="card-thumb" style="background:${thumbBg}">
+      ${thumbInner}
+      ${catName ? `<div class="card-cat-badge ${catClass}">${catName}</div>` : ''}
+      ${ex.status_label ? `<div class="card-type-badge">${ex.status_label}</div>` : ''}
+    </div>
+    <div class="card-body">
+      <div class="card-title">${ex.title || ''}</div>
+      <div class="card-meta">
+        ${ex.date_label ? `<div class="card-meta-item">📅 ${ex.date_label}</div>` : ''}
+        ${ex.venue ? `<div class="card-meta-item">📍 ${ex.venue}${ex.area ? `（${ex.area}）` : ''}</div>` : ''}
+        ${(ex.target || ex.fee) ? `<div class="card-meta-item">${ex.target || ''}${ex.target && ex.fee ? '・' : ''}${ex.fee || ''}</div>` : ''}
+      </div>
+    </div>
+    <div class="card-src">
+      <span class="card-src-from">情報元：${ex.source_name || '外部サイト'}</span>
+      <span class="card-src-link">外部サイト ↗</span>
+    </div>
+  </div>`;
 }
 
 /* ---------- 募集中の企画（応援＝お気に入り/手を上げる） ---------- */
