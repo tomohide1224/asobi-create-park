@@ -20,6 +20,11 @@
     .detail-desc { font-size: 15px; line-height: 1.9; color: #333; white-space: pre-wrap; margin-bottom: 24px; }
     .detail-section-title { font-size: 15px; font-weight: 800; color: var(--navy); margin: 26px 0 14px; padding-left: 11px; border-left: 4px solid var(--green); }
     .detail-back { display: inline-flex; align-items: center; gap: 6px; margin: 26px 0 0; color: var(--green); font-weight: 700; font-size: 14px; text-decoration: none; }
+    /* 地図（Googleマップ埋め込み） */
+    .detail-map-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.06); margin-bottom: 6px; }
+    .detail-map { width: 100%; height: 260px; border: 0; display: block; }
+    .detail-map-link { display: inline-block; font-size: 12px; color: var(--green); font-weight: 700; text-decoration: none; margin: 2px 0 6px; }
+    .detail-map-note { font-size: 13px; color: #444; line-height: 1.7; background: #F8F9FA; border-radius: 12px; padding: 12px 14px; margin-top: 8px; white-space: pre-wrap; }
     .detail-loading, .detail-notfound { text-align: center; padding: 80px 20px; color: var(--gray); }
     .detail-notfound .nf-icon { font-size: 56px; margin-bottom: 14px; }
     /* 応援ボタン */
@@ -82,7 +87,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/common.js"></script>
-<script src="/js/pages/event-detail.js?v=20260721"></script>
+<script src="/js/pages/event-detail.js?v=20260722"></script>
 <script>
   loadHeader();
   loadFooter();
