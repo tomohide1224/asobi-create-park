@@ -139,6 +139,8 @@
 <script src="/js/common.js"></script>
 <script src="/js/pages/events.js?v=20260723"></script>
 <script>
+  // 内部イベント（ACP内の企画）のカードクリックは独立詳細ページ（/event.html）へ
+  window.openModal = function(id){ location.href = '/event.html?id=' + id; };
   loadHeader();
   loadFooter();
 </script>
