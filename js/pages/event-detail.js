@@ -144,7 +144,7 @@ function render() {
 
 /* ---------- 「気になる」（開催予定・事例の応援） ---------- */
 function buildInterestAction() {
-  const isFav = favSet.has(ev.id);
+  const isFav = acpIsFav(ev.id);
   const note = viewer === 'guest'
     ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると「気になる」に登録できます</div>`
     : '';
@@ -160,7 +160,7 @@ function buildInterestAction() {
 
 /* ---------- 募集中の企画：応援（お気に入り／手を上げる） ---------- */
 function buildRecruitAction() {
-  const isFav = favSet.has(ev.id);
+  const isFav = acpIsFav(ev.id);
   const isHand = handSet.has(ev.id);
   const note = viewer === 'guest'
     ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると、お気に入り登録や手を上げることができます</div>`
@@ -194,12 +194,9 @@ function buildCaseAction() {
 async function loadMarks(id) {
   if (!mySupporterId) mySupporterId = await ensureSupporterId();
   if (!mySupporterId) return;
-  const [favRes, handRes] = await Promise.all([
-    client.from('favorite_plans').select('event_id').eq('supporter_id', mySupporterId).eq('event_id', id),
-    client.from('support_hands').select('event_id').eq('supporter_id', mySupporterId).eq('event_id', id),
-  ]);
-  favSet = new Set((favRes.data || []).map(f => f.event_id));
-  handSet = new Set((handRes.data || []).map(h => h.event_id));
+  const { data: handData } = await client.from('support_hands').select('event_id').eq('supporter_id', mySupporterId).eq('event_id', id);
+  handSet = new Set((handData || []).map(h => h.event_id));
+  acpSyncFavs(client, mySupporterId);
 }
 
 async function ensureSupporterId() {
@@ -216,17 +213,9 @@ async function ensureSupporterId() {
 }
 
 async function toggleFav(btn) {
-  if (!mySupporterId) mySupporterId = await ensureSupporterId();
-  if (!mySupporterId) { alert('ログインすると応援できます'); return; }
-  if (favSet.has(ev.id)) {
-    await client.from('favorite_plans').delete().eq('supporter_id', mySupporterId).eq('event_id', ev.id);
-    favSet.delete(ev.id);
-    btn.classList.remove('active'); btn.innerHTML = '🤍 気になる';
-  } else {
-    await client.from('favorite_plans').insert({ supporter_id: mySupporterId, event_id: ev.id });
-    favSet.add(ev.id);
-    btn.classList.add('active'); btn.innerHTML = '❤️ 気になる登録済み';
-  }
+  const now = await acpToggleFav(ev.id, client, mySupporterId);
+  if (now) { btn.classList.add('active'); btn.innerHTML = '❤️ 気になる登録済み'; }
+  else { btn.classList.remove('active'); btn.innerHTML = '🤍 気になる'; }
 }
 
 function openHandModal() {

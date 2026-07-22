@@ -61,6 +61,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (viewer !== 'guest') {
     const rb = document.getElementById('recruitTabBtn');
     if (rb) rb.style.display = '';
+    ensureSupporterId().then(sid => { if (sid) { mySupporterId = sid; acpSyncFavs(client, sid); } });
   }
 
   const chips = document.getElementById('catChips');
@@ -181,6 +182,7 @@ function renderUpcoming(events, externals) {
         ${thumbInner}
         <div class="card-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
         ${ev.can_help ? '<div class="card-type-badge">🙌 スタッフも募集</div>' : ''}
+        <button class="card-fav-heart" onclick="event.stopPropagation();cardToggleFav(${ev.id},this)">${acpIsFav(ev.id) ? '❤️' : '🤍'}</button>
       </div>
       <div class="card-body">
         <div class="card-title">${ev.title}</div>
@@ -248,7 +250,7 @@ function renderRecruiting(events) {
     const grad = THUMB_GRADIENTS[(ev.category_id - 1) % THUMB_GRADIENTS.length] || THUMB_GRADIENTS[0];
     const emoji = cat ? cat.emoji : '🌱';
     const dateStr = ev.event_date || ev.event_on || '';
-    const isFav = favSet.has(ev.id);
+    const isFav = acpIsFav(ev.id);
     const isHand = handSet.has(ev.id);
     const thumbInner = ev.image_url ? `<img src="${ev.image_url}" alt="" loading="lazy">` : `<span style="font-size:52px">${emoji}</span>`;
     const thumbBg = ev.image_url ? '#eef1ee' : grad;
@@ -267,7 +269,7 @@ function renderRecruiting(events) {
         </div>
       </div>
       <div class="card-footer recruit-actions">
-        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(${ev.id},this)">${isFav ? '❤️' : '🤍'} お気に入り</button>
+        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(${ev.id},this)">${isFav ? '❤️' : '🤍'} 気になる</button>
         <button class="btn-hand ${isHand ? 'active' : ''}" ${isHand ? 'disabled' : `onclick="openHandModal(${ev.id})"`}>${isHand ? '✅ 手を上げた' : '🙋 手を上げる'}</button>
       </div>
     </div>`;
@@ -292,6 +294,7 @@ function renderRecords(events) {
       <div class="case-thumb" style="background:${grad}">
         <span>${emoji}</span>
         <div class="case-cat-badge ${catClass}">${cat ? cat.name : ''}</div>
+        <button class="card-fav-heart" onclick="event.stopPropagation();cardToggleFav(${ev.id},this)">${acpIsFav(ev.id) ? '❤️' : '🤍'}</button>
       </div>
       <div class="case-body">
         <div class="case-title">${ev.title}</div>
@@ -389,7 +392,7 @@ function openRecruitModal(id) {
   const cat = ev.event_categories;
   const catClass = CAT_COLORS[ev.category_id] || 'cat-1';
   const dateStr = ev.event_date || ev.event_on || '';
-  const isFav = favSet.has(ev.id);
+  const isFav = acpIsFav(ev.id);
   const isHand = handSet.has(ev.id);
 
   document.getElementById('modalHeader').innerHTML = `
@@ -408,7 +411,7 @@ function openRecruitModal(id) {
       <div class="form-title">🌱 この企画を応援する</div>
       <div class="form-sub">お気に入り登録や、手を上げて主催者に気持ちを届けよう</div>
       <div class="recruit-actions" style="margin-top:12px">
-        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(${ev.id},this)">${isFav ? '❤️' : '🤍'} お気に入り</button>
+        <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(${ev.id},this)">${isFav ? '❤️' : '🤍'} 気になる</button>
         <button class="btn-hand ${isHand ? 'active' : ''}" ${isHand ? 'disabled' : `onclick="openHandModal(${ev.id})"`}>${isHand ? '✅ 手を上げた' : '🙋 手を上げる'}</button>
       </div>
     </div>`;
@@ -464,33 +467,25 @@ async function ensureSupporterId() {
   return null;
 }
 
-/* 募集中タブを初めて開いたときに、自分の応援状態（お気に入り/手を上げた）を読み込む */
+/* 募集中タブを初めて開いたときに、自分の応援状態（手を上げた）を読み込む。お気に入りはlocalStorage同期。 */
 async function ensureMarksLoaded() {
   if (marksLoaded || viewer === 'guest') return;
   if (!mySupporterId) mySupporterId = await ensureSupporterId();
   if (mySupporterId) {
-    const [favRes, handRes] = await Promise.all([
-      client.from('favorite_plans').select('event_id').eq('supporter_id', mySupporterId),
-      client.from('support_hands').select('event_id').eq('supporter_id', mySupporterId),
-    ]);
-    favSet = new Set((favRes.data || []).map(f => f.event_id));
-    handSet = new Set((handRes.data || []).map(h => h.event_id));
+    const { data: handData } = await client.from('support_hands').select('event_id').eq('supporter_id', mySupporterId);
+    handSet = new Set((handData || []).map(h => h.event_id));
+    acpSyncFavs(client, mySupporterId);
   }
   marksLoaded = true;
 }
 
 async function toggleFav(eventId, btn) {
-  if (!mySupporterId) mySupporterId = await ensureSupporterId();
-  if (!mySupporterId) { alert('ログインすると応援できます'); return; }
-  if (favSet.has(eventId)) {
-    await client.from('favorite_plans').delete().eq('supporter_id', mySupporterId).eq('event_id', eventId);
-    favSet.delete(eventId);
-    btn.classList.remove('active'); btn.innerHTML = '🤍 お気に入り';
-  } else {
-    await client.from('favorite_plans').insert({ supporter_id: mySupporterId, event_id: eventId });
-    favSet.add(eventId);
-    btn.classList.add('active'); btn.innerHTML = '❤️ お気に入り';
-  }
+  const now = await acpToggleFav(eventId, client, mySupporterId);
+  if (now) { btn.classList.add('active'); btn.innerHTML = '❤️ 気になる'; }
+  else { btn.classList.remove('active'); btn.innerHTML = '🤍 気になる'; }
+}
+function cardToggleFav(id, btn) {
+  acpToggleFav(id, client, mySupporterId).then(now => { btn.innerHTML = now ? '❤️' : '🤍'; btn.classList.toggle('faved', now); });
 }
 
 let _handEventId = null;
