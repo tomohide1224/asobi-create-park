@@ -109,10 +109,11 @@ function buildInfoGrid() {
   </div>`;
 }
 
-/* Googleマップ埋め込み（APIキー不要）＋ 地図の補足情報 */
+/* Googleマップ埋め込み（APIキー不要）。ピン座標(lat/lng)があれば優先、なければ住所。＋補足情報 */
 function buildMap() {
-  if (!ev.location) return '';
-  const q = encodeURIComponent(ev.location);
+  const hasPin = ev.lat != null && ev.lng != null;
+  if (!ev.location && !hasPin) return '';
+  const q = hasPin ? `${ev.lat},${ev.lng}` : encodeURIComponent(ev.location);
   const note = ev.location_note
     ? `<div class="detail-map-note">📝 ${ev.location_note}</div>`
     : '';
