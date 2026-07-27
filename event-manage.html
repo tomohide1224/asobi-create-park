@@ -6,6 +6,7 @@
 <title>イベント登録 | ASOBI CREATE PARK</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 body { background: #F8F9FA; }
 .em-wrap { max-width: 600px; margin: 0 auto; padding: 24px 16px 80px; }
@@ -76,6 +77,14 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 .maps-embed-frame { width: 100%; height: 220px; border: 0; display: block; }
 .maps-embed-link { display: inline-block; font-size: 12px; color: var(--green); font-weight: 700; text-decoration: none; margin-top: 6px; }
 .maps-embed-link:hover { text-decoration: underline; }
+
+/* 地図ピッカー（Leaflet） */
+.map-picker { height: 260px; border-radius: 12px; overflow: hidden; margin-top: 10px; border: 1px solid #E0E0E0; z-index: 0; }
+.map-pick-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.map-pick-btn { font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1.5px solid #E0E0E0; background: #fff; color: #444; cursor: pointer; }
+.map-pick-btn:hover { border-color: var(--green); color: var(--green); }
+.map-coords { font-size: 11px; color: var(--gray); margin-top: 6px; }
+.acp-pin { font-size: 26px; line-height: 28px; text-align: center; }
 </style>
 </head>
 <body>
@@ -132,12 +141,22 @@ textarea.form-input { min-height: 90px; resize: vertical; }
     </div>
 
     <div class="form-group">
-      <label class="form-label">開催場所</label>
-      <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園" oninput="updateMapsLink(this.value)">
-      <div class="maps-embed" id="mapsEmbedWrap">
-        <iframe id="mapsEmbedFrame" class="maps-embed-frame" src="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <label class="form-label">開催場所（住所・目印）</label>
+      <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園">
+      <div class="form-hint">住所を入れて「住所からピンを探す」を押すか、地図を直接クリックしてピンを置いてください。ピンはドラッグで微調整できます。</div>
+      <div class="map-pick-row">
+        <button type="button" class="map-pick-btn" onclick="geocodeToPin()">📍 住所からピンを探す</button>
+        <button type="button" class="map-pick-btn" onclick="clearPin()">✕ ピンを消す</button>
       </div>
-      <a class="maps-embed-link" id="mapsEmbedLink" href="" target="_blank" rel="noopener" style="display:none">🗺️ Googleマップで大きく確認する →</a>
+      <div class="map-picker" id="mapPicker"></div>
+      <div class="map-coords" id="mapCoords">ピン未設定（地図をクリックして設置）</div>
+      <input type="hidden" id="ev_lat">
+      <input type="hidden" id="ev_lng">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">地図の補足情報 <span class="hint">（任意）</span></label>
+      <textarea id="ev_location_note" class="form-input" rows="2" placeholder="例：駐輪場は公園の北側。ベビーカーはスロープあり。集合はけやき広場の時計前。"></textarea>
     </div>
 
     <div class="form-row">
@@ -272,6 +291,7 @@ textarea.form-input { min-height: 90px; resize: vertical; }
   loadHeaderMember();
   loadFooter();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
@@ -283,23 +303,55 @@ const HEADERS = {
 
 let currentOrg = null;
 
-// ── Googleマップリンク ──────────────────────
-function updateMapsLink(val) {
-  val = (val || '').trim();
-  const wrap = document.getElementById('mapsEmbedWrap');
-  const frame = document.getElementById('mapsEmbedFrame');
-  const link = document.getElementById('mapsEmbedLink');
-  if (val) {
-    const q = encodeURIComponent(val);
-    frame.src = 'https://www.google.com/maps?q=' + q + '&output=embed';
-    link.href = 'https://www.google.com/maps/search/?api=1&query=' + q;
-    wrap.style.display = 'block';
-    link.style.display = 'inline-block';
+// ── 地図ピッカー（Leaflet / OpenStreetMap・APIキー不要） ──────────────────────
+let _map = null, _marker = null;
+const ACP_PIN = L.divIcon({ className: 'acp-pin', html: '📍', iconSize: [28, 28], iconAnchor: [14, 28] });
+
+function initMapPicker() {
+  const def = [35.6465, 139.6533]; // 世田谷区あたり
+  _map = L.map('mapPicker').setView(def, 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(_map);
+  _map.on('click', e => setPin(e.latlng.lat, e.latlng.lng, false));
+  setTimeout(() => { if (_map) _map.invalidateSize(); }, 250);
+}
+
+function setPin(lat, lng, pan) {
+  document.getElementById('ev_lat').value = lat;
+  document.getElementById('ev_lng').value = lng;
+  if (!_marker) {
+    _marker = L.marker([lat, lng], { draggable: true, icon: ACP_PIN }).addTo(_map);
+    _marker.on('dragend', () => { const p = _marker.getLatLng(); setPin(p.lat, p.lng, false); });
   } else {
-    frame.src = '';
-    wrap.style.display = 'none';
-    link.style.display = 'none';
+    _marker.setLatLng([lat, lng]);
   }
+  if (pan) _map.setView([lat, lng], Math.max(_map.getZoom(), 16));
+  updateCoordsLabel();
+}
+
+function clearPin() {
+  document.getElementById('ev_lat').value = '';
+  document.getElementById('ev_lng').value = '';
+  if (_marker) { _map.removeLayer(_marker); _marker = null; }
+  updateCoordsLabel();
+}
+
+function updateCoordsLabel() {
+  const lat = document.getElementById('ev_lat').value, lng = document.getElementById('ev_lng').value;
+  const el = document.getElementById('mapCoords');
+  el.textContent = (lat && lng)
+    ? `📍 ピン設定済み：${(+lat).toFixed(6)}, ${(+lng).toFixed(6)}（ドラッグで微調整可）`
+    : 'ピン未設定（地図をクリックして設置）';
+}
+
+async function geocodeToPin() {
+  const q = document.getElementById('ev_location').value.trim();
+  if (!q) { alert('先に住所・場所名を入力してください'); return; }
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
+    const d = await r.json();
+    if (d && d.length) { setPin(parseFloat(d[0].lat), parseFloat(d[0].lon), true); }
+    else { alert('住所が見つかりませんでした。地図を直接クリックしてピンを置いてください。'); }
+  } catch (e) { alert('検索に失敗しました。地図を直接クリックしてピンを置いてください。'); }
 }
 
 // ── 初期化 ──────────────────────
@@ -310,6 +362,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('orgName').textContent = '🏢 ' + (currentOrg.org_name || '');
   document.getElementById('mainWrap').style.display = '';
+
+  initMapPicker();
 
   await loadCategories();
 
@@ -345,7 +399,8 @@ async function loadEvent(id) {
   document.getElementById('ev_event_date').value = ev.event_date || '';
   document.getElementById('ev_fee').value = ev.fee || '無料';
   document.getElementById('ev_location').value = ev.location || '';
-  updateMapsLink(ev.location || '');
+  document.getElementById('ev_location_note').value = ev.location_note || '';
+  if (ev.lat != null && ev.lng != null) setPin(ev.lat, ev.lng, true);
   document.getElementById('ev_target_audience').value = ev.target_audience || ev.target || '';
   document.getElementById('ev_max_participants').value = ev.max_participants || '';
   document.getElementById('ev_description').value = ev.description || '';
@@ -458,6 +513,9 @@ async function saveEvent() {
       description: document.getElementById('ev_description').value.trim() || null,
       event_date: document.getElementById('ev_event_date').value || null,
       location: document.getElementById('ev_location').value.trim() || null,
+      lat: document.getElementById('ev_lat').value ? parseFloat(document.getElementById('ev_lat').value) : null,
+      lng: document.getElementById('ev_lng').value ? parseFloat(document.getElementById('ev_lng').value) : null,
+      location_note: document.getElementById('ev_location_note').value.trim() || null,
       target_audience: document.getElementById('ev_target_audience').value.trim() || null,
       fee: document.getElementById('ev_fee').value.trim() || '無料',
       max_participants: document.getElementById('ev_max_participants').value ? parseInt(document.getElementById('ev_max_participants').value) : null,
