@@ -84,6 +84,10 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 .map-pick-btn { font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 10px; border: 1.5px solid #E0E0E0; background: #fff; color: #444; cursor: pointer; }
 .map-pick-btn:hover { border-color: var(--green); color: var(--green); }
 .map-coords { font-size: 11px; color: var(--gray); margin-top: 6px; }
+.loc-row { display: flex; gap: 8px; align-items: stretch; }
+.loc-row .form-input { flex: 1; }
+.loc-reflect-btn { white-space: nowrap; padding: 10px 16px; border-radius: 10px; border: none; background: var(--green); color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; transition: opacity .2s; }
+.loc-reflect-btn:hover { opacity: .9; }
 .acp-pin { font-size: 26px; line-height: 28px; text-align: center; }
 </style>
 </head>
@@ -142,14 +146,16 @@ textarea.form-input { min-height: 90px; resize: vertical; }
 
     <div class="form-group">
       <label class="form-label">開催場所（住所・目印）</label>
-      <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園">
-      <div class="form-hint">住所を入れて「住所からピンを探す」を押すか、地図を直接クリックしてピンを置いてください。ピンはドラッグで微調整できます。</div>
-      <div class="map-pick-row">
-        <button type="button" class="map-pick-btn" onclick="geocodeToPin()">📍 住所からピンを探す</button>
-        <button type="button" class="map-pick-btn" onclick="clearPin()">✕ ピンを消す</button>
+      <div class="loc-row">
+        <input type="text" id="ev_location" class="form-input" placeholder="例：世田谷区○○公園" onkeydown="if(event.key==='Enter'){event.preventDefault();geocodeToPin();}">
+        <button type="button" class="loc-reflect-btn" onclick="geocodeToPin()">🗺️ 地図に反映</button>
       </div>
+      <div class="form-hint">住所を入れて「地図に反映」を押すと、地図がその場所へ移動します。あとはピンを地図クリック／ドラッグで微調整してください。</div>
       <div class="map-picker" id="mapPicker"></div>
       <div class="map-coords" id="mapCoords">ピン未設定（地図をクリックして設置）</div>
+      <div class="map-pick-row">
+        <button type="button" class="map-pick-btn" onclick="clearPin()">✕ ピンを消す</button>
+      </div>
       <input type="hidden" id="ev_lat">
       <input type="hidden" id="ev_lng">
     </div>
