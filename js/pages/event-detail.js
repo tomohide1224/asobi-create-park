@@ -140,7 +140,43 @@ function render() {
   else action = buildInterestAction();
 
   const back = `<a href="/events.html" class="detail-back">← あそびを探すに戻る</a>`;
-  document.getElementById('detailContent').innerHTML = head + action + back;
+  document.getElementById('detailContent').innerHTML = head + action + buildInquiry() + back;
+}
+
+/* ---------- 問い合わせ（送信で主催者のLINEへ通知） ---------- */
+function buildInquiry() {
+  return `<div class="form-section">
+      <div class="form-title">📩 主催者に問い合わせる</div>
+      <div class="form-sub">質問や連絡はこちらから。主催者にLINEで届きます。</div>
+      <form id="inqForm" onsubmit="submitInquiry(event)">
+        <div class="form-group"><label>お名前</label><input type="text" name="name" placeholder="山田 太郎" required></div>
+        <div class="form-group"><label>メールアドレス</label><input type="email" name="email" placeholder="example@mail.com" required></div>
+        <div class="form-group"><label>メッセージ</label><textarea name="message" placeholder="聞きたいこと・連絡事項をどうぞ" required></textarea></div>
+        <button type="submit" class="submit-btn" id="inqBtn">送信する</button>
+        <div class="success-msg" id="inqMsg">🎉 送信しました！主催者からの連絡をお待ちください。</div>
+      </form>
+    </div>`;
+}
+
+async function submitInquiry(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('inqBtn');
+  btn.disabled = true; btn.textContent = '送信中...';
+  const { error } = await client.from('participation_requests').insert({
+    event_id: ev.id,
+    name: form.name.value,
+    email: form.email.value,
+    request_type: 'inquiry',
+    message: form.message.value
+  });
+  if (!error) {
+    form.style.display = 'none';
+    document.getElementById('inqMsg').style.display = 'block';
+  } else {
+    btn.disabled = false; btn.textContent = '送信する';
+    alert('送信に失敗しました。時間をおいて再度お試しください。');
+  }
 }
 
 /* ---------- 「気になる」（開催予定・事例の応援） ---------- */
