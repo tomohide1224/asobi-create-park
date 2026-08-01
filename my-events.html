@@ -172,13 +172,14 @@ function buildCard(it, kind) {
   if (kind === 'org') {
     const canApplicants = (it.status === 'recruiting' || it.status === 'draft' || it.status === 'active');
     actions = `
+      <button class="btn-sm" onclick="location.href='/event.html?id=${it.id}'">👁 詳細</button>
       <button class="btn-sm edit" onclick="location.href='/event-manage.html?edit=${it.id}'">✏️ 編集</button>
       ${canApplicants ? `<button class="btn-sm view-hands" onclick="location.href='/applicants.html?event_id=${it.id}'">🙋 申込者</button>` : ''}`;
   } else {
-    actions = `<button class="btn-sm edit" onclick="location.href='/events.html'">🎪 あそびを探すで見る</button>`;
+    actions = `<button class="btn-sm" onclick="location.href='/event.html?id=${it.id}'">👁 詳細を見る</button>`;
   }
   card.innerHTML = `
-    <div class="plan-card-emoji">${catEmoji}</div>
+    <div class="plan-card-emoji" style="${it.image_url ? 'padding:0;overflow:hidden;' : ''}">${it.image_url ? `<img src="${esc(it.image_url)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">` : catEmoji}</div>
     <div class="plan-card-body">
       <div class="plan-card-head">
         <div class="plan-title">${esc(it.title)}</div>
