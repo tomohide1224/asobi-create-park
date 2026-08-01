@@ -297,7 +297,7 @@
   function loginWithLINE() {
     const state = Math.random().toString(36).slice(2);
     sessionStorage.setItem('line_state', state);
-    const params = new URLSearchParams({ response_type: 'code', client_id: LINE_LOGIN_CHANNEL_ID, redirect_uri: getRedirectUri(), state, scope: 'profile' });
+    const params = new URLSearchParams({ response_type: 'code', client_id: LINE_LOGIN_CHANNEL_ID, redirect_uri: getRedirectUri(), state, scope: 'profile', bot_prompt: 'aggressive' });
     window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
   }
 
