@@ -172,7 +172,7 @@ function buildCard(it, kind) {
   if (kind === 'org') {
     const canApplicants = (it.status === 'recruiting' || it.status === 'draft' || it.status === 'active');
     actions = `
-      <button class="btn-sm" onclick="location.href='/event.html?id=${it.id}'">👁 詳細</button>
+      <button class="btn-sm" onclick="location.href='/event-admin.html?id=${it.id}'">👁 詳細</button>
       <button class="btn-sm edit" onclick="location.href='/event-manage.html?edit=${it.id}'">✏️ 編集</button>
       ${canApplicants ? `<button class="btn-sm view-hands" onclick="location.href='/applicants.html?event_id=${it.id}'">🙋 申込者</button>` : ''}`;
   } else {
