@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あそびの管理詳細 | ASOBI CREATE PARK</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/pages/events.css">
+  <link rel="stylesheet" href="/css/pages/cases.css">
+  <style>
+    .detail-wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 60px; }
+    .detail-hero { position: relative; width: 100%; aspect-ratio: 3 / 2; border-radius: 22px; overflow: hidden; margin: 8px 0 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .detail-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .detail-hero .hero-emoji { font-size: 96px; }
+    .detail-cat-badge { position: absolute; top: 16px; left: 16px; padding: 7px 15px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+    .detail-status-badge { position: absolute; top: 16px; right: 16px; padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 800; background: rgba(255,255,255,.92); color: var(--navy); box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+    .detail-title { font-size: 26px; font-weight: 900; color: var(--navy); line-height: 1.35; margin: 0 0 10px; }
+    .detail-org { font-size: 14px; color: var(--gray); margin-bottom: 18px; }
+    .detail-desc { font-size: 15px; line-height: 1.9; color: #333; white-space: pre-wrap; margin-bottom: 24px; }
+    .detail-section-title { font-size: 15px; font-weight: 800; color: var(--navy); margin: 26px 0 14px; padding-left: 11px; border-left: 4px solid var(--green); }
+    .detail-back { display: inline-flex; align-items: center; gap: 6px; margin: 26px 0 0; color: var(--green); font-weight: 700; font-size: 14px; text-decoration: none; }
+    .detail-loading, .detail-notfound { text-align: center; padding: 80px 20px; color: var(--gray); }
+    .detail-notfound .nf-icon { font-size: 56px; margin-bottom: 14px; }
+    .detail-map-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.06); margin-bottom: 6px; }
+    .detail-map { width: 100%; height: 240px; border: 0; display: block; }
+    .detail-map-link { display: inline-block; font-size: 12px; color: var(--green); font-weight: 700; text-decoration: none; margin: 2px 0 6px; }
+    .detail-map-note { font-size: 13px; color: #444; line-height: 1.7; background: #F8F9FA; border-radius: 12px; padding: 12px 14px; margin-top: 8px; white-space: pre-wrap; }
+    /* 管理バー */
+    .admin-bar { display: flex; gap: 10px; flex-wrap: wrap; background: #F0FBF5; border: 1.5px solid #A5D6A7; border-radius: 16px; padding: 16px; margin-bottom: 8px; }
+    .admin-bar .abtn { flex: 1; min-width: 130px; text-align: center; padding: 12px 10px; border-radius: 12px; font-size: 14px; font-weight: 800; text-decoration: none; cursor: pointer; border: none; }
+    .abtn.primary { background: var(--green); color: #fff; }
+    .abtn.sub { background: #fff; color: var(--navy); border: 1.5px solid #e0e0e0; }
+    .admin-note { font-size: 12px; color: var(--gray); margin: 6px 2px 0; }
+    /* 問い合わせ・手を上げた */
+    .adm-list { display: flex; flex-direction: column; gap: 10px; }
+    .adm-item { background: #fff; border: 1px solid #eee; border-radius: 14px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+    .adm-item-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .adm-badge { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 999px; background: #E8F5E9; color: var(--green); }
+    .adm-name { font-size: 14px; font-weight: 800; color: var(--navy); }
+    .adm-date { font-size: 11px; color: var(--gray); }
+    .adm-msg { font-size: 13px; color: #444; line-height: 1.7; white-space: pre-wrap; }
+    .adm-empty { color: var(--gray); font-size: 13px; padding: 14px; background: #F8F9FA; border-radius: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="/index.html">トップ</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="/my-events.html">あそび一覧</a>
+    <span class="breadcrumb-sep">›</span>
+    <span id="crumbTitle">管理詳細</span>
+  </div>
+</div>
+
+<div class="detail-wrap">
+  <div id="detailContent">
+    <div class="detail-loading">
+      <div class="spinner"></div>
+      <div style="font-size:14px;margin-top:12px;">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script>
+const SUPABASE_URL = 'https://hlgbazcqekvjukbjtskt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsZ2JhemNxZWt2anVrYmp0c2t0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjgxMzksImV4cCI6MjA5NzkwNDEzOX0.QwXexU1f4vjeXrVsGU3ayZsW9gLj7XIcbqkHSlAsEm8';
+const HEADERS = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` };
+const CAT_COLOR = ['', '#66bb6a', '#42a5f5', '#ab47bc', '#ffca28', '#e91e63', '#00acc1', '#ff5722', '#8d6e63'];
+const GRAD = ['linear-gradient(135deg,#a5d6a7,#81c784)','linear-gradient(135deg,#90caf9,#64b5f6)','linear-gradient(135deg,#ce93d8,#ab47bc)','linear-gradient(135deg,#ffe082,#ffca28)','linear-gradient(135deg,#f48fb1,#e91e63)','linear-gradient(135deg,#80deea,#00acc1)','linear-gradient(135deg,#ffab91,#ff5722)','linear-gradient(135deg,#bcaaa4,#8d6e63)'];
+const STATUS_MAP = { draft:'📝 下書き', recruiting:'🌱 企画中', active:'🎪 公開中', closed:'🔒 終了', published:'📚 事例' };
+
+let currentOrg = null, ev = null;
+
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getId(){ const n = parseInt(new URLSearchParams(location.search).get('id'),10); return Number.isFinite(n)?n:null; }
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try { const o = sessionStorage.getItem('acp_org'); if (o) currentOrg = JSON.parse(o); } catch(e){}
+  if (!currentOrg || !currentOrg.id) { location.href = '/login.html'; return; }
+  const id = getId();
+  if (!id) { renderNotFound('IDが指定されていません'); return; }
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${id}&select=*,event_categories(name,emoji)&limit=1`, { headers: HEADERS });
+  const rows = res.ok ? await res.json() : [];
+  ev = rows[0];
+  if (!ev) { renderNotFound('あそびが見つかりませんでした'); return; }
+  if (String(ev.organization_id) !== String(currentOrg.id)) {
+    renderNotFound('この企画を管理する権限がありません（自分の団体の企画のみ表示できます）');
+    return;
+  }
+
+  document.title = `${ev.title}（管理）| ASOBI CREATE PARK`;
+  const crumb = document.getElementById('crumbTitle'); if (crumb) crumb.textContent = ev.title;
+  render();
+  loadRequests(id);
+  loadHands(id);
+});
+
+function renderNotFound(msg) {
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-notfound">
+      <div class="nf-icon">🔒</div>
+      <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:8px;">${esc(msg)}</div>
+      <a href="/my-events.html" class="detail-back">← あそび一覧に戻る</a>
+    </div>`;
+}
+
+function render() {
+  const cat = ev.event_categories;
+  const grad = GRAD[((ev.category_id||1)-1)%GRAD.length] || GRAD[0];
+  const emoji = cat ? cat.emoji : '🎪';
+  const badgeColor = CAT_COLOR[ev.category_id] || '#66bb6a';
+  const heroInner = ev.image_url ? `<img src="${esc(ev.image_url)}" alt="" onerror="this.style.display='none'">` : `<span class="hero-emoji">${emoji}</span>`;
+  const heroBg = ev.image_url ? '#eef1ee' : grad;
+  const dateStr = ev.event_date || ev.event_on || '';
+
+  const hasPin = ev.lat != null && ev.lng != null;
+  const q = hasPin ? `${ev.lat},${ev.lng}` : encodeURIComponent(ev.location || '');
+  const mapHtml = (ev.location || hasPin) ? `
+    <div class="detail-section-title">📍 場所・アクセス</div>
+    <div class="detail-map-wrap"><iframe class="detail-map" src="https://www.google.com/maps?q=${q}&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    <a class="detail-map-link" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">🗺️ Googleマップで大きく見る →</a>
+    ${ev.location_note ? `<div class="detail-map-note">📝 ${esc(ev.location_note)}</div>` : ''}` : '';
+
+  const knowhow = ev.knowhow_summary ? `
+    <div class="detail-section-title">💡 ノウハウ・ポイント</div>
+    <div class="knowhow-grid">
+      <div class="knowhow-box good"><div class="knowhow-title">✅ よかった点</div><div class="knowhow-text">${esc(ev.knowhow_summary)}</div></div>
+      <div class="knowhow-box memo"><div class="knowhow-title">📝 企画したい人へのメモ</div><div class="knowhow-text">${ev.tips ? esc(ev.tips) : '—'}</div></div>
+    </div>` : '';
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-hero" style="background:${heroBg}">
+      ${heroInner}
+      ${cat ? `<div class="detail-cat-badge" style="background:${badgeColor}">${cat.emoji} ${esc(cat.name)}</div>` : ''}
+      <div class="detail-status-badge">${STATUS_MAP[ev.status] || esc(ev.status)}</div>
+    </div>
+    <h1 class="detail-title">${esc(ev.title)}</h1>
+    <div class="detail-org">📍 ${esc(ev.organizer_name || currentOrg.org_name || '')}${ev.organizer_type ? '　｜ '+esc(ev.organizer_type) : ''}</div>
+
+    <div class="admin-bar">
+      <a class="abtn primary" href="/event-manage.html?edit=${ev.id}">✏️ 編集する</a>
+      <a class="abtn sub" href="/applicants.html?event_id=${ev.id}">🙋 申込者一覧</a>
+      <a class="abtn sub" href="/event.html?id=${ev.id}" target="_blank" rel="noopener">👁 フロント表示を見る</a>
+    </div>
+    <div class="admin-note">「フロント表示を見る」は、参加者から見える公開ページ（別タブ）です。</div>
+
+    ${ev.description ? `<div class="detail-desc" style="margin-top:20px;">${esc(ev.description)}</div>` : ''}
+    <div class="info-grid" style="margin-top:16px;">
+      ${dateStr ? `<div class="info-item"><div class="info-label">🗓️ 開催時期</div><div class="info-value">${esc(dateStr)}</div></div>` : ''}
+      ${ev.location ? `<div class="info-item"><div class="info-label">📍 場所</div><div class="info-value">${esc(ev.location)}</div></div>` : ''}
+      ${ev.target_audience ? `<div class="info-item"><div class="info-label">👥 対象</div><div class="info-value">${esc(ev.target_audience)}</div></div>` : ''}
+      <div class="info-item"><div class="info-label">💴 参加費</div><div class="info-value">${esc(ev.fee || '無料')}</div></div>
+      ${ev.max_participants ? `<div class="info-item"><div class="info-label">🙋 定員</div><div class="info-value">${ev.max_participants}名</div></div>` : ''}
+    </div>
+    ${mapHtml}
+    ${knowhow}
+
+    <div class="detail-section-title">📬 受け取った問い合わせ・申込</div>
+    <div id="reqList"><div class="adm-empty">読み込み中...</div></div>
+
+    <div class="detail-section-title">🙋 手を上げてくれた人</div>
+    <div id="handList"><div class="adm-empty">読み込み中...</div></div>
+
+    <a href="/my-events.html" class="detail-back">← あそび一覧に戻る</a>`;
+}
+
+async function loadRequests(id) {
+  const el = document.getElementById('reqList'); if (!el) return;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/participation_requests?event_id=eq.${id}&order=created_at.desc`, { headers: HEADERS });
+    const reqs = res.ok ? await res.json() : [];
+    if (!reqs.length) { el.innerHTML = '<div class="adm-empty">💭 まだ問い合わせ・申込はありません</div>'; return; }
+    const typeLabel = { participate:'参加希望', help:'手伝い希望', inquiry:'お問い合わせ' };
+    el.innerHTML = `<div class="adm-list">${reqs.map(r => {
+      const d = new Date(r.created_at).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'});
+      return `<div class="adm-item">
+        <div class="adm-item-head"><div><span class="adm-badge">${esc(typeLabel[r.request_type]||r.request_type||'連絡')}</span> <span class="adm-name">${esc(r.name||'匿名')}</span></div><span class="adm-date">${d}</span></div>
+        ${r.email ? `<div class="adm-msg" style="color:var(--gray)">✉️ ${esc(r.email)}</div>` : ''}
+        ${r.message ? `<div class="adm-msg">${esc(r.message)}</div>` : ''}
+      </div>`;
+    }).join('')}</div>`;
+  } catch(e) { el.innerHTML = '<div class="adm-empty">⚠️ 読み込みエラー</div>'; }
+}
+
+async function loadHands(id) {
+  const el = document.getElementById('handList'); if (!el) return;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/support_hands?event_id=eq.${id}&order=created_at.desc`, { headers: HEADERS });
+    const hands = res.ok ? await res.json() : [];
+    if (!hands.length) { el.innerHTML = '<div class="adm-empty">💭 まだ手を上げた人はいません</div>'; return; }
+    el.innerHTML = `<div class="adm-list">${hands.map(h => {
+      const d = new Date(h.created_at).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric'});
+      return `<div class="adm-item">
+        <div class="adm-item-head"><div><span class="adm-badge" style="background:#FFF8E1;color:#F57F17">🙋 手を上げた</span></div><span class="adm-date">${d}</span></div>
+        ${h.message ? `<div class="adm-msg">${esc(h.message)}</div>` : '<div class="adm-msg" style="color:var(--gray)">（メッセージなし）</div>'}
+      </div>`;
+    }).join('')}</div>`;
+  } catch(e) { el.innerHTML = '<div class="adm-empty">⚠️ 読み込みエラー</div>'; }
+}
+</script>
+<script>
+  loadHeaderMember();
+  loadFooter();
+</script>
+</body>
+</html>
