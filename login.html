@@ -315,6 +315,19 @@
       } else if (data.line_user_id) {
         sessionStorage.setItem('acp_line_user_id', data.line_user_id);
         sessionStorage.setItem('acp_line_name', data.line_display_name || '');
+        // 既存の団体を照合してログイン（Edge Functionがsuccess:falseを返した場合の対応）
+        try {
+          const orgRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/organizations?line_user_id=eq.${encodeURIComponent(data.line_user_id)}&limit=1`,
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+          );
+          const orgs = orgRes.ok ? await orgRes.json() : [];
+          if (Array.isArray(orgs) && orgs.length > 0) {
+            sessionStorage.setItem('acp_org', JSON.stringify(orgs[0]));
+            showDashboard(orgs[0], data.line_display_name);
+            return;
+          }
+        } catch (_) {}
         const supporter = await checkSupporter(data.line_user_id);
         if (supporter) {
           sessionStorage.setItem('acp_supporter', JSON.stringify(supporter));
