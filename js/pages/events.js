@@ -1,6 +1,6 @@
 /* events.html — あそびを探す（🎪開催予定 ⇄ 📚やってみた記録 ⇄ 🌱募集中の企画 統合版）
    Phase C Step3: 1ページで状態タブ切替。
-   ・開催予定  = status=active & is_public & 開催日(event_on)が未設定 or まだ過ぎていない
+   ・開催予定  = status=active & is_public & 開催日(event_on、無ければevent_dateの日付)が未設定 or まだ過ぎていない
    ・やってみた記録 = status=published（事例）
    ・募集中の企画 = status=recruiting（★ログイン者だけに表示。応援＝お気に入り/手を上げる）
    開催日が過ぎた開催予定は自動的に一覧から外れる。
@@ -50,8 +50,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   allCategories = catsRes.data || [];
   allOrgs = orgsRes.data || [];
   const rows = evRes.data || [];
-  const today = new Date().toISOString().slice(0, 10);
-  allEvents = rows.filter(ev => ev.status === 'active' && ev.is_public === true && (!ev.event_on || ev.event_on >= today));
+  const _d = new Date();
+  const today = `${_d.getFullYear()}-${String(_d.getMonth() + 1).padStart(2, '0')}-${String(_d.getDate()).padStart(2, '0')}`;
+  // 開催日は event_on を優先。無ければ event_date が YYYY-MM-DD 形式のときだけ使う（登録画面が event_date だけ保存していた分の救済）
+  const eventDay = ev => ev.event_on || (/^\d{4}-\d{2}-\d{2}$/.test(ev.event_date || '') ? ev.event_date : null);
+  allEvents = rows.filter(ev => ev.status === 'active' && ev.is_public === true && (!eventDay(ev) || eventDay(ev) >= today));
   allRecords = rows.filter(ev => ev.status === 'published');
   allRecruiting = rows.filter(ev => ev.status === 'recruiting');
 

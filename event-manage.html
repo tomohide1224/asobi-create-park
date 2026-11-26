@@ -518,6 +518,7 @@ async function saveEvent() {
       category_id: document.getElementById('ev_category_id').value ? parseInt(document.getElementById('ev_category_id').value) : null,
       description: document.getElementById('ev_description').value.trim() || null,
       event_date: document.getElementById('ev_event_date').value || null,
+      event_on: document.getElementById('ev_event_date').value || null,   // 一覧の「開催予定/終了」判定に使う
       location: document.getElementById('ev_location').value.trim() || null,
       lat: document.getElementById('ev_lat').value ? parseFloat(document.getElementById('ev_lat').value) : null,
       lng: document.getElementById('ev_lng').value ? parseFloat(document.getElementById('ev_lng').value) : null,

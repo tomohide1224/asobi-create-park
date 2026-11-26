@@ -183,7 +183,7 @@ async function submitInquiry(e) {
 function buildInterestAction() {
   const isFav = acpIsFav(ev.id);
   const note = viewer === 'guest'
-    ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると「気になる」に登録できます</div>`
+    ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると、ほかのスマホやPCでも「気になる」が引き継がれます</div>`
     : '';
   return `<div class="form-section">
       <div class="form-title">🌱 このあそびを応援する</div>
@@ -200,7 +200,7 @@ function buildRecruitAction() {
   const isFav = acpIsFav(ev.id);
   const isHand = handSet.has(ev.id);
   const note = viewer === 'guest'
-    ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると、お気に入り登録や手を上げることができます</div>`
+    ? `<div class="form-sub" style="margin-top:8px;">※ ログインすると、手を上げることができます（「気になる」はログインなしでもOK）</div>`
     : '';
   return `<div class="form-section">
       <div class="form-title">🌱 この企画を応援する</div>
